@@ -1,0 +1,1802 @@
+[
+  {
+    "domain": "identity",
+    "name": "access-scope",
+    "source": "rbac",
+    "trade": "Эрхийн scope нарийсахад хохирлын хүрээ буурна; олон assignment удирдах ажил нэмэгдэж болно. HA ба throughput нь энэ сонголтын гол ялгаа биш.",
+    "rows": [
+      {
+        "option_en": "Resource scope",
+        "option_mn": "Нэг resource-ийн scope",
+        "en": "An operator may inspect one production VM but no other VM. Which Reader assignment scope meets least privilege?",
+        "mn": "Оператор зөвхөн нэг production VM-ийг харах ёстой. Reader role-ийг хамгийн бага эрхээр ямар scope-д өгөх вэ?",
+        "reason": "Нэг resource scope нь зөвхөн тэр VM-д үйлчилнэ; өргөн scope бусад нөөцийг хамарна."
+      },
+      {
+        "option_en": "Resource group scope",
+        "option_mn": "Resource group scope",
+        "en": "An auditor must inspect every resource in one dedicated project resource group, including future resources, but no other project. Where should Reader be assigned?",
+        "mn": "Аудитор нэг төслийн тусгай resource group-ийн одоогийн ба ирээдүйн бүх нөөцийг харна, бусад төслийг харахгүй. Reader-ийг хаана оноох вэ?",
+        "reason": "Resource group нь төслийн бүх нөөцийг хамарна; нэг resource дутуу, subscription хэт өргөн."
+      },
+      {
+        "option_en": "Subscription scope",
+        "option_mn": "Subscription scope",
+        "en": "A cost and inventory team needs read access across all resource groups of one subscription, with no access to sibling subscriptions. Choose the scope.",
+        "mn": "Баг нэг subscription-ийн бүх resource group-ийг унших эрхтэй, бусад subscription-д эрхгүй байна. Scope сонго.",
+        "reason": "Subscription scope нь бүх resource group-д өвлөгдөнө; management group хэт өргөн."
+      },
+      {
+        "option_en": "Management group scope",
+        "option_mn": "Management group scope",
+        "en": "Auditors require Reader access across all current and future subscriptions placed under a finance management group. Minimize repeated role assignments.",
+        "mn": "Аудиторууд finance management group-ийн одоогийн ба ирээдүйн subscription бүрд Reader эрхтэй байна. Давтан assignment-ийг багасга.",
+        "reason": "Management group-ийн assignment нь доорх subscription-д өвлөгдөнө; доод scope-ууд нийт хүрээг хамрахгүй."
+      }
+    ]
+  },
+  {
+    "domain": "identity",
+    "name": "resource-controls",
+    "source": "policy",
+    "trade": "Policy compliance нь role assignment-ийг орлохгүй. Төвлөрсөн дүрэм admin ажлыг багасгана; throughput/DR-ийн оронд governance шаардлага шийднэ.",
+    "rows": [
+      {
+        "option_en": "Azure Policy deny",
+        "option_mn": "Azure Policy deny",
+        "en": "New resources must be rejected when deployed outside approved regions, even by resource Contributors. Which control addresses this?",
+        "mn": "Contributor ч зөвшөөрөөгүй region-д шинэ нөөц үүсгэх боломжгүй байх ёстой. Ямар control хэрэгтэй вэ?",
+        "reason": "Deny нь нийцээгүй deployment-ийг хориглоно; audit зөвхөн илрүүлнэ."
+      },
+      {
+        "option_en": "Azure Policy audit",
+        "option_mn": "Azure Policy audit",
+        "en": "A company wants to measure noncompliant resource configurations before enforcing restrictions. Existing deployments must continue. Choose the effect.",
+        "mn": "Компани хориг тавихаас өмнө нийцээгүй тохиргоог хэмжинэ. Deployment үргэлжлэх ёстой. Ямар effect вэ?",
+        "reason": "Audit нь зөрчлийг тэмдэглэнэ, deployment-ийг хориглохгүй; deny шаардлагыг зөрчинө."
+      },
+      {
+        "option_en": "Azure RBAC",
+        "option_mn": "Azure RBAC",
+        "en": "A contractor may manage VMs in a project but must not assign access to other users. Select the authorization mechanism rather than a configuration rule.",
+        "mn": "Гэрээт ажилтан төслийн VM-үүдийг удирдана, бусдад эрх олгохгүй. Тохиргооны дүрэм бус authorization mechanism сонго.",
+        "reason": "RBAC role нь зөвшөөрөх үйлдлийг тодорхойлно; Policy нь хэрэглэгчид VM удирдах эрх олгохгүй."
+      },
+      {
+        "option_en": "Resource tags",
+        "option_mn": "Resource tag-ууд",
+        "en": "Resources already meet access and compliance requirements. Finance only needs a department label for cost grouping, with no new enforcement. What should be added?",
+        "mn": "Эрх ба compliance хангагдсан. Санхүүд зардлыг бүлэглэх department шошго л хэрэгтэй, enforcement нэмэхгүй. Юу нэмэх вэ?",
+        "reason": "Tag нь ангиллын metadata; өөрөө access эсвэл deployment enforcement биш."
+      }
+    ]
+  },
+  {
+    "domain": "identity",
+    "name": "identity-lifecycle",
+    "source": "pim",
+    "trade": "Хугацаатай эрх standing privilege-ийг бууруулна. Governance лиценз ба workflow-ийн admin зардлыг тооц; app latency/DR-ийг эдгээрээр шийдэхгүй.",
+    "rows": [
+      {
+        "option_en": "Privileged Identity Management",
+        "option_mn": "Privileged Identity Management",
+        "en": "Administrators need eligible Azure roles that activate for two hours after approval, rather than permanent production access. What should you use?",
+        "mn": "Админууд production-д байнгын эрхгүй, зөвшөөрөл авсны дараа хоёр цаг идэвхжих eligible Azure role хэрэгтэй. Юу ашиглах вэ?",
+        "reason": "PIM нь хугацаатай, approval-той role activation өгнө; тогтмол review нь activation биш."
+      },
+      {
+        "option_en": "Access reviews",
+        "option_mn": "Access reviews",
+        "en": "Group owners must periodically confirm whether external guests still need access and remove access for rejected users. Which capability fits?",
+        "mn": "Group owner-ууд guest эрх шаардлагатай хэвээр эсэхийг тогтмол баталж, татгалзсан хэрэглэгчийн эрхийг хасна. Ямар боломж вэ?",
+        "reason": "Access reviews нь давтамжтай recertification; PIM activation болон sign-in control өөр зорилготой."
+      },
+      {
+        "option_en": "Entitlement management",
+        "option_mn": "Entitlement management",
+        "en": "Partners request a bundle of groups and enterprise applications with sponsor approval and automatic expiration. Which governance capability fits?",
+        "mn": "Түншүүд sponsor approval ба автоматаар дуусах хугацаатай group/application багц хүснэ. Ямар governance боломж вэ?",
+        "reason": "Entitlement management-ийн access package нь олон resource-ийн access lifecycle зохион байгуулна."
+      },
+      {
+        "option_en": "Conditional Access",
+        "option_mn": "Conditional Access",
+        "en": "Employees may access a cloud app only when MFA and device conditions are satisfied at sign-in. Which control evaluates these signals?",
+        "mn": "Ажилтан sign-in үед MFA ба device нөхцөлийг хангасан тохиолдолд cloud app-д орно. Ямар control вэ?",
+        "reason": "Conditional Access нь sign-in signal-аар шийдвэрлэнэ; access package эсвэл review дангаараа энэ нөхцөлийг шалгахгүй."
+      }
+    ]
+  },
+  {
+    "domain": "identity",
+    "name": "hybrid-auth",
+    "source": "hybrid",
+    "trade": "Cloud authentication on-prem доголдлын хамаарлыг багасгана; PTA/federation нь on-prem availability ба удирдлагын ачаалалтай. Нууц үгийн бодлого сонголтыг шийднэ.",
+    "rows": [
+      {
+        "option_en": "Password hash synchronization",
+        "option_mn": "Password hash synchronization",
+        "en": "Cloud sign-in must continue during an on-premises directory outage. Synchronizing derived password hashes is permitted. Minimize authentication infrastructure.",
+        "mn": "On-prem directory унтарсан ч cloud sign-in ажиллах ёстой. Password hash-ийн хувиргасан хуулбар sync хийхийг зөвшөөрсөн. Authentication infrastructure-ийг багасга.",
+        "reason": "PHS нь cloud-д authentication хийдэг; PTA/federation нь on-prem замаас хамаарна."
+      },
+      {
+        "option_en": "Pass-through authentication",
+        "option_mn": "Pass-through authentication",
+        "en": "Password validation must occur against on-premises AD at sign-in. The company forbids password hash synchronization and wants no federation farm. What fits?",
+        "mn": "Sign-in бүрийн password-ийг on-prem AD шалгана. Hash sync хориотой, federation farm хүсэхгүй. Юу тохирох вэ?",
+        "reason": "PTA agent on-prem AD-аар password шалгана; PHS бодлого зөрчинө, federation farm илүү ажилтай."
+      },
+      {
+        "option_en": "Federation",
+        "option_mn": "Federation",
+        "en": "An existing third-party identity provider must remain the authority and supply its custom sign-in process to Microsoft Entra ID. Which approach fits?",
+        "mn": "Одоо байгаа third-party IdP нь өөрийн custom sign-in процессыг хадгалж Entra ID-д authentication өгөх ёстой. Аль арга вэ?",
+        "reason": "Federation нь external IdP-д authentication шилжүүлнэ; PHS/PTA энэ custom IdP урсгалыг орлохгүй."
+      },
+      {
+        "option_en": "Cloud-only identities",
+        "option_mn": "Зөвхөн cloud identity",
+        "en": "A newly formed subsidiary has no AD DS, no legacy domain dependencies, and no identity synchronization requirement. Minimize identity infrastructure.",
+        "mn": "Шинэ салбар AD DS, legacy domain dependency, identity sync шаардлагагүй. Identity infrastructure-ийг багасга.",
+        "reason": "Cloud-only identity нь шаардлагагүй hybrid бүрэлдэхүүнийг арилгана; бусад нь on-prem directory-д зориулсан."
+      }
+    ]
+  },
+  {
+    "domain": "identity",
+    "name": "workload-credentials",
+    "source": "identity",
+    "trade": "Managed identity credential rotation ажлыг багасгана. Shared identity blast radius-тай; service availability ба authorization-ийг тусад нь төлөвлөнө.",
+    "rows": [
+      {
+        "option_en": "System-assigned managed identity",
+        "option_mn": "System-assigned managed identity",
+        "en": "A single Azure VM needs an identity whose lifecycle ends when that VM is deleted. Avoid storing credentials. Choose the identity type.",
+        "mn": "Нэг Azure VM устахад хамт устдаг identity хэрэгтэй. Credential хадгалахгүй. Ямар төрөл вэ?",
+        "reason": "System-assigned identity нь нэг resource-ийн lifecycle-тэй холбоотой."
+      },
+      {
+        "option_en": "User-assigned managed identity",
+        "option_mn": "User-assigned managed identity",
+        "en": "Several replacement compute instances need the same preauthorized identity, which must survive instance deletion. Avoid managing secrets.",
+        "mn": "Солигддог compute instance-ууд ижил урьдчилан эрхтэй identity ашиглана; instance устахад identity үлдэнэ. Secret удирдахгүй.",
+        "reason": "User-assigned identity бие даасан lifecycle-тэй, олон resource-д холбож болно."
+      },
+      {
+        "option_en": "Service principal with a certificate",
+        "option_mn": "Certificate-тэй service principal",
+        "en": "An external legacy daemon cannot use managed identity or workload federation. It supports certificate-based Entra authentication; shared secrets are prohibited. Choose a credential model.",
+        "mn": "Гаднын legacy daemon managed identity/federation ашиглаж чадахгүй, certificate-based Entra authentication дэмжинэ. Shared secret хориотой. Credential model сонго.",
+        "reason": "Certificate-тэй service principal боломжит supported арга; managed identity-ийн hosting шаардлага хангагдахгүй."
+      },
+      {
+        "option_en": "Workload identity federation",
+        "option_mn": "Workload identity federation",
+        "en": "An external automation platform supports OIDC trust with Entra ID. Eliminate stored client secrets and certificates. Choose the approach.",
+        "mn": "Гаднын automation platform Entra ID-тай OIDC trust дэмждэг. Client secret болон certificate хадгалахгүй болго. Арга сонго.",
+        "reason": "Federation нь trusted external token-ийг ашиглана; certificate эсвэл client secret хадгалах шаардлагагүй."
+      }
+    ]
+  },
+  {
+    "domain": "identity",
+    "name": "observability-signals",
+    "source": "monitor",
+    "trade": "Өгөгдлийн хэмжээ/retention нь cost-д нөлөөлнө; шаардлагатай signal-ийг сонгох нь query latency ба admin ажлыг багасгана. Telemetry нь backup биш.",
+    "rows": [
+      {
+        "option_en": "Platform metrics",
+        "option_mn": "Platform metric",
+        "en": "An operator needs minute-by-minute numeric CPU trends and a threshold alert, with no text search or request tracing. Which telemetry type is primary?",
+        "mn": "Оператор CPU-ийн минут тутмын тоон trend ба threshold alert хүснэ; текст хайлт/request tracing хэрэггүй. Үндсэн telemetry юу вэ?",
+        "reason": "Metric нь хугацааны дараалалтай numeric signal; log/trace илүү өөр хэрэгцээнд зориулагдсан."
+      },
+      {
+        "option_en": "Resource logs",
+        "option_mn": "Resource log",
+        "en": "A security investigation needs detailed data-plane operations emitted by an Azure service, including operation results. Which signal should be routed?",
+        "mn": "Аюулгүй байдлын шалгалтад Azure service-ийн data-plane ажиллагаа ба үр дүнгийн дэлгэрэнгүй хэрэгтэй. Ямар signal routing хийх вэ?",
+        "reason": "Resource logs нь service operation-ийн дэлгэрэнгүй; Activity Log нь management-plane-д төвлөрнө."
+      },
+      {
+        "option_en": "Activity Log",
+        "option_mn": "Activity Log",
+        "en": "An auditor asks who changed a resource's configuration through Azure Resource Manager. Which source should be examined first?",
+        "mn": "Аудитор Azure Resource Manager-аар resource тохиргоог хэн өөрчилснийг асуув. Юуг эхэлж шалгах вэ?",
+        "reason": "Activity Log нь control-plane ажиллагааг бүртгэнэ; app trace/CPU metric энэ асуултад хариулахгүй."
+      },
+      {
+        "option_en": "Distributed traces",
+        "option_mn": "Distributed trace",
+        "en": "A request spans three microservices and fails in a dependency. Engineers need the correlated end-to-end execution path. Choose the signal.",
+        "mn": "Request гурван microservice дамжаад dependency дээр алдана. End-to-end холбоотой зам хэрэгтэй. Signal сонго.",
+        "reason": "Distributed trace нь request ба dependency correlation өгнө; тусгаар numeric metric нь замыг харуулахгүй."
+      }
+    ]
+  },
+  {
+    "domain": "identity",
+    "name": "log-destinations",
+    "source": "diagnostics",
+    "trade": "Storage retention cost, Log Analytics query cost, Event Hubs streaming capacity-ийг шаардлагаар сонго. Нэмэлт destination бүр удирдлага ба cost нэмнэ.",
+    "rows": [
+      {
+        "option_en": "Log Analytics workspace",
+        "option_mn": "Log Analytics workspace",
+        "en": "Operations needs interactive KQL analysis of routed Azure resource logs. Choose the diagnostic setting destination.",
+        "mn": "Operations Azure resource log дээр interactive KQL query хийнэ. Diagnostic setting-ийн destination сонго.",
+        "reason": "Log Analytics workspace нь query хийх destination; archive/stream дангаараа KQL workspace биш."
+      },
+      {
+        "option_en": "Storage account",
+        "option_mn": "Storage account",
+        "en": "Compliance requires an inexpensive raw archive of diagnostic logs and does not require interactive queries. Choose the destination.",
+        "mn": "Compliance diagnostic log-ийн хямд raw archive хүснэ; interactive query хэрэггүй. Destination сонго.",
+        "reason": "Storage archive зорилгод нийцнэ; workspace query capability шаардлагагүй нэмэлт зардал болно."
+      },
+      {
+        "option_en": "Event hub",
+        "option_mn": "Event hub",
+        "en": "A third-party SIEM must continuously consume Azure diagnostic events through a streaming interface. Choose the destination.",
+        "mn": "Third-party SIEM Azure diagnostic event-ийг streaming interface-аар тасралтгүй авна. Destination сонго.",
+        "reason": "Event Hubs нь streaming integration; storage archive эсвэл workspace дангаараа энэ stream биш."
+      },
+      {
+        "option_en": "Multiple diagnostic destinations",
+        "option_mn": "Олон diagnostic destination",
+        "en": "The same logs must support KQL investigation and independent long-term raw archiving. No single destination meets both selected workflows. What should you configure?",
+        "mn": "Ижил log KQL шинжилгээ болон тусдаа урт хугацааны raw archive-д очно. Сонгосон хоёр workflow-д нэг destination хүрэхгүй. Юу тохируулах вэ?",
+        "reason": "Diagnostic settings олон destination руу routing хийж болно; зөвхөн нэгийг сонговол нэг шаардлага дутна."
+      }
+    ]
+  },
+  {
+    "domain": "identity",
+    "name": "alert-choice",
+    "source": "alerts",
+    "trade": "Metric alert latency ба log-query flexibility-г ялга. Alert rule/action group удирдах ажилтай; alert нь HA/DR-ийг өөрөө бий болгохгүй.",
+    "rows": [
+      {
+        "option_en": "Metric alert",
+        "option_mn": "Metric alert",
+        "en": "A VM CPU metric crossing a threshold must trigger an alert. No cross-resource joins or event search are required. Select the rule type.",
+        "mn": "VM CPU metric босго давбал alert өгнө. Join/event search хэрэггүй. Rule төрөл сонго.",
+        "reason": "Metric alert нь numeric time series-д шууд тохирно; log query шаардлагагүй."
+      },
+      {
+        "option_en": "Log search alert",
+        "option_mn": "Log search alert",
+        "en": "An alert must combine failed requests with deployment logs using a KQL query. Select the rule type.",
+        "mn": "Failed request ба deployment log-ийг KQL query-аар холбож alert өгнө. Rule төрөл сонго.",
+        "reason": "Log search alert нь query-ийн үр дүнд суурилна; metric alert энэ join-ийг хийхгүй."
+      },
+      {
+        "option_en": "Activity log alert",
+        "option_mn": "Activity log alert",
+        "en": "Notify security whenever an Azure resource is deleted through the management plane. Select the rule type.",
+        "mn": "Management plane-аар Azure resource устах бүрд security-д мэдэгдэнэ. Rule төрөл сонго.",
+        "reason": "Activity log alert нь control-plane event-д хариулна; query шаардлагагүй шууд signal."
+      },
+      {
+        "option_en": "Action group",
+        "option_mn": "Action group",
+        "en": "Alert detection already works. The same email and webhook recipients must be reused across rules. Which shared component is missing?",
+        "mn": "Alert detection ажиллаж байгаа. Ижил email/webhook хүлээн авагчийг олон rule-д дахин ашиглана. Ямар shared component дутуу вэ?",
+        "reason": "Action group notification/action-ийг нэгтгэнэ; шинэ detection rule нэмэх нь recipient reuse биш."
+      }
+    ]
+  },
+  {
+    "domain": "identity",
+    "name": "governance-hierarchy",
+    "source": "policy",
+    "trade": "Нэгдсэн hierarchy давтан policy/admin ажлыг бууруулна. Billing/access boundary ба lifecycle-г ялга; hierarchy өөрөө latency/DR шийдэхгүй.",
+    "rows": [
+      {
+        "option_en": "Management groups",
+        "option_mn": "Management group",
+        "en": "A policy baseline must apply to multiple subscriptions and future subscriptions organized under the same business unit. Which hierarchy level fits?",
+        "mn": "Policy baseline бизнес нэгжийн одоогийн болон ирээдүйн олон subscription-д үйлчилнэ. Ямар түвшин вэ?",
+        "reason": "Management group нь subscription-уудын дээрх governance scope."
+      },
+      {
+        "option_en": "Subscriptions",
+        "option_mn": "Subscription",
+        "en": "Two departments require separate Azure billing and subscription-level quotas. Resource lifecycle grouping alone is insufficient. What boundary should be used?",
+        "mn": "Хоёр хэлтэст тусдаа Azure billing ба subscription-level quota хэрэгтэй. Lifecycle бүлэглэлт хүрэлцэхгүй. Ямар boundary вэ?",
+        "reason": "Subscription нь billing/quota boundary; resource group энэ тусгаарлалтыг өгөхгүй."
+      },
+      {
+        "option_en": "Resource groups",
+        "option_mn": "Resource group",
+        "en": "A web app and its supporting resources should be deployed and removed together within an existing subscription. Which grouping fits this lifecycle?",
+        "mn": "Web app ба supporting resource-уудыг нэг subscription дотор хамт deploy/remove хийнэ. Lifecycle-д ямар бүлэг тохирох вэ?",
+        "reason": "Resource group нь холбоотой resource-ийн lifecycle grouping; management group subscription-уудыг нэгтгэдэг."
+      },
+      {
+        "option_en": "Tags",
+        "option_mn": "Tag",
+        "en": "Finance needs to query cost by project across unrelated resource groups without moving resources or changing access. What should be standardized?",
+        "mn": "Санхүү нөөц шилжүүлэхгүй, эрх өөрчлөхгүйгээр олон resource group дамнасан төслийн зардлыг ангилна. Юуг стандартчилах вэ?",
+        "reason": "Tag нь cross-cutting metadata; hierarchy өөрчлөх шаардлагагүй."
+      }
+    ]
+  },
+  {
+    "domain": "identity",
+    "name": "vault-content",
+    "source": "vault",
+    "trade": "Key Vault credential төвлөрүүлж admin ажлыг багасгана. Key operation latency ба availability-г тооц; secret-д private key string хадгалах нь key operation-той адил биш.",
+    "rows": [
+      {
+        "option_en": "Key Vault secrets",
+        "option_mn": "Key Vault secrets",
+        "en": "An application must retrieve a legacy database password at runtime. The target cannot use Entra authentication. Which Key Vault object fits?",
+        "mn": "Legacy database Entra authentication дэмжихгүй тул app runtime үед password авна. Key Vault-ийн ямар object вэ?",
+        "reason": "Secret нь нууц text утгыг хадгална; key object нь password string retrieval-ийн оронд crypto operation-д зориулагдсан."
+      },
+      {
+        "option_en": "Key Vault keys",
+        "option_mn": "Key Vault keys",
+        "en": "A service must request cryptographic signing without retrieving private key material. Which Key Vault object should be used?",
+        "mn": "Service private key material татахгүйгээр signing operation хүснэ. Ямар object вэ?",
+        "reason": "Key object нь crypto operation өгнө; secret хэлбэрээр хадгалбал key material татах загвар болно."
+      },
+      {
+        "option_en": "Key Vault certificates",
+        "option_mn": "Key Vault certificates",
+        "en": "A team needs certificate lifecycle management, including X.509 certificate versions and renewal integration. Which object category fits?",
+        "mn": "Баг X.509 certificate version ба renewal integration бүхий lifecycle удирдана. Ямар object төрөл вэ?",
+        "reason": "Certificate object нь certificate lifecycle-д зориулагдсан; энгийн secret дангаар renewal workflow биш."
+      },
+      {
+        "option_en": "Managed identity with RBAC",
+        "option_mn": "Managed identity + RBAC",
+        "en": "Secrets are already stored correctly. An Azure app needs passwordless authorization to read them. Which addition addresses the missing requirement?",
+        "mn": "Secret зөв хадгалагдсан. Azure app тэдгээрийг credential хадгалахгүйгээр унших эрхтэй болно. Юу нэмэх вэ?",
+        "reason": "Managed identity ба тохирох RBAC access-ийг шийднэ; шинэ vault object үүсгэх нь authorization биш."
+      }
+    ]
+  },
+  {
+    "domain": "identity",
+    "name": "review-versus-activation",
+    "source": "reviews",
+    "trade": "Periodic review ба JIT нь өөр хугацааны хяналт. Лиценз/approval workflow нэмэгдэнэ; гүйцэтгэл, DR шаардлагыг тусдаа шийднэ.",
+    "rows": [
+      {
+        "option_en": "Periodic group access review",
+        "option_mn": "Group-ийн тогтмол access review",
+        "en": "A manager must certify every quarter that each member still needs a project group. There is no privileged-role activation requirement.",
+        "mn": "Менежер улирал бүр project group-ийн гишүүн бүрт эрх хэрэгтэй эсэхийг батална. Privileged role activation хэрэггүй.",
+        "reason": "Review нь одоогийн membership-ийг дахин батална; activation шинэ session-ийн эрхийн тухай."
+      },
+      {
+        "option_en": "PIM eligible role",
+        "option_mn": "PIM eligible role",
+        "en": "An engineer should hold no active production role between incidents, but activate one for an approved maintenance window.",
+        "mn": "Инженер incident хооронд active production role-гүй, зөвшөөрсөн maintenance window үед идэвхжүүлнэ.",
+        "reason": "Eligible role + activation нь байнгын active privilege-ийг арилгана; улирлын review үүнийг орлохгүй."
+      },
+      {
+        "option_en": "Access package expiration",
+        "option_mn": "Access package-ийн хугацаа дуусах",
+        "en": "A supplier's project access bundle must end on a known contract date without waiting for the next quarterly review.",
+        "mn": "Нийлүүлэгчийн access bundle гэрээний тодорхой өдөр дуусна; улирлын review хүлээхгүй.",
+        "reason": "Package expiration нь тогтсон lifecycle төгсгөлийг автоматжуулна; review хугацаа нь contract end-тэй адил биш."
+      },
+      {
+        "option_en": "Conditional Access session/sign-in controls",
+        "option_mn": "Conditional Access sign-in/session control",
+        "en": "Membership remains valid, but access must depend on sign-in risk and device conditions. Which control layer should change?",
+        "mn": "Membership хүчинтэй хэвээр, гэхдээ access нь sign-in risk/device нөхцөлөөс хамаарна. Аль layer өөрчлөх вэ?",
+        "reason": "Conditional Access нь access context-ийг үнэлнэ; membership review-ээр device condition шалгахгүй."
+      }
+    ]
+  },
+  {
+    "domain": "identity",
+    "name": "policy-effects",
+    "source": "policy",
+    "trade": "Enforcement эхлэхээс өмнө нөлөөг хэмж. Remediation existing resource-д нэмэлт ажил/эрх шаардана; audit нь downtime үүсгэхгүй ч зөрчлийг засахгүй.",
+    "rows": [
+      {
+        "option_en": "Audit",
+        "option_mn": "Audit",
+        "en": "A pilot must report configuration violations without blocking deployment or changing resources. Which policy behavior is appropriate?",
+        "mn": "Pilot тохиргооны зөрчлийг мэдээлэх боловч deployment хориглохгүй, нөөц өөрчлөхгүй. Ямар behavior вэ?",
+        "reason": "Audit зөвхөн compliance үнэлнэ; modify/deploy/deny нь өөр нөлөөтэй."
+      },
+      {
+        "option_en": "Deny",
+        "option_mn": "Deny",
+        "en": "New deployments with prohibited settings must fail rather than be silently corrected. Which policy behavior fits?",
+        "mn": "Хориотой тохиргоотой шинэ deployment чимээгүй засагдах бус fail болох ёстой. Ямар behavior вэ?",
+        "reason": "Deny request-ийг хориглоно; audit зөвхөн тэмдэглэнэ, modify нь өөрчилнө."
+      },
+      {
+        "option_en": "Modify",
+        "option_mn": "Modify",
+        "en": "A supported tag property should be automatically added or updated during resource requests, with remediation for existing resources. Which effect fits?",
+        "mn": "Дэмжигддэг tag property-г request үед автоматаар нэмж/засаж, existing resource-ийг remediation хийнэ. Ямар effect вэ?",
+        "reason": "Modify supported property-г өөрчилнө; deny засахгүй, audit өөрчлөхгүй."
+      },
+      {
+        "option_en": "DeployIfNotExists",
+        "option_mn": "DeployIfNotExists",
+        "en": "After evaluating a resource, a missing related configuration resource must be deployed when conditions match. Which effect fits?",
+        "mn": "Resource үнэлсний дараа нөхцөл хангахад байхгүй related configuration resource-ийг deploy хийнэ. Ямар effect вэ?",
+        "reason": "DeployIfNotExists related resource deploy хийдэг; modify нь property өөрчлөлтөд чиглэнэ."
+      }
+    ]
+  },
+  {
+    "domain": "identity",
+    "name": "access-plane",
+    "source": "rbacdata",
+    "trade": "Data plane ба management plane эрх тусдаа. Least privilege нь ажиллагааг нарийсгана; нэмэлт assignment admin ажилтай, HA/performance ялгаа биш.",
+    "rows": [
+      {
+        "option_en": "Reader",
+        "option_mn": "Reader",
+        "en": "An auditor only needs to view Azure resource configuration, not download blobs or change configuration. Choose a built-in role.",
+        "mn": "Аудитор зөвхөн Azure resource configuration харна, blob татахгүй, тохиргоо өөрчлөхгүй. Built-in role сонго.",
+        "reason": "Reader management-plane read өгнө; blob data access-ийг автоматаар өгөхгүй."
+      },
+      {
+        "option_en": "Storage Blob Data Reader",
+        "option_mn": "Storage Blob Data Reader",
+        "en": "A reporting identity must read blob content using Entra authorization without modifying blobs or administering the account. Choose the role.",
+        "mn": "Reporting identity Entra authorization-аар blob content уншина, blob өөрчлөхгүй, account удирдахгүй. Role сонго.",
+        "reason": "Data Reader blob унших data action өгнө; энгийн Reader нь content access биш."
+      },
+      {
+        "option_en": "Storage Blob Data Contributor",
+        "option_mn": "Storage Blob Data Contributor",
+        "en": "An ingestion identity must read, write and delete blobs but must not grant other users access. Choose the role.",
+        "mn": "Ingestion identity blob уншиж, бичиж, устгана, бусдад эрх олгохгүй. Role сонго.",
+        "reason": "Data Contributor blob data үйлдлийг зөвшөөрнө; Reader write/delete хангахгүй."
+      },
+      {
+        "option_en": "User Access Administrator",
+        "option_mn": "User Access Administrator",
+        "en": "A delegated access team must manage Azure role assignments, rather than operate application data. Which role is designed for that task?",
+        "mn": "Access баг Azure role assignment удирдана, app data боловсруулах зорилгогүй. Аль role зориулагдсан бэ?",
+        "reason": "User Access Administrator access assignment удирдана; data role-ууд role assignment эрх биш."
+      }
+    ]
+  },
+  {
+    "domain": "identity",
+    "name": "monitoring-tool",
+    "source": "logs",
+    "trade": "Query/dashboard нь incident diagnosis-д тусална; ingestion ба retention cost тооц. Visualization нь collection эсвэл backup-ийг орлохгүй.",
+    "rows": [
+      {
+        "option_en": "Log Analytics",
+        "option_mn": "Log Analytics",
+        "en": "An engineer needs an interactive editor to run KQL over existing workspace logs and inspect individual records. Which tool fits?",
+        "mn": "Инженер workspace log дээр KQL бичиж record бүрийг шалгах interactive editor хүснэ. Ямар tool вэ?",
+        "reason": "Log Analytics нь KQL query interface; workbook нь report visualization-д чиглэнэ."
+      },
+      {
+        "option_en": "Azure Monitor Workbooks",
+        "option_mn": "Azure Monitor Workbooks",
+        "en": "Operations needs a shared interactive report combining queries, charts and parameters over monitoring data. Choose the presentation tool.",
+        "mn": "Operations query/chart/parameter хосолсон shared interactive report хүснэ. Presentation tool сонго.",
+        "reason": "Workbook interactive analysis/report зохион байгуулна; query editor дангаараа shared report биш."
+      },
+      {
+        "option_en": "Application Insights",
+        "option_mn": "Application Insights",
+        "en": "A developer needs application request, dependency and exception correlation for a web service. Which monitoring capability fits?",
+        "mn": "Developer web service-ийн request, dependency, exception correlation хүснэ. Ямар monitoring capability вэ?",
+        "reason": "Application Insights application performance telemetry-д чиглэнэ; Activity Log app dependency trace биш."
+      },
+      {
+        "option_en": "Azure Activity Log",
+        "option_mn": "Azure Activity Log",
+        "en": "An investigation concerns who changed a network resource through Azure Resource Manager, not application requests. Which source is relevant?",
+        "mn": "Шалгалт application request бус network resource-ийг ARM-аар хэн өөрчилсөн тухай. Ямар source хэрэгтэй вэ?",
+        "reason": "Activity Log нь management operation-ийг харуулна; application monitoring өөр давхарга."
+      }
+    ]
+  },
+  {
+    "domain": "data",
+    "name": "sql-platform",
+    "source": "sqlchoose",
+    "trade": "PaaS нь OS/patching ажлыг багасгана; VM нь control нэмэхдээ maintenance ба HA төлөвлөлт шаардана. Compatibility-г cost-оос өмнө шалга.",
+    "rows": [
+      {
+        "option_en": "Azure SQL Database",
+        "option_mn": "Azure SQL Database",
+        "en": "A new application needs one relational database with no instance-level dependencies or OS access. Minimize patching and database infrastructure management.",
+        "mn": "Шинэ app нэг relational database хэрэгтэй, instance dependency/OS access байхгүй. Patching ба infrastructure удирдлагыг багасга.",
+        "reason": "SQL Database нь database-level PaaS; VM control шаардлагагүй, MI-ийн instance compatibility хэрэггүй."
+      },
+      {
+        "option_en": "Azure SQL Managed Instance",
+        "option_mn": "Azure SQL Managed Instance",
+        "en": "A SQL Server migration depends on SQL Agent and instance-level compatibility but not OS access. Minimize database platform administration.",
+        "mn": "SQL Server migration SQL Agent ба instance-level compatibility шаарддаг, OS access хэрэггүй. Platform administration-ийг багасга.",
+        "reason": "MI нь managed instance compatibility өгнө; single SQL Database instance feature-ийг адил хангахгүй."
+      },
+      {
+        "option_en": "SQL Server on Azure VM",
+        "option_mn": "SQL Server on Azure VM",
+        "en": "A vendor requires SQL Server plus installation of a custom OS-level agent and full OS control. Which deployment meets the non-negotiable requirement?",
+        "mn": "Vendor SQL Server-ийн OS-д custom agent суулгах ба full OS control шаардсан. Аль deployment заавал нөхцөлийг хангах вэ?",
+        "reason": "VM OS control өгнө; managed database нь guest OS-д custom agent суулгах эрх өгөхгүй."
+      },
+      {
+        "option_en": "Azure SQL elastic pool",
+        "option_mn": "Azure SQL elastic pool",
+        "en": "A SaaS provider has many independent databases whose peaks occur at different times. Pool compute to reduce provisioned idle capacity without merging data.",
+        "mn": "SaaS олон тусдаа database-тай, peak нь өөр цагт. Data нэгтгэхгүйгээр сул compute-ийн зардлыг бууруул.",
+        "reason": "Elastic pool нь олон database-д shared compute budget; тус бүр peak provision хийхээс үр ашигтай байж болно."
+      }
+    ]
+  },
+  {
+    "domain": "data",
+    "name": "sql-compute",
+    "source": "serverless",
+    "trade": "Peak concurrency ба idle хугацаа cost-ийг шийднэ; resume latency performance-д нөлөөлнө. HA нь service tier тохиргооноос мөн хамаарна.",
+    "rows": [
+      {
+        "option_en": "Provisioned single database",
+        "option_mn": "Provisioned single database",
+        "en": "One database is continuously busy with predictable sustained demand and must avoid auto-resume delays. Choose the compute arrangement.",
+        "mn": "Нэг database тогтмол өндөр ачаалалтай, auto-resume саатал зөвшөөрөхгүй. Compute arrangement сонго.",
+        "reason": "Provisioned compute нь байнгын ачаалалд нийцнэ; auto-pause-ийн idle хэмнэлт энд бага."
+      },
+      {
+        "option_en": "Serverless with auto-pause",
+        "option_mn": "Auto-pause-тай serverless",
+        "en": "A supported single database is unused for long periods. It has no auto-pause blockers, accepts resume delay, and prioritizes reducing idle compute charges.",
+        "mn": "Дэмжигддэг single database удаан idle, auto-pause blocker байхгүй, resume delay зөвшөөрнө. Idle compute charge бууруул.",
+        "reason": "Serverless auto-pause idle compute-ийг бууруулна; storage төлбөр үлдэнэ, resume latency trade-off."
+      },
+      {
+        "option_en": "Elastic pool",
+        "option_mn": "Elastic pool",
+        "en": "Fifty databases have short, non-overlapping peaks and should share a managed compute budget while remaining logically separate. Choose the arrangement.",
+        "mn": "50 database богино, давхцахгүй peak-тэй, тусдаа хэвээр shared managed compute budget ашиглана. Arrangement сонго.",
+        "reason": "Elastic pool олон database-ийн compute-ийг хуваалцана; нэг serverless database бусдыг pool хийхгүй."
+      },
+      {
+        "option_en": "Separate dedicated compute per database",
+        "option_mn": "Database бүрийн dedicated compute",
+        "en": "Several critical databases peak simultaneously and require independently reserved compute budgets with no shared-pool contention. Choose the arrangement.",
+        "mn": "Чухал database-ууд зэрэг peak хүрнэ, shared pool contention-гүй тус тусдаа compute budget шаарддаг. Arrangement сонго.",
+        "reason": "Тусдаа compute нь нэг pool-ийн өрсөлдөөнийг арилгана; зардал нэмэгдэх боломжтой."
+      }
+    ]
+  },
+  {
+    "domain": "data",
+    "name": "consistency-guarantees",
+    "source": "cosmos",
+    "trade": "Consistency чангарахад latency/availability trade-off үүснэ. Хамгийн сул боловч шаардлага хангах guarantee сонго; app logic-ийн ажлыг тооц.",
+    "rows": [
+      {
+        "option_en": "Strong",
+        "option_mn": "Strong",
+        "en": "Every read must return the latest committed write globally; accepting weaker guarantees is prohibited. Which Cosmos DB consistency is required?",
+        "mn": "Read бүр globally хамгийн сүүлийн committed write-ийг буцаах ёстой; сул guarantee зөвшөөрөхгүй. Cosmos DB consistency сонго.",
+        "reason": "Strong нь latest committed read guarantee; session зөвхөн session дотор, bounded staleness хоцролт зөвшөөрнө."
+      },
+      {
+        "option_en": "Bounded staleness",
+        "option_mn": "Bounded staleness",
+        "en": "Readers may lag, but only within a configured time or version bound across clients. Choose the weakest listed consistency that guarantees this bound.",
+        "mn": "Уншилт хоцорч болно, гэхдээ бүх client-д тохируулсан time/version bound-оос хэтрэхгүй. Хангах хамгийн сул сонголт вэ?",
+        "reason": "Bounded staleness explicit lag bound өгнө; session/eventual global lag bound өгөхгүй."
+      },
+      {
+        "option_en": "Session",
+        "option_mn": "Session",
+        "en": "A shopping client must read its own writes within its session. Global latest-write visibility is unnecessary. Choose the weakest listed guarantee that meets this.",
+        "mn": "Shopping client өөрийн session дотор бичсэнээ уншина. Global latest write хэрэггүй. Хангах хамгийн сул guarantee сонго.",
+        "reason": "Session read-your-writes өгнө; eventual батлахгүй, strong/bounded илүү шаардлага тавина."
+      },
+      {
+        "option_en": "Eventual",
+        "option_mn": "Eventual",
+        "en": "A public counter tolerates temporary stale and out-of-order reads. Only eventual convergence is required. Choose the least restrictive consistency.",
+        "mn": "Public counter түр stale ба out-of-order read зөвшөөрнө. Эцэстээ ижил болох л шаардлагатай. Хамгийн сул consistency вэ?",
+        "reason": "Eventual convergence өгнө; бусад нь шаардлагагүй илүү баталгаа шаардана."
+      }
+    ]
+  },
+  {
+    "domain": "data",
+    "name": "cosmos-ordering",
+    "source": "cosmos",
+    "trade": "Ordering ба freshness өөр ойлголт. Сул consistency нь read performance-д тустай байж болох ч app stale data-г зохицуулна; HA/latency бүсээс хамаарна.",
+    "rows": [
+      {
+        "option_en": "Consistent prefix",
+        "option_mn": "Consistent prefix",
+        "en": "A feed may be stale but must never expose writes out of order. No read-your-writes or lag bound is needed. Choose the weakest listed level.",
+        "mn": "Feed stale байж болно, write дараалал алдагдахгүй. Read-your-writes/lag bound хэрэггүй. Хангах хамгийн сул түвшин вэ?",
+        "reason": "Consistent prefix нь дарааллыг хадгална; eventual дараалал батлахгүй."
+      },
+      {
+        "option_en": "Session",
+        "option_mn": "Session",
+        "en": "A user updates a profile and must immediately observe that update in the same session; other users may see older data. Choose the weakest listed level.",
+        "mn": "User profile-оо update хийгээд ижил session-д шууд харна; бусад user хуучин data харж болно. Хамгийн сул тохирох түвшин вэ?",
+        "reason": "Session нь тухайн session-ийн read-your-writes; prefix нь өөрийн write харагдахыг батлахгүй."
+      },
+      {
+        "option_en": "Bounded staleness",
+        "option_mn": "Bounded staleness",
+        "en": "All readers must be no more than a configured number of versions behind, although they need not always see the latest version. Which level fits?",
+        "mn": "Бүх reader тохируулсан version тооноос илүү хоцрохгүй, latest version үргэлж шаардлагагүй. Аль түвшин вэ?",
+        "reason": "Bounded staleness нь version lag-ийг хязгаарлана; session/prefix тоон lag bound байхгүй."
+      },
+      {
+        "option_en": "Strong",
+        "option_mn": "Strong",
+        "en": "A business rule rejects any stale read, including reads from unrelated clients. Choose the consistency that enforces the requirement.",
+        "mn": "Бизнесийн дүрэм хамааралгүй client-ийн read ч stale байхыг хориглосон. Ямар consistency шаардлагыг enforce хийх вэ?",
+        "reason": "Strong global latest committed data батална; бусад түвшин тодорхой stale read зөвшөөрнө."
+      }
+    ]
+  },
+  {
+    "domain": "data",
+    "name": "blob-access-tier",
+    "source": "blobtiers",
+    "trade": "Storage price ба retrieval/transaction cost-ийг нийлүүлж тооц; archive retrieval latency өндөр. Tier нь redundancy эсвэл backup биш.",
+    "rows": [
+      {
+        "option_en": "Hot",
+        "option_mn": "Hot",
+        "en": "Customer images are read frequently throughout each day. Immediate online access is required and retrieval charges matter more than minimum storage price.",
+        "mn": "Customer зураг өдөржин байнга уншигдана. Шууд online access хэрэгтэй, хамгийн бага storage price-аас retrieval cost чухал.",
+        "reason": "Hot нь frequent access-д чиглэнэ; хямд хадгалалтын tier retrieval cost нэмэгдүүлж болно."
+      },
+      {
+        "option_en": "Cool",
+        "option_mn": "Cool",
+        "en": "A supported blob dataset is expected to remain for 45 days and is rarely read, but must stay online. Choose a tier aligned with the 30-day minimum rather than 90 or 180 days.",
+        "mn": "Blob dataset 45 хоног хадгалагдаж ховор уншигдана, online байна. 90/180 бус 30 хоногийн minimum-тэй tier сонго.",
+        "reason": "Cool 30-day minimum-тэй; cold/archive богино хадгалалтын early deletion cost үүсгэж болно."
+      },
+      {
+        "option_en": "Cold",
+        "option_mn": "Cold",
+        "en": "Data will remain for 120 days with very infrequent reads. It must be online; choose the online tier designed for a 90-day minimum retention horizon.",
+        "mn": "Data 120 хоног маш ховор уншигдана. Online байх бөгөөд 90 хоногийн minimum retention horizon-той tier сонго.",
+        "reason": "Cold нь online, 90-day minimum; archive offline, cool өөр minimum-тэй."
+      },
+      {
+        "option_en": "Archive",
+        "option_mn": "Archive",
+        "en": "Records will remain untouched for years. Retrieval can take hours and online access is unnecessary. Minimize storage charges among these tiers.",
+        "mn": "Бүртгэлүүд олон жил ашиглагдахгүй. Retrieval хэдэн цаг үргэлжилж болно, online access хэрэггүй. Storage charge багасга.",
+        "reason": "Archive offline storage хямд боловч rehydration delay/charge-тай; online tier шаардлагагүй."
+      }
+    ]
+  },
+  {
+    "domain": "data",
+    "name": "storage-shape",
+    "source": "files",
+    "trade": "Access protocol ба data model эхэлж шийднэ. Managed storage admin ажлыг бууруулна; redundancy/throughput tier-ийг дараа нь тохируулна.",
+    "rows": [
+      {
+        "option_en": "Azure Blob Storage",
+        "option_mn": "Azure Blob Storage",
+        "en": "An application stores large immutable image objects accessed over HTTP, with no shared file-system requirement. Which storage abstraction fits?",
+        "mn": "App HTTP-аар ханддаг том immutable image object хадгална, shared filesystem хэрэггүй. Ямар storage вэ?",
+        "reason": "Blob object storage тохирно; Files filesystem, managed disk VM block storage."
+      },
+      {
+        "option_en": "Azure Files",
+        "option_mn": "Azure Files",
+        "en": "Several application servers need a managed shared SMB file share without running their own file server. Which service fits?",
+        "mn": "Олон application server өөрсдөө file server ажиллуулахгүйгээр managed shared SMB share ашиглана. Ямар service вэ?",
+        "reason": "Azure Files SMB file share өгнө; blob HTTP object interface нь SMB share биш."
+      },
+      {
+        "option_en": "Azure managed disks",
+        "option_mn": "Azure managed disk",
+        "en": "A VM needs persistent block storage for its operating system and data volumes. Which service is designed for this?",
+        "mn": "VM OS ба data volume-д persistent block storage хэрэгтэй. Ямар service зориулагдсан бэ?",
+        "reason": "Managed disk нь VM block device; file share/object storage нь OS disk-ийн шууд орлуулагч биш."
+      },
+      {
+        "option_en": "Azure Queue Storage",
+        "option_mn": "Azure Queue Storage",
+        "en": "Workers need a simple large-scale queue of work items; ordering, transactions and publish-subscribe topics are not required. Choose a storage service.",
+        "mn": "Worker-уудад энгийн их хэмжээний work-item queue хэрэгтэй; ordering, transaction, topic хэрэггүй. Storage service сонго.",
+        "reason": "Queue Storage энгийн messaging abstraction; blob/files/disks queue semantics өгөхгүй."
+      }
+    ]
+  },
+  {
+    "domain": "data",
+    "name": "data-model",
+    "source": "datachoice",
+    "trade": "Data model ба query pattern нь performance/cost-ийг шийднэ. Өөр model руу хүчээр хувиргавал app/admin complexity нэмэгдэнэ; DR тусдаа дизайн.",
+    "rows": [
+      {
+        "option_en": "Relational database",
+        "option_mn": "Relational database",
+        "en": "Orders require multi-table joins, constraints and transactional updates across related records. Which data model is the best fit?",
+        "mn": "Захиалгад multi-table join, constraint, холбоотой record-ийн transaction шаарддаг. Ямар model тохирох вэ?",
+        "reason": "Relational model нь холбоос/constraint/transaction-д нийцнэ; document/graph model нь энэ зорилгод илүү өөрчлөлт шаардана."
+      },
+      {
+        "option_en": "Document database",
+        "option_mn": "Document database",
+        "en": "A product catalog has heterogeneous nested JSON attributes and usually retrieves a complete product by ID. Which model fits naturally?",
+        "mn": "Product catalog ялгаатай nested JSON attribute-тай, ихэнхдээ ID-аар бүтэн product авна. Ямар model вэ?",
+        "reason": "Document model nested varied structure-д нийцнэ; fixed relational schema-д нэмэлт mapping шаардана."
+      },
+      {
+        "option_en": "Graph database",
+        "option_mn": "Graph database",
+        "en": "Fraud detection repeatedly traverses several hops of relationships between accounts and devices. Which model targets this access pattern?",
+        "mn": "Fraud detection account/device хоорондын олон hop холбоосыг байнга traverses хийнэ. Ямар model вэ?",
+        "reason": "Graph relationship traversal-д зориулагдсан; object/key-value нь traversal-ийг app-д шилжүүлнэ."
+      },
+      {
+        "option_en": "Key-value store",
+        "option_mn": "Key-value store",
+        "en": "A service retrieves opaque session payloads by exact key and does not query relationships or nested properties. Which model minimizes unnecessary query machinery?",
+        "mn": "Service opaque session payload-ийг exact key-ээр авна, relationship/nested property query хийхгүй. Аль model илүү тохирох вэ?",
+        "reason": "Key-value exact key lookup-д нийцнэ; relational/graph capability хэрэггүй."
+      }
+    ]
+  },
+  {
+    "domain": "data",
+    "name": "integration-pipeline",
+    "source": "adf",
+    "trade": "Batch latency ба streaming latency ялгаатай. Managed pipeline admin ажлыг багасгана; compute хэмжээ/transfer cost, retry/availability-г төлөвлө.",
+    "rows": [
+      {
+        "option_en": "Azure Data Factory pipeline",
+        "option_mn": "Azure Data Factory pipeline",
+        "en": "Nightly data movement from on-premises SQL to a cloud lake requires scheduling, connectors and orchestration. Choose the main service.",
+        "mn": "Шөнө бүр on-prem SQL-ээс cloud lake руу data зөөж schedule/connector/orchestration хэрэгтэй. Гол service сонго.",
+        "reason": "ADF pipeline нь batch movement/orchestration; streaming ingestion дангаараа workflow биш."
+      },
+      {
+        "option_en": "Self-hosted integration runtime",
+        "option_mn": "Self-hosted integration runtime",
+        "en": "A Data Factory pipeline already exists but must reach a private on-premises source through a host under company control. Which runtime is needed?",
+        "mn": "ADF pipeline байгаа, company-ийн host-оор private on-prem source-д хүрэх ёстой. Ямар runtime вэ?",
+        "reason": "Self-hosted runtime private/on-prem connectivity өгнө; pipeline сонгох төдийд network reachability үүсэхгүй."
+      },
+      {
+        "option_en": "Azure Event Hubs",
+        "option_mn": "Azure Event Hubs",
+        "en": "Millions of telemetry events must be ingested continuously for multiple independent consumers, with replay over retained events. Choose the ingestion service.",
+        "mn": "Сая telemetry event тасралтгүй ingest хийгдэж олон consumer retained event-ийг replay хийнэ. Ingestion service сонго.",
+        "reason": "Event Hubs event stream ingestion/replay-д чиглэнэ; batch pipeline өөр хэрэгцээ."
+      },
+      {
+        "option_en": "Azure Stream Analytics",
+        "option_mn": "Azure Stream Analytics",
+        "en": "Telemetry ingestion is already available. The missing step is continuous SQL-like windowed aggregation over the stream. Which service fits?",
+        "mn": "Telemetry ingestion байгаа. Stream дээр тасралтгүй SQL-like windowed aggregation дутуу. Ямар service вэ?",
+        "reason": "Stream Analytics нь streaming query/window processing; Event Hubs өөрөө aggregation engine биш."
+      }
+    ]
+  },
+  {
+    "domain": "data",
+    "name": "partitioning",
+    "source": "partition",
+    "trade": "Partition design throughput ба query cost-д нөлөөлнө. Hot partition нь capacity байсаар байхад bottleneck болно; redistribution admin ажилтай.",
+    "rows": [
+      {
+        "option_en": "High-cardinality evenly distributed key",
+        "option_mn": "Жигд тархалттай олон утгат key",
+        "en": "A horizontally partitioned store is throttled because most writes share one key. The redesign must spread traffic across many independent keys. What property is essential?",
+        "mn": "Partitioned store-ийн write ихэнх нь нэг key-д очиж throttle болно. Traffic олон key-д тараах redesign-д ямар property чухал вэ?",
+        "reason": "Олон утгатай бөгөөд traffic жигд тархсан key нь hotspot бууруулна; cardinality дангаараа хангалтгүй."
+      },
+      {
+        "option_en": "Co-locate related transactional records",
+        "option_mn": "Transaction-ийн record-уудыг хамт байрлуулах",
+        "en": "A datastore supports transactions only inside one logical partition. Related records must be updated atomically. What should guide the partition design?",
+        "mn": "Datastore зөвхөн нэг logical partition дотор transaction дэмжинэ. Related record atomic update шаарддаг. Partition-ийг юунд тулгуурлах вэ?",
+        "reason": "Atomic boundary нь co-location шаардана; дурын тархалт transaction-ийг partition дамнуулна."
+      },
+      {
+        "option_en": "Align key with common query filters",
+        "option_mn": "Key-г түгээмэл query filter-тэй нийцүүлэх",
+        "en": "Most queries filter by tenant, but current partitioning forces fan-out over every tenant. Each tenant's load is within limits. What redesign reduces query fan-out?",
+        "mn": "Ихэнх query tenant-аар filter хийдэг ч partitioning бүх tenant руу fan-out үүсгэнэ. Tenant бүр limit дотор. Ямар redesign вэ?",
+        "reason": "Tenant filter-тэй нийцсэн key нь relevant partition-д чиглүүлэхэд тусална; random key query fan-out үлдээнэ."
+      },
+      {
+        "option_en": "Separate oversized/hot tenants",
+        "option_mn": "Хэт том эсвэл hot tenant-ийг тусгаарлах",
+        "en": "One tenant dominates throughput despite a tenant-based key. Simply adding more low-traffic tenants will not remove the bottleneck. What should be reconsidered?",
+        "mn": "Tenant key ашигласан ч нэг tenant throughput-ийг эзэлнэ. Жижиг tenant нэмэх нь bottleneck арилгахгүй. Юуг өөрчлөх вэ?",
+        "reason": "Hot tenant-ийн partitioning/isolation-ийг дахин төлөвлө; tenant key-г сохроор хадгалах нь hotspot үлдээнэ."
+      }
+    ]
+  },
+  {
+    "domain": "data",
+    "name": "data-retention",
+    "source": "blobprotect",
+    "trade": "Soft delete/versioning storage cost нэмдэг; immutability compliance хамгаалалт. Redundancy availability-г сайжруулна, logical алдааны backup биш.",
+    "rows": [
+      {
+        "option_en": "Blob soft delete",
+        "option_mn": "Blob soft delete",
+        "en": "Users occasionally delete blobs accidentally. Recovery within a configured retention window is required, but write-once compliance is not. Choose the targeted protection.",
+        "mn": "User blob санамсаргүй устгадаг. Retention window дотор сэргээх хэрэгтэй, WORM compliance хэрэггүй. Protection сонго.",
+        "reason": "Soft delete нь устгасан blob-ийг retention дотор сэргээхэд зориулагдсан."
+      },
+      {
+        "option_en": "Blob versioning",
+        "option_mn": "Blob versioning",
+        "en": "Applications overwrite blob content and must recover earlier versions. Choose a protection that preserves previous versions after updates.",
+        "mn": "App blob overwrite хийдэг, update-ээс өмнөх хувилбарыг сэргээх ёстой. Ямар protection вэ?",
+        "reason": "Versioning update-ийн өмнөх хувилбаруудыг хадгална; redundancy logical overwrite-ийг зүгээр replication хийнэ."
+      },
+      {
+        "option_en": "Immutable blob storage",
+        "option_mn": "Immutable blob storage",
+        "en": "Regulated records must not be modified or deleted during a mandated retention period, even by normal writers. Which protection fits?",
+        "mn": "Regulated record-ийг тогтоосон хугацаанд writer ч modify/delete хийхгүй. Ямар protection вэ?",
+        "reason": "Immutability WORM retention/legal hold зорилгод нийцнэ; soft delete устгахыг хориглохгүй."
+      },
+      {
+        "option_en": "Geo-redundancy",
+        "option_mn": "Geo-redundancy",
+        "en": "The requirement is survival of a regional storage outage rather than recovery from deletion or overwrite. Which capability addresses that failure domain?",
+        "mn": "Шаардлага нь delete/overwrite сэргээх бус region storage outage-ийг даван туулах. Ямар capability вэ?",
+        "reason": "Geo redundancy өөр region-д copy үүсгэнэ; soft delete/versioning дангаараа region isolation биш."
+      }
+    ]
+  },
+  {
+    "domain": "data",
+    "name": "cache-decisions",
+    "source": "cache",
+    "trade": "Cache latency бууруулдаг ч consistency/invalidation ба memory cost нэмнэ. Cache failure үед origin overload-ийг тооц; primary durability-г cache-аар орлуулахгүй.",
+    "rows": [
+      {
+        "option_en": "Cache-aside",
+        "option_mn": "Cache-aside",
+        "en": "A read-heavy catalog tolerates brief staleness. Populate cache only when requested, reading the database on a miss. Which pattern fits?",
+        "mn": "Read-heavy catalog түр stale байж болно. Request ирэхэд cache дүүргэж, miss үед database уншина. Ямар pattern вэ?",
+        "reason": "Cache-aside нь miss үед origin уншиж cache дүүргэнэ; урьдчилан бүгдийг load хийх албагүй."
+      },
+      {
+        "option_en": "Read directly from the authoritative store",
+        "option_mn": "Authoritative store-оос шууд унших",
+        "en": "Authorization decisions must reflect immediate permission revocation; the proposed cache can remain stale and has no reliable invalidation. What should this path do?",
+        "mn": "Permission revoke даруй нөлөөлөх ёстой, cache stale байж болох ба reliable invalidation байхгүй. Энэ path яах вэ?",
+        "reason": "Security decision-д stale cache тохирохгүй; authoritative store унших нь өгсөн constraint-ийг хангана."
+      },
+      {
+        "option_en": "Invalidate after updating the data store",
+        "option_mn": "Store update-ийн дараа cache invalidate хийх",
+        "en": "A cache-aside application updates a record. To reduce the risk of repopulating cache with old data, which write order should it use?",
+        "mn": "Cache-aside app record update хийнэ. Cache хуучин data-гаар дахин дүүрэх эрсдэлийг бууруулах write order юу вэ?",
+        "reason": "Store update дараа invalidate хийнэ; эхэлж invalidate хийвэл concurrent read хуучныг дүүргэж болно."
+      },
+      {
+        "option_en": "Shared distributed cache",
+        "option_mn": "Shared distributed cache",
+        "en": "Several app instances maintain divergent private cached values. A shared cache is acceptable and should reduce independent copies. Which architecture fits?",
+        "mn": "Олон app instance-ийн private cache өөр өөр утгатай. Shared cache зөвшөөрсөн, тус тусдаа copy-ийг багасгана. Ямар architecture вэ?",
+        "reason": "Shared cache нь instance тус бүрийн тусгаар copy-г бууруулна; consistency бүрэн батлахгүй, invalidation хэрэгтэй."
+      }
+    ]
+  },
+  {
+    "domain": "continuity",
+    "name": "storage-failure-domain",
+    "source": "redundancy",
+    "trade": "Өргөн failure domain хамгаалалт cost нэмнэ. Cross-region replication asynchronous тул RPO тэг гэж амлахгүй; failover ажил ба app retry-г төлөвлө.",
+    "rows": [
+      {
+        "option_en": "LRS",
+        "option_mn": "LRS",
+        "en": "A disposable staging dataset can be recreated after a datacenter outage. Only local hardware redundancy is required; minimize redundancy cost.",
+        "mn": "Staging dataset datacenter outage дараа дахин үүсгэж болно. Зөвхөн local hardware redundancy хэрэгтэй, cost багасга.",
+        "reason": "LRS нэг datacenter-ийн copy; zone/region хамгаалалт нэмэлт бөгөөд энд шаардлагагүй."
+      },
+      {
+        "option_en": "ZRS",
+        "option_mn": "ZRS",
+        "en": "Data must remain in one region while surviving a zone outage. Cross-region replication is prohibited. Choose the redundancy model.",
+        "mn": "Data нэг region-д үлдэж zone outage тэсвэрлэнэ. Cross-region replication хориотой. Redundancy сонго.",
+        "reason": "ZRS нэг region-ийн олон zone-д synchronous copy; GRS/GZRS region boundary давна."
+      },
+      {
+        "option_en": "GRS",
+        "option_mn": "GRS",
+        "en": "A secondary-region copy is required, but primary-region zone redundancy is not. The application accepts asynchronous replication and plans account failover. Choose the model.",
+        "mn": "Secondary region copy шаардлагатай, primary zone redundancy хэрэггүй. Async replication ба account failover зөвшөөрсөн. Model сонго.",
+        "reason": "GRS primary LRS ба secondary region copy; ZRS secondary region copy өгөхгүй."
+      },
+      {
+        "option_en": "GZRS",
+        "option_mn": "GZRS",
+        "en": "The design requires primary-region zone redundancy and an asynchronous secondary-region copy. Choose the model that combines both.",
+        "mn": "Primary region-ийн zone redundancy болон async secondary region copy хоёул хэрэгтэй. Хосолсон model сонго.",
+        "reason": "GZRS primary ZRS-ийг geo replication-тэй хослуулна; GRS primary zone redundancy өгөхгүй."
+      }
+    ]
+  },
+  {
+    "domain": "continuity",
+    "name": "secondary-read",
+    "source": "redundancy",
+    "trade": "Read-access geo redundancy secondary read өгөх ч write failover-ийг автоматаар шийдэхгүй. Secondary stale байж болно; app routing/admin cost нэмнэ.",
+    "rows": [
+      {
+        "option_en": "RA-GRS",
+        "option_mn": "RA-GRS",
+        "en": "The app must read a possibly stale secondary-region endpoint before failover. Primary zone redundancy is not required. Choose the model.",
+        "mn": "App failover-оос өмнө stale байж болох secondary region endpoint уншина. Primary zone redundancy хэрэггүй. Model сонго.",
+        "reason": "RA-GRS secondary read endpoint өгнө; GRS дангаар failover-оос өмнө read access байхгүй."
+      },
+      {
+        "option_en": "RA-GZRS",
+        "option_mn": "RA-GZRS",
+        "en": "The app needs primary zone resilience and readable geo-secondary data without waiting for account failover. Choose the model.",
+        "mn": "App primary zone resilience ба account failover хүлээхгүй geo-secondary read шаарддаг. Model сонго.",
+        "reason": "RA-GZRS zone ба geo copy дээр secondary read access нэмнэ."
+      },
+      {
+        "option_en": "GRS without read access",
+        "option_mn": "Read access-гүй GRS",
+        "en": "The app never reads the secondary before failover, primary-zone redundancy is unnecessary, and a geo-copy is required. Avoid paying for unneeded read access.",
+        "mn": "App failover-оос өмнө secondary уншихгүй, primary zone redundancy хэрэггүй, geo-copy шаарддаг. Хэрэггүй read access бүү нэм.",
+        "reason": "GRS шаардлагатай geo-copy өгнө; RA нь ашиглахгүй нэмэлт capability."
+      },
+      {
+        "option_en": "ZRS",
+        "option_mn": "ZRS",
+        "en": "Data residency permits only the primary region, and the app must withstand a zone outage. Secondary-region reads are not allowed. Choose the model.",
+        "mn": "Data residency зөвхөн primary region зөвшөөрнө, zone outage тэсвэрлэнэ. Secondary region read хориотой. Model сонго.",
+        "reason": "ZRS region дотроо үлдэнэ; geo сонголтууд residency constraint зөрчинө."
+      }
+    ]
+  },
+  {
+    "domain": "continuity",
+    "name": "recovery-objectives",
+    "source": "asr",
+    "trade": "RTO/RPO нь шаардлага болохоос үйлчилгээний нэр биш. Бага target их replication/standby cost ба testing ажил шаарддаг; latency-г тусдаа хэмж.",
+    "rows": [
+      {
+        "option_en": "RPO",
+        "option_mn": "RPO",
+        "en": "A business can lose at most five minutes of committed data after a disaster. Which objective expresses this tolerance?",
+        "mn": "Disaster үед хамгийн ихдээ таван минутын committed data алдаж болно. Энэ ямар objective вэ?",
+        "reason": "RPO data loss window; RTO нь service сэргээх хугацаа."
+      },
+      {
+        "option_en": "RTO",
+        "option_mn": "RTO",
+        "en": "A customer-facing service must be usable within thirty minutes after an outage is declared. Which objective is being specified?",
+        "mn": "Outage зарласнаас 30 минутын дотор service usable болно. Ямар objective вэ?",
+        "reason": "RTO restoration duration; replication lag эсвэл retention хугацаа биш."
+      },
+      {
+        "option_en": "Backup retention",
+        "option_mn": "Backup хадгалах хугацаа",
+        "en": "Auditors must be able to restore a monthly historical copy from seven years ago. Which requirement should be specified?",
+        "mn": "Аудитор долоон жилийн өмнөх сарын copy-г сэргээх ёстой. Ямар шаардлага вэ?",
+        "reason": "Retention түүхэн copy-г хэр удаан хадгалахыг заана; RPO шинэ data loss тухай."
+      },
+      {
+        "option_en": "Availability target",
+        "option_mn": "Availability зорилт",
+        "en": "A service agreement limits total unplanned unavailability over a month, rather than data loss or restore history. Which target is relevant?",
+        "mn": "Гэрээ сард нийт unplanned unavailability-г хязгаарлана, data loss/restore history бус. Ямар target вэ?",
+        "reason": "Availability target нийт uptime-д хамаарна; RTO нэг recovery event-ийн duration."
+      }
+    ]
+  },
+  {
+    "domain": "continuity",
+    "name": "backup-versus-dr",
+    "source": "backup",
+    "trade": "Backup retention ба DR failover хоёр өөр хамгаалалт. Давхар хэрэгжүүлэхэд cost нэмнэ; сэргээх туршилтгүйгээр RTO хангана гэж үзэхгүй.",
+    "rows": [
+      {
+        "option_en": "Azure Backup",
+        "option_mn": "Azure Backup",
+        "en": "A VM's files were corrupted last week. Restore a retained earlier copy; moving the current corrupted workload to another region will not help. Which service fits?",
+        "mn": "VM file өнгөрсөн долоо хоногт эвдэрсэн. Retained earlier copy сэргээх хэрэгтэй; одоогийн эвдэрсэн workload-ийг өөр region руу шилжүүлэх тусгүй. Service сонго.",
+        "reason": "Backup түүхэн restore point өгнө; replication corruption-ийг дамжуулж болно."
+      },
+      {
+        "option_en": "Azure Site Recovery",
+        "option_mn": "Azure Site Recovery",
+        "en": "VM workloads must replicate to another region with orchestrated failover and recovery plans. Long-term historical retention is a separate solution. Choose the service.",
+        "mn": "VM workload өөр region руу replicate, orchestrated failover/recovery plan хэрэгтэй. Long-term retention тусдаа. Service сонго.",
+        "reason": "Site Recovery VM disaster recovery/failover-д чиглэнэ; Backup дангаараа replicated runtime биш."
+      },
+      {
+        "option_en": "Both backup and replication",
+        "option_mn": "Backup ба replication хоёул",
+        "en": "A business needs regional failover and recovery from corruption discovered months later. Which protection combination covers both failure types?",
+        "mn": "Бизнес region failover болон хэдэн сарын дараа илэрсэн corruption-оос сэргээх шаардлагатай. Ямар хослол вэ?",
+        "reason": "Replication regional recovery, retained backup historical recovery-г хамарна; нэг нь нөгөөг орлохгүй."
+      },
+      {
+        "option_en": "Availability zones",
+        "option_mn": "Availability zone-ууд",
+        "en": "A stateless service must remain available when one datacenter zone fails within its region. Region disaster recovery and historical data are already covered. What deployment change fits?",
+        "mn": "Stateless service нэг zone failure үед available байна. Region DR ба historical data хамгаалагдсан. Ямар deployment өөрчлөх вэ?",
+        "reason": "Zone distribution local datacenter failure-г тусгаарлана; backup нь live availability биш."
+      }
+    ]
+  },
+  {
+    "domain": "continuity",
+    "name": "sql-recovery",
+    "source": "sqlha",
+    "trade": "HA нь local failure, geo replication regional failure, backup logical failure-д чиглэнэ. Cost ба failover endpoint/admin effort-ийг RPO/RTO-той хамт үнэл.",
+    "rows": [
+      {
+        "option_en": "Point-in-time restore",
+        "option_mn": "Point-in-time restore",
+        "en": "An accidental SQL DELETE committed two hours ago; the database is otherwise healthy. Recover to a time before the mistake within retention.",
+        "mn": "SQL DELETE хоёр цагийн өмнө санамсаргүй commit болсон, database healthy. Retention дотор алдааны өмнөх цагт сэргээ.",
+        "reason": "PITR historical backup/log ашиглана; live replica алдааг мөн авсан байж болно."
+      },
+      {
+        "option_en": "Zone-redundant deployment",
+        "option_mn": "Zone-redundant deployment",
+        "en": "A supported Azure SQL tier must tolerate a primary-region zone failure without relying on another region. What should be enabled?",
+        "mn": "Дэмжигддэг SQL tier өөр region ашиглахгүйгээр primary region zone failure тэсвэрлэнэ. Юуг enable хийх вэ?",
+        "reason": "Zone redundancy local zone failure хамгаална; backup restore нь active HA-ийн оронд биш."
+      },
+      {
+        "option_en": "Failover group",
+        "option_mn": "Failover group",
+        "en": "A supported Azure SQL deployment needs managed geo-failover and stable listener endpoints for applications. Which capability fits?",
+        "mn": "Дэмжигддэг SQL deployment managed geo-failover ба app-ийн stable listener endpoint шаарддаг. Аль capability вэ?",
+        "reason": "Failover group нь geo failover/connection endpoint удирдлагыг багасгана."
+      },
+      {
+        "option_en": "Long-term retention",
+        "option_mn": "Long-term retention",
+        "en": "Compliance requires selected database backups to be retained for years, beyond ordinary point-in-time restore windows. What should be configured?",
+        "mn": "Compliance selected database backup-ийг энгийн PITR window-оос урт олон жил хадгална. Юуг тохируулах вэ?",
+        "reason": "LTR урт хугацааны backup retention; geo replica түүхэн жил бүрийн copy биш."
+      }
+    ]
+  },
+  {
+    "domain": "continuity",
+    "name": "dr-validation",
+    "source": "asr",
+    "trade": "DR plan-ийн бодит хугацааг хэмж. Test failover нь validation ажил/compute cost-тай; replication alone app dependency ба DNS-г батлахгүй.",
+    "rows": [
+      {
+        "option_en": "Test failover in an isolated network",
+        "option_mn": "Тусгаар network дахь test failover",
+        "en": "A team must validate recovery without interrupting production or exposing duplicate live services. Which exercise should it perform?",
+        "mn": "Production таслахгүй, duplicate live service гаргахгүй recovery шалгана. Ямар exercise вэ?",
+        "reason": "Isolated test failover recovery-г production-оос салгаж шалгана; unplanned failover зориуд outage үүсгэнэ."
+      },
+      {
+        "option_en": "Planned failover",
+        "option_mn": "Planned failover",
+        "en": "A controlled move is scheduled while the source is healthy. Synchronization and coordinated shutdown are possible. Which failover type fits?",
+        "mn": "Source healthy үед төлөвлөсөн шилжилт хийнэ, sync ба coordinated shutdown боломжтой. Ямар failover вэ?",
+        "reason": "Planned failover control-той sync ашиглана; disaster-ийн unplanned нөхцөл биш."
+      },
+      {
+        "option_en": "Unplanned failover",
+        "option_mn": "Unplanned failover",
+        "en": "The source region is unavailable and cannot coordinate shutdown. Recovery must use available replicated state. Which operation fits?",
+        "mn": "Source region unavailable, shutdown coordinate хийхгүй. Available replicated state-аар сэргээнэ. Ямар operation вэ?",
+        "reason": "Unplanned failover source-гүй recovery; data loss боломжийг RPO-оор үнэлнэ."
+      },
+      {
+        "option_en": "Recovery plan with ordered groups",
+        "option_mn": "Дараалалтай recovery plan",
+        "en": "Database, middleware and web VMs replicate correctly, but failover must start dependencies in a defined sequence with scripts. What is missing?",
+        "mn": "Database/middleware/web VM replicate болсон ч dependency order ба script хэрэгтэй. Юу дутуу вэ?",
+        "reason": "Recovery plan startup orchestration өгнө; replication setting дангаараа app order биш."
+      }
+    ]
+  },
+  {
+    "domain": "continuity",
+    "name": "logical-data-protection",
+    "source": "blobprotect",
+    "trade": "Recovery capability бүр өөр failure-г хамарна. Version/soft-delete storage cost нэмнэ; WORM нь prevention, geo copy availability хамгаалалт.",
+    "rows": [
+      {
+        "option_en": "Versioning",
+        "option_mn": "Versioning",
+        "en": "A storage application repeatedly overwrites valid content with incorrect values. Restore prior object versions without treating every update as prohibited.",
+        "mn": "Storage app зөв content-ийг буруу утгаар overwrite хийдэг. Update бүрийг хориглохгүйгээр prior version сэргээ.",
+        "reason": "Versioning нь update history; immutability update-г хориглоно, redundancy overwrite-ийг replicate хийнэ."
+      },
+      {
+        "option_en": "Soft delete",
+        "option_mn": "Soft delete",
+        "en": "A user deletes an object and notices immediately. A configured recovery window must allow undelete. Which feature targets this event?",
+        "mn": "User object устгаад шууд анзаарсан. Тохируулсан window-д undelete хийх ёстой. Аль feature вэ?",
+        "reason": "Soft delete устгасан object recovery-д чиглэнэ; versioning/replication-ийг бүх delete protection гэж үзэхгүй."
+      },
+      {
+        "option_en": "Immutability policy",
+        "option_mn": "Immutability policy",
+        "en": "A regulatory archive must reject modification and deletion until its retention obligation ends. Recovery after deletion alone is insufficient.",
+        "mn": "Regulatory archive retention дуустал modify/delete request-ийг хориглоно. Устгасны дараах recovery хүрэхгүй.",
+        "reason": "Immutability prevention өгнө; soft delete нь delete request-ийг заавал хориглохгүй."
+      },
+      {
+        "option_en": "Geo-replication",
+        "option_mn": "Geo-replication",
+        "en": "The primary region is inaccessible, but there is no logical corruption. Recovery requires data outside the affected region. Which protection addresses the location risk?",
+        "mn": "Primary region unavailable, logical corruption байхгүй. Өртсөн region-оос гаднах data хэрэгтэй. Ямар protection вэ?",
+        "reason": "Geo replication geographic failure тусгаарлана; local version history өөр region copy биш."
+      }
+    ]
+  },
+  {
+    "domain": "continuity",
+    "name": "redundancy-limits",
+    "source": "redundancy",
+    "trade": "Redundancy-ийн failure domain ба replication lag-ийг бизнесийн requirement-тай тулга. Нэмэлт copy cost-тай; app endpoint failover ба retry ажил тусдаа.",
+    "rows": [
+      {
+        "option_en": "Add zone redundancy",
+        "option_mn": "Zone redundancy нэмэх",
+        "en": "An LRS account must now survive a zone-wide outage while staying in the same region. Which change directly addresses the new failure domain?",
+        "mn": "LRS account нэг region-д үлдээд zone-wide outage тэсвэрлэх шинэ шаардлагатай. Ямар өөрчлөлт вэ?",
+        "reason": "Zone redundancy нь datacenter failure domain-ийг тэлнэ; local copy тоо дангаар хангахгүй."
+      },
+      {
+        "option_en": "Add geo-redundancy",
+        "option_mn": "Geo-redundancy нэмэх",
+        "en": "A ZRS account must now retain a copy after an entire region is lost. Cross-region replication is allowed. Which capability must be added?",
+        "mn": "ZRS account бүтэн region алдагдсаны дараа copy үлдээх ёстой. Cross-region зөвшөөрсөн. Юу нэмэх вэ?",
+        "reason": "Geo redundancy region boundary давна; ZRS дангаараа region failure хамгаалахгүй."
+      },
+      {
+        "option_en": "Add historical backup/version protection",
+        "option_mn": "Historical backup/version protection нэмэх",
+        "en": "Geo-replication is enabled, but administrators fear valid credentials overwriting data in both regions. What additional protection addresses this?",
+        "mn": "Geo replication байгаа ч valid credential хоёр region-ийн data-г overwrite хийхээс айж байна. Ямар нэмэлт хамгаалалт вэ?",
+        "reason": "Historical protection logical overwrite-оос сэргээнэ; synchronous/async replication дангаараа хуучин утга хадгалахгүй."
+      },
+      {
+        "option_en": "Revisit the zero-data-loss requirement",
+        "option_mn": "Zero-data-loss шаардлагыг дахин үнэлэх",
+        "en": "A design claims asynchronous geo-replication guarantees zero loss of all acknowledged recent writes after regional failure. What review action is required?",
+        "mn": "Design async geo replication region failure үед бүх acknowledged recent write zero loss гэжээ. Review ямар action хийх вэ?",
+        "reason": "Async replication lag байдаг тул zero-loss claim үндэслэлгүй; RPO/design-ийг дахин үнэлнэ."
+      }
+    ]
+  },
+  {
+    "domain": "continuity",
+    "name": "availability-design",
+    "source": "sqlha",
+    "trade": "Replica/standby cost ба failover complexity ихэснэ. HA ба DR нь latency, failure domain, RPO/RTO-гийн шаардлагыг тус тус хангах ёстой.",
+    "rows": [
+      {
+        "option_en": "Local high availability",
+        "option_mn": "Local high availability",
+        "en": "A service must recover automatically from host failure without changing regions. Regional disaster recovery is already handled. Which layer addresses this?",
+        "mn": "Host failure-оос region солихгүй автоматаар сэргээнэ. Region DR тусдаа бий. Ямар layer вэ?",
+        "reason": "Local HA host failure-г хамарна; geo recovery илүү том failure domain."
+      },
+      {
+        "option_en": "Regional disaster recovery",
+        "option_mn": "Regional disaster recovery",
+        "en": "A design already survives individual hosts and zones but must continue after an entire region fails. Which capability is still missing?",
+        "mn": "Host/zone failure тэсвэрлэдэг боловч бүтэн region failure дараа үргэлжлэх ёстой. Юу дутуу вэ?",
+        "reason": "Regional DR нь region boundary давсан recovery; local HA хүрэлцэхгүй."
+      },
+      {
+        "option_en": "Historical restore",
+        "option_mn": "Historical restore",
+        "en": "All replicas are healthy but contain a bad update replicated from the primary. The business needs the state before that update. Which recovery approach fits?",
+        "mn": "Бүх replica healthy ч primary-ийн буруу update бүгдэд очсон. Update-ээс өмнөх state хэрэгтэй. Ямар recovery вэ?",
+        "reason": "Historical restore нь logical mistake-ээс өмнөх state; replica failover буруу data-г хэвээр үлдээнэ."
+      },
+      {
+        "option_en": "Application retry and reconnection",
+        "option_mn": "Application retry ба reconnection",
+        "en": "The database fails over successfully but clients retain broken connections and report errors. Which application capability must be added?",
+        "mn": "Database failover амжилттай ч client broken connection бариад алдана. App-д ямар capability хэрэгтэй вэ?",
+        "reason": "Retry/reconnection нь transient failover алдааг зохицуулна; replica нэмэх нь client connection logic засахгүй."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "traffic-layer",
+    "source": "routing",
+    "trade": "Global/regional ба L4/L7-ийг эхэлж ялга. Proxy feature cost/latency нэмнэ; DNS failover нь cache TTL ба client behavior-оос хамаарна.",
+    "rows": [
+      {
+        "option_en": "Azure Front Door",
+        "option_mn": "Azure Front Door",
+        "en": "A public HTTP application spans regions and requires global Layer 7 routing, edge TLS termination and WAF. Which entry service fits?",
+        "mn": "Public HTTP app олон region-той, global L7 routing, edge TLS termination, WAF шаарддаг. Entry service сонго.",
+        "reason": "Front Door global HTTP reverse proxy; Traffic Manager DNS тул TLS/WAF proxy биш."
+      },
+      {
+        "option_en": "Application Gateway",
+        "option_mn": "Application Gateway",
+        "en": "A regional web workload needs private frontend access, URL path routing and WAF within its regional network design. Which service fits?",
+        "mn": "Regional web workload private frontend, URL path routing, WAF хэрэгтэй. Ямар service вэ?",
+        "reason": "Application Gateway regional L7 proxy/private frontend; Front Door global public edge өөр загвар."
+      },
+      {
+        "option_en": "Azure Load Balancer",
+        "option_mn": "Azure Load Balancer",
+        "en": "A regional TCP service needs Layer 4 distribution without HTTP inspection or TLS termination. Which service fits?",
+        "mn": "Regional TCP service HTTP inspection/TLS termination-гүй L4 distribution хүснэ. Ямар service вэ?",
+        "reason": "Load Balancer TCP/UDP L4; HTTP proxy нь arbitrary TCP-ийн орлуулагч биш."
+      },
+      {
+        "option_en": "Traffic Manager",
+        "option_mn": "Traffic Manager",
+        "en": "An existing cross-region service needs DNS-based endpoint selection; connections must go directly to endpoints without a new reverse proxy. Which service fits?",
+        "mn": "Cross-region service DNS-based endpoint selection хүснэ, connection шинэ proxy-гүй endpoint руу шууд очно. Ямар service вэ?",
+        "reason": "Traffic Manager DNS selection; Front Door connection proxy хийдэг тул constraint өөр."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "private-connectivity",
+    "source": "private",
+    "trade": "Private access нь authentication-ийг орлохгүй. DNS/network policy admin ажил нэмэгдэнэ; private endpoint hourly/data cost ба DR endpoint-ийг тооц.",
+    "rows": [
+      {
+        "option_en": "Private Endpoint",
+        "option_mn": "Private Endpoint",
+        "en": "A PaaS service must be reached using a private IP in a VNet, and public access will be disabled. Which connectivity primitive fits?",
+        "mn": "PaaS service VNet-ийн private IP-аар хүрдэг, public access disabled болно. Ямар primitive вэ?",
+        "reason": "Private Endpoint service-д private IP өгнө; service endpoint нь public endpoint-ийг private IP болгохгүй."
+      },
+      {
+        "option_en": "Service endpoint",
+        "option_mn": "Service endpoint",
+        "en": "An Azure subnet must be authorized to a supported PaaS public endpoint via its VNet identity; no private IP endpoint is required. Which option fits?",
+        "mn": "Azure subnet supported PaaS public endpoint-д VNet identity-аар authorized болно; private IP endpoint хэрэггүй. Аль option вэ?",
+        "reason": "Service endpoint subnet identity ашиглана; private endpoint нь өөр private IP загвар."
+      },
+      {
+        "option_en": "VNet peering",
+        "option_mn": "VNet peering",
+        "en": "Two Azure VNets need direct private IP connectivity to each other's VM networks. PaaS endpoint access is not the task. What fits?",
+        "mn": "Хоёр VNet-ийн VM network хооронд direct private IP connectivity хэрэгтэй. PaaS endpoint биш. Юу тохирох вэ?",
+        "reason": "Peering VNet хооронд холбодог; private endpoint нь service endpoint mapping."
+      },
+      {
+        "option_en": "VPN Gateway",
+        "option_mn": "VPN Gateway",
+        "en": "An on-premises network must access Azure private addresses over an encrypted internet tunnel. Which component fits?",
+        "mn": "On-prem network Azure private address руу encrypted internet tunnel-аар орно. Ямар component вэ?",
+        "reason": "VPN Gateway tunnel connectivity өгнө; peering on-prem site-тэй шууд VPN үүсгэхгүй."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "hybrid-link",
+    "source": "express",
+    "trade": "Dedicated circuit нь cost/lead time нэмнэ; VPN internet variability-тай. Private connectivity дангаараа encryption guarantee биш; HA-д redundant path төлөвлө.",
+    "rows": [
+      {
+        "option_en": "ExpressRoute",
+        "option_mn": "ExpressRoute",
+        "en": "A datacenter needs provider-based private connectivity to Microsoft networks rather than internet-based VPN transport. Which service fits?",
+        "mn": "Datacenter internet VPN transport бус provider-based private connectivity хүснэ. Ямар service вэ?",
+        "reason": "ExpressRoute private circuit; VPN public internet tunnel тул transport constraint зөрчинө."
+      },
+      {
+        "option_en": "Site-to-site VPN",
+        "option_mn": "Site-to-site VPN",
+        "en": "A small branch has compatible VPN equipment and needs an encrypted tunnel over its existing internet connection. Avoid a dedicated carrier circuit.",
+        "mn": "Жижиг салбар VPN device-тай, existing internet дээр encrypted tunnel хэрэгтэй. Dedicated carrier circuit авахгүй.",
+        "reason": "S2S VPN site network холбодог; ExpressRoute dedicated connection шаарддаг."
+      },
+      {
+        "option_en": "Point-to-site VPN",
+        "option_mn": "Point-to-site VPN",
+        "en": "Individual remote engineers need encrypted access from their laptops to a VNet without a branch VPN device. Which connection type fits?",
+        "mn": "Remote инженерүүд laptop-оос VNet руу encrypted access авна, branch VPN device байхгүй. Ямар төрөл вэ?",
+        "reason": "P2S client laptop-д зориулагдсан; S2S site gateway шаарддаг."
+      },
+      {
+        "option_en": "VNet peering",
+        "option_mn": "VNet peering",
+        "en": "Two Azure VNets need private connectivity without an on-premises network or VPN tunnel. Which mechanism is simplest among these?",
+        "mn": "Хоёр Azure VNet private холбогдоно, on-prem/tunnel шаардлагагүй. Эдгээрээс аль нь тохирох вэ?",
+        "reason": "Peering Azure VNet network-уудыг холбоно; carrier circuit/VPN нь шаардлагагүй нэмэлт бүрэлдэхүүн."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "network-topology",
+    "source": "network",
+    "trade": "Hub shared service cost-ийг хуваалцана, routing/inspection bottleneck үүсгэж болно. Peering transitivity-г бүү таамагла; redundancy ба route testing хэрэгтэй.",
+    "rows": [
+      {
+        "option_en": "Hub-spoke topology",
+        "option_mn": "Hub-spoke topology",
+        "en": "Several isolated workload networks need shared connectivity and central inspection services. Which topology organizes these responsibilities?",
+        "mn": "Олон isolated workload network shared connectivity ба central inspection ашиглана. Ямар topology вэ?",
+        "reason": "Hub shared network service, spoke workload isolation-д зориулагдсан."
+      },
+      {
+        "option_en": "Explicit spoke-to-spoke connectivity",
+        "option_mn": "Spoke хооронд explicit connectivity",
+        "en": "Two spokes are each peered to the hub. Designers assume that this automatically provides transitive connectivity between spokes. What is required?",
+        "mn": "Хоёр spoke тус бүр hub-тэй peered. Энэ нь spoke хооронд automatic transitive connection гэж үзжээ. Юу хэрэгтэй вэ?",
+        "reason": "Peering transitive биш; direct peering эсвэл routing/forwarding-ийн explicit design шаардлагатай."
+      },
+      {
+        "option_en": "User-defined routes with inspection path",
+        "option_mn": "Inspection path бүхий UDR",
+        "en": "Spoke egress must traverse a central inspection appliance rather than its default outbound route. Which routing configuration is needed?",
+        "mn": "Spoke egress default outbound бус central inspection appliance-аар дамжина. Ямар routing хэрэгтэй вэ?",
+        "reason": "UDR next hop-оор inspection path чиглүүлнэ; hub байгаа төдийд traffic автоматаар дамжихгүй."
+      },
+      {
+        "option_en": "Gateway transit",
+        "option_mn": "Gateway transit",
+        "en": "Spokes should reuse the hub's supported VPN gateway instead of deploying a gateway in each spoke. Which peering feature should be designed?",
+        "mn": "Spoke бүр gateway үүсгэхгүйгээр hub-ийн supported VPN gateway-г ашиглана. Ямар feature төлөвлөх вэ?",
+        "reason": "Gateway transit shared gateway reuse; энгийн peering дангаараа gateway reuse тохируулга биш."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "compute-control",
+    "source": "compute",
+    "trade": "Managed compute patching/admin ажлыг бууруулна; control хэрэгтэй бол IaaS/cluster cost нэмнэ. Scale/zone/DR supported plan-ийг тусад нь сонго.",
+    "rows": [
+      {
+        "option_en": "Azure App Service",
+        "option_mn": "Azure App Service",
+        "en": "A conventional web API needs managed hosting and deployment slots, with no custom OS modules or Kubernetes API requirement. Minimize platform operations.",
+        "mn": "Энгийн web API managed hosting/deployment slot хүснэ, custom OS module/Kubernetes API хэрэггүй. Platform operations багасга.",
+        "reason": "App Service web hosting-д чиглэсэн managed platform; VM/AKS шаардлагагүй control нэмнэ."
+      },
+      {
+        "option_en": "Azure Virtual Machines",
+        "option_mn": "Azure Virtual Machines",
+        "en": "A vendor application requires a custom kernel driver and administrator access to the operating system. Which compute option meets this hard constraint?",
+        "mn": "Vendor app custom kernel driver ба OS admin access шаарддаг. Аль compute энэ hard constraint-ийг хангах вэ?",
+        "reason": "VM guest OS control өгнө; managed web/container platform kernel control өгөхгүй."
+      },
+      {
+        "option_en": "Azure Kubernetes Service",
+        "option_mn": "Azure Kubernetes Service",
+        "en": "A platform team requires direct Kubernetes API access, custom controllers and cluster-level orchestration configuration. Which managed service fits?",
+        "mn": "Platform team Kubernetes API, custom controller, cluster-level orchestration шаарддаг. Ямар managed service вэ?",
+        "reason": "AKS Kubernetes control хэрэгцээнд нийцнэ; Container Apps direct cluster API өгөхгүй."
+      },
+      {
+        "option_en": "Azure Container Apps",
+        "option_mn": "Azure Container Apps",
+        "en": "Microservices must run containers with event-driven scaling and managed revisions, without managing Kubernetes clusters. Which service fits?",
+        "mn": "Microservice container, event-driven scaling, managed revision хүснэ; Kubernetes cluster удирдахгүй. Service сонго.",
+        "reason": "Container Apps managed container platform; AKS илүү cluster administration шаардана."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "compute-workload",
+    "source": "compute",
+    "trade": "Ажлын хугацаа/trigger/control нь compute сонголтыг шийднэ. Consumption зардал багасч болох ч cold start/limit-ийг тооц; HA тохиргоо тусдаа.",
+    "rows": [
+      {
+        "option_en": "Azure Functions",
+        "option_mn": "Azure Functions",
+        "en": "A small unit of code should run when a supported event arrives, using managed bindings and no server administration. Which compute model fits?",
+        "mn": "Supported event ирэхэд жижиг code ажиллаж managed binding ашиглана, server удирдахгүй. Ямар model вэ?",
+        "reason": "Functions event-triggered code-д чиглэнэ; batch scheduler том job orchestration-д зориулагдсан."
+      },
+      {
+        "option_en": "Azure Batch",
+        "option_mn": "Azure Batch",
+        "en": "Thousands of independent compute jobs need managed scheduling across a pool of compute nodes. Which service targets this workload?",
+        "mn": "Мянга мянган independent compute job node pool дээр managed scheduling шаардана. Ямар service вэ?",
+        "reason": "Batch parallel/batch job scheduling-д зориулагдсан; нэг event function бүх pool scheduler биш."
+      },
+      {
+        "option_en": "Azure Container Instances",
+        "option_mn": "Azure Container Instances",
+        "en": "Run a short-lived standalone container group with no cluster management, no revision-based microservice platform and no autoscaling requirement. Choose the simplest fit.",
+        "mn": "Богино настай standalone container group ажиллуулна; cluster/revision platform/autoscaling хэрэггүй. Тохирох service сонго.",
+        "reason": "ACI standalone container execution; AKS/Container Apps-ийн orchestration requirement байхгүй."
+      },
+      {
+        "option_en": "Virtual Machine Scale Sets",
+        "option_mn": "Virtual Machine Scale Sets",
+        "en": "A stateless workload requires identical VMs with OS-level control and scaling the VM instance count. Which compute structure fits?",
+        "mn": "Stateless workload OS control-той ижил VM-үүдийн instance count-ийг scale хийнэ. Ямар structure вэ?",
+        "reason": "VM Scale Sets VM fleet scale хийнэ; Functions/ACI ижил IaaS control model биш."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "messaging-choice",
+    "source": "messaging",
+    "trade": "Queue delivery semantics, stream replay, event notification-ийг ялга. Throughput/cost ба consumer operation trade-off; message processing idempotency-г тусдаа бод.",
+    "rows": [
+      {
+        "option_en": "Service Bus queue",
+        "option_mn": "Service Bus queue",
+        "en": "Each business command must be processed by one competing worker, with dead-letter handling and reliable broker semantics. Which messaging primitive fits?",
+        "mn": "Business command бүрийг competing worker-оос нэг нь боловсруулж dead-letter handling хэрэгтэй. Ямар primitive вэ?",
+        "reason": "Service Bus queue work distribution/advanced broker semantics; stream нь queue lock/settlement загвар биш."
+      },
+      {
+        "option_en": "Service Bus topic and subscriptions",
+        "option_mn": "Service Bus topic + subscription",
+        "en": "Each order event must reach billing and shipping independently, with separate durable subscriber queues and filters. What fits?",
+        "mn": "Order event billing ба shipping-д тус тусдаа durable subscriber queue/filter-тэй очно. Юу тохирох вэ?",
+        "reason": "Topic/subscription durable pub-sub; ганц queue consumer-ууд work-ийг хуваана."
+      },
+      {
+        "option_en": "Event Hubs",
+        "option_mn": "Event Hubs",
+        "en": "High-volume device telemetry must be retained as a stream and replayed independently by multiple analytic consumers. Which service fits?",
+        "mn": "Их telemetry stream хэлбэрээр retained, олон analytics consumer тусдаа replay хийнэ. Ямар service вэ?",
+        "reason": "Event Hubs partitioned stream/replay-д чиглэнэ; Service Bus command workflow өөр."
+      },
+      {
+        "option_en": "Event Grid",
+        "option_mn": "Event Grid",
+        "en": "A storage event should notify an event handler when a new object appears. No ordered command queue or historical stream replay is required. Which service fits?",
+        "mn": "Шинэ object гарвал storage event handler-д мэдэгдэнэ. Ordered command queue/history replay хэрэггүй. Service сонго.",
+        "reason": "Event Grid reactive event routing; analytics stream retention эсвэл command broker шаардлагагүй."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "messaging-features",
+    "source": "sessions",
+    "trade": "Broker feature сонгохдоо throughput/session bottleneck ба duplicate business effect-ийг тооц. HA нь retry, settlement, idempotency-г орлохгүй.",
+    "rows": [
+      {
+        "option_en": "Service Bus sessions",
+        "option_mn": "Service Bus session",
+        "en": "Messages for each order must be processed in order, while different orders can proceed independently. Which broker feature should group them?",
+        "mn": "Order бүрийн message дарааллаар, өөр order-ууд зэрэг боловсруулагдана. Ямар broker feature вэ?",
+        "reason": "Session related messages-ийн ordered handling; random consumer distribution order guarantee биш."
+      },
+      {
+        "option_en": "Duplicate detection",
+        "option_mn": "Duplicate detection",
+        "en": "A producer may resend the same MessageId after a network timeout. Suppress duplicate sends within a configured broker detection window. Which feature fits?",
+        "mn": "Producer timeout дараа ижил MessageId дахин явуулж болно. Broker window дотор duplicate send-ийг дарах feature вэ?",
+        "reason": "Duplicate detection send duplicate-ийг window дотор шүүнэ; end-to-end business exactly-once баталгаа биш."
+      },
+      {
+        "option_en": "Dead-letter queue",
+        "option_mn": "Dead-letter queue",
+        "en": "Poison messages repeatedly fail processing and must be isolated for investigation rather than blocking ordinary work. Which destination fits?",
+        "mn": "Poison message дахин дахин fail болж, бусад ажлыг хаахгүй тусгаарлаж шалгана. Ямар destination вэ?",
+        "reason": "DLQ failed/unprocessable message тусгаарлана; session нь error investigation queue биш."
+      },
+      {
+        "option_en": "Topic subscription filters",
+        "option_mn": "Topic subscription filter",
+        "en": "Billing wants only invoice-related messages while logistics wants shipment-related ones from the same topic. Which feature routes the relevant subset?",
+        "mn": "Нэг topic-оос billing зөвхөн invoice, logistics зөвхөн shipment message авна. Ямар feature вэ?",
+        "reason": "Subscription filter relevant subset сонгоно; duplicate detection business category routing биш."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "application-integration",
+    "source": "logic",
+    "trade": "Workflow orchestration admin effort ба custom code flexibility-г харьцуул. Connector/service call latency, retry cost, idempotency ба DR-ийг тооц.",
+    "rows": [
+      {
+        "option_en": "Azure Logic Apps",
+        "option_mn": "Azure Logic Apps",
+        "en": "A business process must connect SaaS systems using managed connectors and visual workflow orchestration. Minimize custom integration code.",
+        "mn": "Бизнес процесс SaaS системүүдийг managed connector ба visual workflow-оор холбоно. Custom integration code багасга.",
+        "reason": "Logic Apps connector/workflow integration; VM-based custom code нэмэлт operations шаардана."
+      },
+      {
+        "option_en": "Azure Functions",
+        "option_mn": "Azure Functions",
+        "en": "A workflow needs a custom event-triggered calculation implemented as code, rather than a connector-only business process. Which service fits?",
+        "mn": "Workflow custom event-triggered calculation code шаарддаг, connector-only process биш. Service сонго.",
+        "reason": "Functions custom code execution-д тохирно; visual orchestration өөр abstraction."
+      },
+      {
+        "option_en": "Azure API Management",
+        "option_mn": "Azure API Management",
+        "en": "Existing APIs need a managed facade for policies, consumer access, throttling and API publishing. The backend compute already exists. What is missing?",
+        "mn": "Backend API байгаа, policy/consumer access/throttling/publishing бүхий facade дутуу. Юу хэрэгтэй вэ?",
+        "reason": "API Management API facade/control; compute hosting эсвэл event bus өөр үүрэгтэй."
+      },
+      {
+        "option_en": "Azure Event Grid",
+        "option_mn": "Azure Event Grid",
+        "en": "Independent services should react to published events without embedding every destination in the publisher. Which event-routing service fits?",
+        "mn": "Publisher destination бүрийг embed хийхгүй, independent service event-д react хийнэ. Ямар event-routing service вэ?",
+        "reason": "Event Grid event distribution; APIM synchronous API facade, workflow orchestration өөр үүрэг."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "migration-path",
+    "source": "migrationstrategy",
+    "trade": "Өөрчлөлт бага migration хурдан ч cloud efficiency сул байж болно. Refactor/rearchitect development effort нэмнэ; availability ба cutover risk-ийг хэмж.",
+    "rows": [
+      {
+        "option_en": "Rehost",
+        "option_mn": "Rehost",
+        "en": "A legacy app must move quickly with minimal code change, retaining its VM operating model initially. Which migration strategy fits?",
+        "mn": "Legacy app хурдан, code бага өөрчлөөд эхэндээ VM operating model-оо хадгалж нүүнэ. Strategy сонго.",
+        "reason": "Rehost infrastructure relocation; redesign хийвэл хугацаа/code constraint зөрчинө."
+      },
+      {
+        "option_en": "Replatform",
+        "option_mn": "Replatform",
+        "en": "An application can move to a managed hosting platform with limited changes while keeping its core architecture. Which strategy fits?",
+        "mn": "App core architecture-аа хадгалаад бага өөрчлөлтөөр managed hosting руу нүүнэ. Strategy сонго.",
+        "reason": "Replatform platform-ийг өөрчилнө, бүрэн architecture redesign биш."
+      },
+      {
+        "option_en": "Rearchitect",
+        "option_mn": "Rearchitect",
+        "en": "A monolith must be redesigned into independently scalable services to meet new business requirements. Which strategy fits?",
+        "mn": "Monolith шинэ шаардлагаар independently scalable service-үүд болж redesign хийгдэнэ. Strategy сонго.",
+        "reason": "Rearchitect application structure-ийг өөрчилнө; rehost нь энэ өөрчлөлт хийхгүй."
+      },
+      {
+        "option_en": "Retire",
+        "option_mn": "Retire",
+        "en": "Discovery shows an application has no remaining users, dependencies or retention obligation. Moving it would add cost without value. Which action fits?",
+        "mn": "Discovery app хэрэглэгч/dependency/retention obligation-гүйг тогтоов. Нүүлгэх нь хэрэггүй зардал. Ямар action вэ?",
+        "reason": "Retire хэрэггүй workload-ийг зогсооно; бусад strategy хэрэггүй нөөцийг cloud-д үлдээнэ."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "migration-assessment",
+    "source": "migrate",
+    "trade": "Assessment нь sizing/cost ба dependency эрсдэлийг багасгана; migration execution-аас тусдаа. Түүхэн utilization ба cutover window бодитоор хэмж.",
+    "rows": [
+      {
+        "option_en": "Discovery and inventory",
+        "option_mn": "Discovery ба inventory",
+        "en": "The team does not know which servers and applications exist. Before sizing or moving anything, what activity is required?",
+        "mn": "Баг ямар server/app байгааг мэдэхгүй. Sizing/move-оос өмнө юу хийх вэ?",
+        "reason": "Inventory migration population тодруулна; replication хийхээс өмнө source-оо мэдэх хэрэгтэй."
+      },
+      {
+        "option_en": "Dependency analysis",
+        "option_mn": "Dependency analysis",
+        "en": "Servers are inventoried, but migration waves must keep communicating application components together. Which analysis is missing?",
+        "mn": "Server inventory байгаа, migration wave харилцдаг component-уудыг хамт байлгана. Ямар analysis дутуу вэ?",
+        "reason": "Dependency analysis communication холбоосыг тодруулна; size report wave dependency-г дангаар харуулахгүй."
+      },
+      {
+        "option_en": "Readiness and sizing assessment",
+        "option_mn": "Readiness ба sizing assessment",
+        "en": "A target estimate must account for compatibility and observed resource utilization instead of copying oversized VM allocations. What should be performed?",
+        "mn": "Target estimate compatibility ба observed utilization-д тулгуурлана, хэт том VM allocation-ийг хуулж болохгүй. Юу хийх вэ?",
+        "reason": "Assessment readiness/right-sizing үнэлнэ; шууд migration oversized cost хадгалж болно."
+      },
+      {
+        "option_en": "Test migration",
+        "option_mn": "Test migration",
+        "en": "Replication is configured and the cutover plan exists. Validate the migrated workload in isolation before switching production. Which next step fits?",
+        "mn": "Replication ба cutover plan байгаа. Production switch-ээс өмнө migrated workload тусгаар туршина. Дараагийн алхам вэ?",
+        "reason": "Test migration behavior/connectivity validation; inventory энэ runtime validation-ийг орлохгүй."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "egress-security",
+    "source": "firewall",
+    "trade": "NAT, firewall, NSG, WAF өөр layer-ийн control. Inspection нь cost/latency/admin ажил нэмнэ; нэгийг бүх хамгаалалт гэж үзэхгүй.",
+    "rows": [
+      {
+        "option_en": "NAT Gateway",
+        "option_mn": "NAT Gateway",
+        "en": "Private VMs need scalable outbound internet connectivity using predictable public source IPs. No traffic inspection is required. Which component fits?",
+        "mn": "Private VM predictable public source IP-аар scalable outbound internet авна. Traffic inspection хэрэггүй. Component сонго.",
+        "reason": "NAT Gateway outbound SNAT; firewall inspection шаардлагагүй нэмэлт complexity."
+      },
+      {
+        "option_en": "Azure Firewall",
+        "option_mn": "Azure Firewall",
+        "en": "Multiple spokes need centralized stateful network/application filtering and managed security rules for outbound traffic. Which service fits?",
+        "mn": "Олон spoke outbound traffic-д centralized stateful network/application filtering ба managed rule хүснэ. Service сонго.",
+        "reason": "Azure Firewall central inspection; NAT нь filtering engine биш, NSG нь application rule ижил биш."
+      },
+      {
+        "option_en": "Network security group",
+        "option_mn": "Network security group",
+        "en": "A subnet requires basic allow/deny rules by IP, port and protocol, with no HTTP inspection or centralized application filtering. Which control fits?",
+        "mn": "Subnet IP/port/protocol-оор basic allow/deny, HTTP inspection/central app filtering хэрэггүй. Control сонго.",
+        "reason": "NSG L3/L4 access filtering; WAF HTTP-layer, NAT security policy биш."
+      },
+      {
+        "option_en": "Web Application Firewall",
+        "option_mn": "Web Application Firewall",
+        "en": "A public web application needs inspection for common HTTP attacks such as SQL injection. Which security layer fits?",
+        "mn": "Public web app SQL injection зэрэг HTTP attack inspection шаарддаг. Ямар security layer вэ?",
+        "reason": "WAF web attack inspection; NSG port/IP filter payload SQL injection танихгүй."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "dns-routing",
+    "source": "tm",
+    "trade": "DNS routing connection proxy биш. Client caching ба health probe interval failover хугацаанд нөлөөлнө; latency/cost trade-off-ийг global хэмжээнд үнэл.",
+    "rows": [
+      {
+        "option_en": "Priority routing",
+        "option_mn": "Priority routing",
+        "en": "A DNS traffic service must send requests to a preferred endpoint unless it is unhealthy, then use a standby. Which routing method fits?",
+        "mn": "DNS traffic service preferred endpoint healthy үед түүнийг, unhealthy үед standby ашиглана. Method сонго.",
+        "reason": "Priority active/passive preference; weighted нь percentage distribution-д зориулагдсан."
+      },
+      {
+        "option_en": "Weighted routing",
+        "option_mn": "Weighted routing",
+        "en": "A rollout should distribute new DNS responses approximately between two healthy endpoints according to configured weights. Which method fits?",
+        "mn": "Rollout шинэ DNS response-уудыг healthy endpoint-уудад weight-ийн дагуу ойролцоогоор хуваарилна. Method сонго.",
+        "reason": "Weighted relative weight distribution; exact per-request percentage DNS cache-аас шалтгаалж батлахгүй."
+      },
+      {
+        "option_en": "Performance routing",
+        "option_mn": "Performance routing",
+        "en": "Users should be directed by a DNS traffic service to the endpoint expected to provide lower network latency based on its routing model. Which method fits?",
+        "mn": "DNS traffic service routing model-оор бага network latency-тай гэж тооцсон endpoint сонгоно. Method сонго.",
+        "reason": "Performance latency-oriented routing; priority нь fixed preference, geography нь region mapping."
+      },
+      {
+        "option_en": "Geographic routing",
+        "option_mn": "Geographic routing",
+        "en": "DNS query origins must map to designated geographic endpoint groups according to a location-based routing policy. Which method fits?",
+        "mn": "DNS query origin location-based policy-ийн designated geographic endpoint group-д map хийнэ. Method сонго.",
+        "reason": "Geographic location mapping; performance latency сонгоно. Энэ нь дангаараа data residency enforcement биш."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "resilience-patterns",
+    "source": "patterns",
+    "trade": "Resilience pattern буруу retry storm үүсгэж болно. Latency, queue backlog, extra capacity cost ба операцийн monitoring-ийг хамтад нь төлөвлө.",
+    "rows": [
+      {
+        "option_en": "Retry with exponential backoff",
+        "option_mn": "Exponential backoff retry",
+        "en": "A dependency occasionally returns transient errors and operations are safe to retry. Avoid synchronized immediate retries. Which pattern fits?",
+        "mn": "Dependency түр зуурын error өгдөг, operation retry-safe. Бүгд зэрэг шууд retry хийхээс зайлсхий. Pattern сонго.",
+        "reason": "Backoff transient failure-ийн дараах retry load тараана; persistent failure-г endlessly retry хийхгүй."
+      },
+      {
+        "option_en": "Circuit breaker",
+        "option_mn": "Circuit breaker",
+        "en": "A dependency fails persistently and repeated calls exhaust resources. Temporarily stop calls and probe for recovery. Which pattern fits?",
+        "mn": "Dependency байнга fail болж давтан call resource шавхаж байна. Түр call зогсоож recovery probe хийнэ. Pattern сонго.",
+        "reason": "Circuit breaker persistent failure үед fail-fast; retry дангаараа load нэмэгдүүлж болно."
+      },
+      {
+        "option_en": "Queue-based load leveling",
+        "option_mn": "Queue-based load leveling",
+        "en": "Incoming work arrives in bursts, but workers should process at a sustainable rate and delayed completion is acceptable. Which pattern fits?",
+        "mn": "Work burst-ээр ирнэ, worker sustainable rate-аар боловсруулна, delay зөвшөөрнө. Pattern сонго.",
+        "reason": "Queue backlog burst шингээнэ; cache нь work scheduling buffer биш."
+      },
+      {
+        "option_en": "Bulkhead isolation",
+        "option_mn": "Bulkhead isolation",
+        "en": "One tenant's failing workload must not exhaust every connection or worker needed by other tenants. Which pattern fits?",
+        "mn": "Нэг tenant-ийн failing workload бусдын connection/worker-ийг бүгдийг шавхахгүй. Pattern сонго.",
+        "reason": "Bulkhead resource pool тусгаарлаж failure spread бууруулна; retry дангаараа isolation биш."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "api-gateway-controls",
+    "source": "apimpolicies",
+    "trade": "Gateway policy төвлөрүүлэх нь admin ажлыг багасгана ч additional hop/cost өгнө. Rate limit/caching нь backend authorization ба DR-ийг орлохгүй.",
+    "rows": [
+      {
+        "option_en": "Rate limiting",
+        "option_mn": "Rate limiting",
+        "en": "An API consumer may send short bursts that overload a backend. Enforce a bounded request rate per consumer. Which gateway policy fits?",
+        "mn": "API consumer богино burst-ээр backend overload болгоно. Consumer бүрийн request rate хязгаарла. Policy сонго.",
+        "reason": "Rate limiting хугацааны богино window-д request rate хянадаг; cache нь per-consumer limit биш."
+      },
+      {
+        "option_en": "Quota",
+        "option_mn": "Quota",
+        "en": "A product subscription includes a fixed request allowance over a longer billing period. Which policy primarily models that allowance?",
+        "mn": "Product subscription урт billing period-д тогтсон request allowance-тай. Аль policy голчлон үүнийг илэрхийлэх вэ?",
+        "reason": "Quota cumulative allowance-д зориулагдсан; rate limit нь short-window pacing."
+      },
+      {
+        "option_en": "Response caching",
+        "option_mn": "Response caching",
+        "en": "Identical safe read requests repeatedly fetch unchanged public data. Reduce backend calls while allowing bounded staleness. Which capability fits?",
+        "mn": "Ижил safe read request өөрчлөгдөөгүй public data авдаг. Bounded stale зөвшөөрч backend call багасга. Capability сонго.",
+        "reason": "Caching reuse өгнө; quota/rate limit нь response reuse биш."
+      },
+      {
+        "option_en": "Token validation",
+        "option_mn": "Token validation",
+        "en": "The gateway must reject requests whose presented token fails issuer, audience or signature validation before forwarding. Which policy fits?",
+        "mn": "Gateway issuer/audience/signature validation fail болсон token-той request-ийг forward хийхгүй. Policy сонго.",
+        "reason": "Token validation authentication claim шалгана; rate limit/cache нь token trust батлахгүй."
+      }
+    ]
+  },
+  {
+    "domain": "infrastructure",
+    "name": "scaling-decision",
+    "source": "autoscale",
+    "trade": "Scale-up limit, scale-out state, scheduling forecast, reactive delay-ийг үнэл. Extra compute cost/HA trade-off ба monitoring admin effort байна.",
+    "rows": [
+      {
+        "option_en": "Scale up",
+        "option_mn": "Scale up",
+        "en": "A non-distributed workload needs more memory on its single instance and cannot run multiple replicas without redesign. Which immediate scaling direction fits?",
+        "mn": "Non-distributed workload нэг instance-д илүү memory хэрэгтэй, redesign-гүй олон replica ажиллахгүй. Шууд scaling direction юу вэ?",
+        "reason": "Scale-up нэг instance-ийн capacity нэмнэ; scale-out app constraint зөрчинө."
+      },
+      {
+        "option_en": "Scale out",
+        "option_mn": "Scale out",
+        "en": "A stateless web tier can distribute requests across identical instances. Increase total capacity and reduce reliance on one instance. Which direction fits?",
+        "mn": "Stateless web tier request-ийг ижил instance-уудад тараана. Нийт capacity нэмээд нэг instance-ийн хамаарлыг бууруул. Direction сонго.",
+        "reason": "Scale-out replica нэмнэ; scale-up ганц instance dependency хэвээр үлдээнэ."
+      },
+      {
+        "option_en": "Scheduled scaling",
+        "option_mn": "Scheduled scaling",
+        "en": "A predictable daily traffic surge starts at the same time and instances must be ready before it begins. Which scaling trigger fits?",
+        "mn": "Traffic surge өдөр бүр тогтсон цагт, instance өмнө нь бэлэн байх ёстой. Ямар trigger вэ?",
+        "reason": "Scheduled scaling урьдчилсан known demand-д нийцнэ; reactive threshold surge эхэлсний дараа хариулна."
+      },
+      {
+        "option_en": "Metric-based autoscaling",
+        "option_mn": "Metric-based autoscaling",
+        "en": "Demand is unpredictable, and instance count should react to sustained observed CPU or queue pressure within limits. Which trigger fits?",
+        "mn": "Demand таамаглах боломжгүй, instance count sustained CPU/queue pressure-д limit дотор хариулна. Trigger сонго.",
+        "reason": "Metric-based autoscale actual demand signal ашиглана; schedule таамаггүй spike-ийг зөв тааруулахгүй."
+      }
+    ]
+  }
+]

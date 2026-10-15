@@ -1,0 +1,5 @@
+#!/bin/sh
+# Blocks commits whose staged files have any Biome error, warning, info or formatting diff.
+# Fix with: bun run check:fix   (bypass in an emergency: git commit --no-verify)
+ROOT=$(git rev-parse --show-toplevel) || exit 1
+exec node "$ROOT/scripts/biome-strict.mjs" check --staged --no-errors-on-unmatched --files-ignore-unknown=true

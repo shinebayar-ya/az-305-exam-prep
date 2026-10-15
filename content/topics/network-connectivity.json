@@ -1,0 +1,119 @@
+{
+  "id": "network-connectivity",
+  "domain": "infrastructure",
+  "order": 13,
+  "title": "Network connectivity: hub-spoke, peering, VPN Gateway, ExpressRoute, Virtual WAN, NAT Gateway",
+  "tagline": "Хуягт машинаар нийтийн замаар явах уу, өөрийн хувийн хурдны замаа барих уу?",
+  "checked": "2026-10-17",
+  "sources": ["network", "peering", "vpn", "express", "virtualwan", "nat"],
+  "analogy": {
+    "title": "Хотын дарга Ганбаатарын замын төлөвлөгөө",
+    "story": "Ганбаатар шинэ хотын замыг төлөвлөж байна. Хот олон хорооллоос бүрдэнэ, хороолол бүр өөрийн хашаатай. Түүний асуулт: *хэн хаашаа, ямар замаар явах вэ?*\n\nХотын төвд **нэг том автобусны буудал** барина. Энэ бол **hub**: шалган нэвтрүүлэх цэг (firewall), хотоос гарах гарц (gateway) бүгд энд. Хороолол бүр (**spoke**) буудалтай шууд замаар (**peering**) холбогдоно.\n\nГэхдээ хоёр хороолол хоёулаа буудалтай холбогдсон ч *хоорондоо* автоматаар холбогдохгүй. Peering **nontransitive**: шууд зам тавих, эсвэл буудлаар дамжуулах тэмдэг (**user-defined route**) тавих хэрэгтэй.\n\nХотын гаднах үйлдвэр (on-premises) рүү хоёр арга бий. **Хуягт машинаар нийтийн замаар** явах нь **VPN Gateway**: зам нь бусадтай хамт (internet), харин ачаа нь түгжээтэй (IPsec). Ажилчин гэрээсээ утсаараа холбогдохыг **point-to-site** гэнэ. **Өөрийн хувийн хурдны зам** бол **ExpressRoute**: нийтийн замаар огт явахгүй, гэрээт компани (connectivity provider) тавина, хоёр эгнээтэй (redundancy).\n\nХот 50 хороолол, 30 салбартай болж Ганбаатар толгой нь эргэвэл буудлыг **Microsoft удирддаг** болгож болно: энэ бол **Virtual WAN**. Хорооллын гарах хаалга бол **NAT Gateway**: оршин суугчид гадагшаа гарч, хариу авна, харин гаднаас урилгагүй хүн орж чадахгүй.\n\nГэхдээ зам сайн байх нь *аюулгүй* гэсэн үг биш. ExpressRoute өөрөө шифрлэдэггүй, peering нь шалган нэвтрүүлэх цэг биш. Аюулгүй байдлын дүрэм (NSG, Azure Firewall) тусдаа сэдэв.",
+    "mapping": [
+      { "real": "Хотын төвийн автобусны буудал", "azure": "Hub virtual network — firewall, gateway зэрэг shared service" },
+      { "real": "Хороолол", "azure": "Spoke virtual network — workload тус бүрийн тусгаарлалт" },
+      { "real": "Буудал ба хорооллын шууд зам", "azure": "Virtual network peering — Microsoft backbone, nontransitive" },
+      { "real": "Буудлаар дамжуулах тэмдэг", "azure": "User-defined route — next hop нь hub дахь NVA эсвэл firewall" },
+      { "real": "Хуягт машин нийтийн замаар", "azure": "VPN Gateway site-to-site — internet дээгүүр IPsec/IKE" },
+      { "real": "Ажилчин гэрээсээ утсаар", "azure": "Point-to-site VPN — OpenVPN, IKEv2, SSTP" },
+      { "real": "Өөрийн хувийн хурдны зам", "azure": "ExpressRoute — connectivity provider, public internet биш" },
+      { "real": "Microsoft удирддаг буудал", "azure": "Virtual WAN — Microsoft-managed hub, transitive connectivity" },
+      { "real": "Зөвхөн гарах хаалга", "azure": "NAT Gateway — subnet-ийн outbound, урилгагүй inbound байхгүй" }
+    ]
+  },
+  "illustration": {
+    "scene": ["Landmark", "Building2", "Building2", "Truck", "Smartphone", "Globe", "DoorOpen"],
+    "caption": "Төв буудал (hub) → хороолол (spokes) → хуягт машин (VPN Gateway) → утас (point-to-site) → хувийн хурдны зам (ExpressRoute) → гарах хаалга (NAT Gateway)",
+    "image": null
+  },
+  "mnemonics": [
+    {
+      "device": "Шаардлага → сонголт: «Хаашаа, ямар замаар холбогдох вэ?»",
+      "parts": [
+        { "key": "Azure VNet – Azure VNet", "meaning": "**Virtual network peering** — Microsoft backbone, gateway хэрэггүй" },
+        { "key": "Салбар – Azure, internet дээгүүр, шифрлэлттэй", "meaning": "**VPN Gateway** site-to-site — IPsec/IKE" },
+        { "key": "Ганц хүн зөөврийн компьютерээс", "meaning": "**Point-to-site VPN** — VPN төхөөрөмж хэрэггүй" },
+        { "key": "Datacenter – Azure, public internet биш", "meaning": "**ExpressRoute** — connectivity provider, тогтвортой latency" },
+        { "key": "Олон салбар, олон region, transit-ийг Microsoft удирдана", "meaning": "**Virtual WAN** (Standard) — hub-ууд full mesh" },
+        { "key": "Subnet-ээс гадагш л гарна", "meaning": "**NAT Gateway** — SNAT, inbound байхгүй" }
+      ],
+      "why": "Requirement → decision: «хоёр төгсгөл хаана байна, траффик internet-ээр явж болох уу?» гэж асуу. Хоёулаа Azure-д → peering. Нэг нь on-premises, internet болно → VPN Gateway. Internet болохгүй → ExpressRoute. Олон салбар, олон region-ийн transit → Virtual WAN."
+    },
+    {
+      "device": "Peering-ийн хоёр «үгүй»",
+      "parts": [
+        { "key": "Transitive үгүй", "meaning": "Spoke A – hub – spoke B нь A – B гэсэн үг **биш**. Шууд peering эсвэл hub-д **UDR + NVA / firewall**" },
+        { "key": "Хоёр gateway үгүй", "meaning": "**Use remote gateways** ашигладаг VNet өөрийн gateway-тэй байж **болохгүй**. VNet нэг л gateway-тэй (local эсвэл remote)" }
+      ],
+      "why": "Requirement → decision: «spoke-ууд хоорондоо эсвэл on-premises-тэй hub-аар дамжиж ярих уу?» гэж асуу. Тийм бол peering дээр gateway transit, UDR тохируул, эсвэл transit-ийг Virtual WAN-д өг."
+    }
+  ],
+  "keyFacts": [
+    { "text": "**Hub-spoke**: hub VNet нь firewall, gateway зэрэг shared service-ийг төвлөрүүлж, spoke VNet бүр workload-оо тусгаарлана. **Azure landing zone** архитектур hub-spoke дээр суурилсан, hub-ууд **Connectivity subscription**-д байна.", "source": "network" },
+    { "text": "Peering болон connected group **nontransitive**. Spoke-ууд хоорондоо ярих бол тэдгээрийн хооронд peering нэмэх, эсвэл ижил network group-д оруулна.", "source": "network" },
+    { "text": "Hub дахь virtual network gateway-д **GatewaySubnet** нэртэй, дор хаяж **/26** subnet хэрэгтэй.", "source": "network" },
+    { "text": "**Virtual network peering** нь траффикийг **Microsoft-ийн private backbone**-оор дамжуулна. Ижил region-д virtual network peering, өөр region-д **global virtual network peering**. Хоёулаа **gateway transit** дэмжинэ.", "source": "peering" },
+    { "text": "**Gateway transit**: spoke нь hub-ийн gateway-г **remote gateway** болгон ашиглана. Remote gateway ашигладаг VNet өөрийн gateway-тэй байж болохгүй, VNet нэг л gateway-тэй.", "source": "peering" },
+    { "text": "**Service chaining**: UDR-ийн next hop-ийг peered VNet дахь NVA эсвэл VPN gateway болгоно. **ExpressRoute gateway**-г VNet хооронд route хийх next hop болгож **болохгүй**.", "source": "peering" },
+    { "text": "**Azure Virtual Network Manager** connectivity configuration нь ердийн peering хязгаараас давж: hub-д **1,000** хүртэл spoke, эсвэл **3,000** хүртэл VNet-тэй mesh connected group.", "source": "peering" },
+    { "text": "**VPN Gateway** нь internet дээгүүр шифрлэсэн траффик: **site-to-site** (IPsec/IKE, on-premises VPN device), **point-to-site** (OpenVPN, IKEv2, SSTP), **VNet-to-VNet**. Site-to-site VPN-ийг ExpressRoute-ийн **failover** зам болгож болно.", "source": "vpn" },
+    { "text": "Шинэ VPN gateway-д **zone-redundant AZ SKU** (VpnGw1AZ–VpnGw5AZ) зөвлөнө. **Basic** SKU нь BGP, IKEv2/OpenVPN P2S дэмждэггүй, zone-redundant биш.", "source": "vpn" },
+    { "text": "**ExpressRoute** нь connectivity provider-аар дамжих **private connection**, **public internet-ээр явдаггүй**: илүү найдвартай, хурдан, тогтвортой latency. Circuit бүр хоёр **MSEE** router-т хоёр холболттой (redundancy), dual BGP шаардана.", "source": "express" },
+    { "text": "**ExpressRoute Global Reach** нь хоёр on-premises site-ийг тэдгээрийн ExpressRoute circuit-ээр Microsoft network дээгүүр холбоно.", "source": "express" },
+    { "text": "**Virtual WAN**: **Basic** нь зөвхөн site-to-site VPN. **Standard** нь ExpressRoute, P2S, hub-аар дамжих VNet-to-VNet transit, Azure Firewall, NVA-тай, hub-ууд **full mesh**. Basic → Standard upgrade болно, буцааж **болохгүй**.", "source": "virtualwan" },
+    { "text": "**NAT Gateway** нь **subnet**-ийн outbound internet холболт, урилгагүй **inbound зөвшөөрөхгүй**. Route table тохиргоо шаардахгүй, load balancer, instance-level public IP, Azure Firewall-аас **давуу эрхтэй**. Basic SKU resource-тэй ажиллахгүй.", "source": "nat" },
+    { "text": "NAT Gateway SKU: **Standard** нь zonal (нэг zone), **StandardV2** нь **zone-redundant**, илүү throughput, IPv6, flow log. 2026-03-31-ээс шинэ VNet-д **default outbound access** өгөхгүй, тодорхой outbound арга (NAT Gateway) хэрэгтэй.", "source": "nat" }
+  ],
+  "compare": {
+    "caption": "Эх сурвалж: About Azure VPN Gateway, What is Azure ExpressRoute?, Azure Virtual Network peering, What is Azure Virtual WAN?. ExpressRoute-ийн шифрлэлтийг Virtual WAN-д IPsec over ExpressRoute-ээр нэмж болно. Virtual WAN-ийн transitive холболт Standard type-д.",
+    "columns": ["Сонголт", "Холбох төгсгөл", "Public internet-ээр", "Шифрлэлт өөрөө", "Transitive", "Хэзээ"],
+    "rows": [
+      ["**Virtual network peering**", "VNet – VNet", "✗ (Microsoft backbone)", "✗", "✗", "Azure дотор VNet-үүдийг энгийнээр холбох"],
+      ["**VPN Gateway**", "On-premises / хэрэглэгч / VNet – VNet", "✓", "✓ (IPsec/IKE)", "✗", "Салбар, remote ажилчин, ExpressRoute-ийн failover"],
+      ["**ExpressRoute**", "On-premises – Microsoft cloud", "✗ (connectivity provider)", "✗", "✗", "Тогтвортой latency, private холболт"],
+      ["**Virtual WAN** (Standard)", "Салбар, хэрэглэгч, ExpressRoute, VNet", "Холболтоос хамаарна", "VPN дээр ✓", "✓", "Олон салбар, олон region-ийн managed transit"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Хоёр spoke хоёулаа hub-тай peering хийсэн тул хоорондоо автоматаар ярина.",
+      "truth": "Peering **nontransitive**. Spoke хооронд шууд peering, эсвэл hub-д **UDR**-ийн next hop болгон NVA / **Azure Firewall**, эсвэл **Virtual WAN**.",
+      "phrase_en": "workloads in two spoke virtual networks must communicate through the hub"
+    },
+    {
+      "trap": "Spoke бүрт on-premises холболтод зориулж өөрийн VPN gateway байршуулах хэрэгтэй.",
+      "truth": "Hub-ийн gateway-г **gateway transit** (hub-д *allow gateway transit*, spoke-д *use remote gateways*)-аар хуваалцана. Remote gateway ашигладаг spoke өөрийн gateway-тэй байж болохгүй.",
+      "phrase_en": "spokes must reach on-premises without deploying a gateway in each spoke"
+    },
+    {
+      "trap": "ExpressRoute нь internet дээгүүр явдаг шифрлэсэн VPN.",
+      "truth": "**ExpressRoute** нь connectivity provider-аар дамжих private connection, public internet-ээр явдаггүй. Internet дээгүүр шифрлэсэн tunnel бол **VPN Gateway**.",
+      "phrase_en": "connectivity must not traverse the public internet and must offer consistent latency"
+    },
+    {
+      "trap": "NAT Gateway-аар гаднаас VM рүү inbound холболт нээж болно.",
+      "truth": "**NAT Gateway** зөвхөн outbound, урилгагүй inbound зөвшөөрөхгүй. Inbound-д load balancer эсвэл бусад сервис хэрэгтэй.",
+      "phrase_en": "VMs in a private subnet need outbound internet access without accepting inbound connections"
+    },
+    {
+      "trap": "Virtual WAN Basic дээр ExpressRoute, VNet хоорондын transit ажиллана.",
+      "truth": "**Basic** нь зөвхөн site-to-site VPN. ExpressRoute, P2S, transit, Azure Firewall бол **Standard**. Standard-аас Basic руу буцааж болохгүй.",
+      "phrase_en": "a global transit network must connect branches, ExpressRoute circuits and virtual networks"
+    },
+    {
+      "trap": "Хэдхэн инженерт VNet хандалт өгөхөд site-to-site VPN, VPN device хэрэгтэй.",
+      "truth": "Ганц хүний төхөөрөмжөөс бол **point-to-site** (OpenVPN, IKEv2, SSTP), VPN device шаардахгүй.",
+      "phrase_en": "remote engineers need encrypted access from their laptops without a branch VPN device"
+    }
+  ],
+  "vocabulary": [
+    { "en": "hub-spoke topology", "mn": "төв (hub) ба салбар (spoke) VNet-тэй сүлжээний бүтэц" },
+    { "en": "nontransitive", "mn": "дамжуулдаггүй: A–B, B–C нь A–C гэсэн үг биш" },
+    { "en": "gateway transit", "mn": "peered VNet-ийн gateway-г дамжуулан ашиглах" },
+    { "en": "user-defined route (UDR)", "mn": "хэрэглэгчийн тодорхойлсон route, next hop-ийг зааж өгнө" },
+    { "en": "network virtual appliance (NVA)", "mn": "сүлжээний виртуал төхөөрөмж (firewall, router)" },
+    { "en": "connectivity provider", "mn": "ExpressRoute холболт тавьдаг харилцаа холбооны компани" },
+    { "en": "SNAT port exhaustion", "mn": "outbound холболтын source port дуусах" },
+    { "en": "cross-premises", "mn": "on-premises ба cloud-ийн хоорондох" }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "id": "backup-dr",
+  "domain": "continuity",
+  "order": 9,
+  "title": "Backup & disaster recovery: Azure Backup, Site Recovery, SQL failover",
+  "tagline": "Пүүн тэсэрвэл хуучин жор уу, нөөц пүүн үү?",
+  "checked": "2026-10-17",
+  "sources": ["backup", "softdelete", "asr", "asrarch", "sqlha", "sqlbackup", "fog"],
+  "analogy": {
+    "title": "Паранойд талхны газар эзэн",
+    "story": "Та хотын төвд талхны газартай, айдас ихтэй эзэн. Хоёр өөр айдастай.\n\nНэгдүгээр айдас: *«Би өөрөө алдаа гаргавал яах вэ?»* Нэг өдөр шөнө дунд давсны оронд элсэн чихэр хийчихлээ гэж төсөөл. Тиймээс өдөр бүр дэлгүүрийн зургийг альбомд хийж, 14 хоногийн турш хогийн савнаас ч буцааж авдаг болгосон. Энэ бол **Azure Backup**: түүхэн цэг, алдааг буцаана. Хуучин жороо хэдэн жилээр ч хадгалж болно (**long-term retention**).\n\nХоёрдугаар айдас: *«Хотын төв үерт автвал яах вэ?»* Тиймээс нөгөө хотод хоёр дахь талхны газрыг байнга халуунаар нь тохируулж, гал тогооны бүх өөрчлөлтийг тэнд шууд давтуулна. Үер ирвэл утасны дугаараа шилжүүлээд нөгөө газраа онгойлгоно. Энэ бол **Site Recovery** (VM-д) болон **failover group** (SQL-д): region унахад ажлаа хурдан үргэлжлүүлнэ.\n\nГэхдээ хоёр дахь газар нь таны шөнийн элсэн чихэрт хамаагүй: таны гал тогоон дээр хийсэн бүх өөрчлөлт, алдаа ч хамт тэнд очно. Backup бол өнгөрсөн рүү буцах цонх, replication бол дараагийн газар руу үсрэх гүүр. Нэгийг нь нөгөөгөөр солих боломжгүй.",
+    "mapping": [
+      { "real": "Өдөр бүрийн зургийн альбом", "azure": "Azure Backup — Recovery Services vault дахь recovery point" },
+      { "real": "Альбомыг хогийн савнаас 14 хоног авч болох", "azure": "Soft delete — default 14 хоног, 14–180 хооронд тохируулна" },
+      { "real": "Хуучин жорыг олон жил хадгалах", "azure": "Long-term retention (LTR) — SQL Database-д 10 жил хүртэл" },
+      { "real": "Нөгөө хотын хоёр дахь талхны газар", "azure": "Site Recovery — өөр region руу VM replication" },
+      { "real": "Утасны дугаарыг шилжүүлэх", "azure": "Failover group listener — failover-ийн дараа нэр нь өөрчлөгдөхгүй" },
+      { "real": "Шөнийн элсэн чихэр хоёр газарт хоёуланд нь", "azure": "Replication нь алдааг буцаахгүй — түүхэн restore point хэрэгтэй" }
+    ]
+  },
+  "illustration": {
+    "scene": ["Factory", "Archive", "Truck", "Warehouse", "Timer"],
+    "caption": "Талхны газар (primary) → зургийн альбом (Backup) → ачаа (replication) → нөгөө хотын агуулах (secondary region) → хэдэн секундэд нээх (RTO)",
+    "image": null
+  },
+  "mnemonics": [
+    {
+      "device": "Алдсан зүйл юу вэ: «Түүх уу, Газар уу?»",
+      "parts": [
+        { "key": "Түүх", "meaning": "Өгөгдөл устсан, эвдэрсэн, ransomware → **Azure Backup** (recovery point, retention)" },
+        { "key": "Zone", "meaning": "Нэг availability zone унасан → **zone redundancy** (local HA)" },
+        { "key": "Газар", "meaning": "Бүтэн region унасан → **Site Recovery** (VM) эсвэл **failover group / active geo-replication** (SQL)" }
+      ],
+      "why": "Requirement → decision: эхлээд «юу алдагдаж байна — өгөгдлийн өмнөх байдал уу, эсвэл ажиллах газар уу?» гэж асуу. Өмнөх байдал бол Backup. Газар бол replication. Хоёулаа хэрэгтэй бол хоёуланг нь сонго."
+    },
+    {
+      "device": "0 · 30 · 60 — «Өгөгдөл 0, Zone 30, Region 60»",
+      "parts": [
+        { "key": "0", "meaning": "**RPO 0** — zone redundancy (SQL high availability): өгөгдөл алдахгүй" },
+        { "key": "30", "meaning": "**RTO < 30 сек** — zone redundancy-ийн downtime (ердийн нөхцөлд)" },
+        { "key": "60", "meaning": "**RTO < 60 сек** — failover group / active geo-replication; RPO ≥ 0 (async тул хэдэн өөрчлөлт алдагдаж болно)" },
+        { "key": "Geo-restore", "meaning": "**Geo-restore** — RTO, RPO хоёулаа минут, цаг (backup-ийн хэмжээнээс хамаарна)" }
+      ],
+      "why": "Requirement → decision: «хэдэн секундээс илүү унтрах боломжгүй юу, өгөгдөл огт алдаж болохгүй юу?» гэж асуу. RPO 0 бол region биш zone хэмжээний HA. Region даах + хурдан бол failover group. Хямд боловч удаан бол geo-restore. Тоонууд нь «ердийн» (typically) утга, баталгаа биш."
+    }
+  ],
+  "keyFacts": [
+    { "text": "**Azure Backup** нь санамсаргүй устгал, corruption, ransomware-ээс хамгаалах, богино ба урт хугацааны retention хийх зориулалттай. **Disaster recovery, failover orchestration** хэрэгтэй бол Site Recovery ашиглана.", "source": "backup" },
+    { "text": "Azure Backup нь **snapshot-based**, **vaulted**, **operational + vaulted** болон урт хугацааны хадгалалтад зориулсан **vault-archive tier** гэсэн backup төрлүүдийг дэмжинэ.", "source": "backup" },
+    { "text": "**Soft delete** default-аар идэвхтэй, устгасан backup өгөгдлийг **14 хоног** хадгална (**14–180 хоног** хооронд тохируулна). Secure-by-default бүс нутагт үүнийг унтрааж **болохгүй**.", "source": "softdelete" },
+    { "text": "Recovery Services vault устгахын өмнө Site Recovery-ийн replicated item-үүдэд **replication-ийг disable** хийх шаардлагатай.", "source": "softdelete" },
+    { "text": "**Site Recovery** нь Azure VM-ийг region-оос region руу, on-premises VMware / Hyper-V VM болон physical server-ийг Azure руу, AWS Windows instance-ийг Azure руу replicate хийнэ.", "source": "asr" },
+    { "text": "Azure VM болон VMware VM-д **continuous replication**, Hyper-V-д replication давтамж **30 секунд** хүртэл. Site Recovery нь аппын өгөгдлийг **intercept хийхгүйгээр** replication-ийг orchestrate хийнэ.", "source": "asr" },
+    { "text": "Azure VM replication-д **crash-consistent** recovery point **5 минут тутамд** үүснэ. **App-consistent** point нь replication policy-ийн тохиргоогоор үүснэ.", "source": "asrarch" },
+    { "text": "Default replication policy: recovery point retention **1 хоног**, app-consistent snapshot давтамж **0 цаг (идэвхгүй)**. App-consistent snapshot нь **VSS** ашигладаг, бусад аппын гүйцэтгэлд нөлөөлж болно.", "source": "asrarch" },
+    { "text": "Failover хийхэд **дурын recovery point** ашиглаж болно. VM-үүд target resource group, virtual network, subnet-д үүснэ. Target resource group нь **эх region-оос өөр** дурын region-д байж болно.", "source": "asrarch" },
+    { "text": "SQL Database RTO/RPO: **zone redundancy** — RTO ердийн үед < 30 сек, RPO 0. **Failover group / active geo-replication** — RTO < 60 сек, RPO ≥ 0. **Geo-restore** — RTO, RPO минут эсвэл цаг.", "source": "sqlha" },
+    { "text": "SQL Database **PITR** retention default **7 хоног**, **1–35 хоног** хооронд тохируулна (Basic: 1–7). **LTR** нь зөвхөн full backup, weekly / monthly / yearly policy-тэй, **10 жил** хүртэл.", "source": "sqlbackup" },
+    { "text": "**Geo-restore** нь PITR backup storage **geo-redundant эсвэл GZRS** үед л боломжтой. LRS эсвэл ZRS backup storage дээр байхгүй. Default нь geo-redundant.", "source": "sqlbackup" },
+    { "text": "**Failover group** нь active geo-replication дээрх declarative давхарга: logical server-ийн бүх эсвэл зарим database-ийг өөр region-ийн server рүү replicate хийнэ. **Listener** нэр (`<fog-name>.database.windows.net`) failover-ийн дараа өөрчлөгдөхгүй, DNS TTL **30 секунд**.", "source": "fog" }
+  ],
+  "compare": {
+    "caption": "¹ Backup frequency, restore хэмжээнээс хамаарна, тогтмол тоо өгөөгүй. ² Default retention 1 хоног. ³ Geo-restore нь geo-redundant / GZRS backup storage шаардана. Эх сурвалж: Azure Backup, Site Recovery, SQL business continuity overview.",
+    "columns": ["Сонголт", "Юунаас хамгаалах", "Region унахад failover", "Өмнөх цэг рүү буцах", "RTO / RPO"],
+    "rows": [
+      ["**Azure Backup**", "Устгал, corruption, ransomware", "✗ (Site Recovery хэрэгтэй)", "✓ retention, soft delete", "Тогтмол тоогүй¹"],
+      ["**Site Recovery**", "VM-ийн zone, region доголдол", "✓", "Recovery point²", "Continuous replication (Azure VM)"],
+      ["**SQL PITR + LTR**", "Алдаа, устгал, compliance", "✗", "✓ 1–35 хоног, LTR 10 жил хүртэл", "Restore хугацаанаас хамаарна¹"],
+      ["**Failover group / active geo-replication**", "SQL region доголдол", "✓", "✗", "RTO < 60 сек, RPO ≥ 0"],
+      ["**Geo-restore**", "SQL region доголдол (хямд)", "✓³", "backup-ийн хуулбараас", "RTO, RPO минут эсвэл цаг"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Azure Backup-тай тул region унахад VM-үүд өөр region-д автоматаар ажиллаж эхэлнэ.",
+      "truth": "Azure Backup нь data protection. **Disaster recovery, failover orchestration** хэрэгтэй бол **Site Recovery**.",
+      "phrase_en": "must fail over virtual machines to a secondary region during a regional outage"
+    },
+    {
+      "trap": "Site Recovery replication байгаа тул backup тусдаа хэрэггүй.",
+      "truth": "Site Recovery default recovery point retention **1 хоног**. Устгал, ransomware, урт хугацааны compliance retention-д **Azure Backup** хэрэгтэй.",
+      "phrase_en": "protect against accidental deletion and ransomware and retain data for compliance"
+    },
+    {
+      "trap": "SQL PITR-ийг 10 жил болгож compliance шаардлагыг хангана.",
+      "truth": "PITR дээд тал нь **35 хоног**. 10 жил хүртэл хадгалахад **long-term retention (LTR)** weekly / monthly / yearly policy.",
+      "phrase_en": "retain monthly full backups for up to 10 years"
+    },
+    {
+      "trap": "Geo-restore бол region унахад хамгийн хурдан SQL recovery.",
+      "truth": "Geo-restore RTO нь **минут, цаг**. Минутаас бага RTO-д **failover group / active geo-replication** (RTO < 60 сек). Мөн backup storage LRS / ZRS бол geo-restore ашиглагдахгүй.",
+      "phrase_en": "recover within one minute after a regional outage with minimal data loss"
+    },
+    {
+      "trap": "Zone redundancy бол region унахаас ч хамгаална.",
+      "truth": "Zone redundancy нь **local HA** (RPO 0, RTO < 30 сек). **Region-ийн** гамшигт **failover group / active geo-replication**.",
+      "phrase_en": "database must remain available if an entire Azure region fails"
+    },
+    {
+      "trap": "Failover group failover хийсний дараа app-ийн connection string-ийг солих хэрэгтэй.",
+      "truth": "**Listener** нэр өөрчлөгдөхгүй. DNS record шинэчлэгдэнэ (TTL **30 сек**), клиентийн DNS cache шинэчлэгдсэний дараа шинэ primary руу холбогдоно.",
+      "phrase_en": "failover without changing the application connection string"
+    }
+  ],
+  "vocabulary": [
+    { "en": "recovery point objective (RPO)", "mn": "хүлээн зөвшөөрөх өгөгдлийн алдагдлын хугацаа" },
+    { "en": "recovery time objective (RTO)", "mn": "үйлчилгээг сэргээх зорилтот хугацаа" },
+    { "en": "fail over / failback", "mn": "нөөц рүү шилжих / анхны газар руу буцах" },
+    { "en": "point-in-time restore", "mn": "тухайн цаг мөчийн байдал руу сэргээх" },
+    { "en": "long-term retention", "mn": "урт хугацааны хадгалалт" },
+    { "en": "unplanned outage", "mn": "урьдчилан төлөвлөөгүй доголдол" }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "id": "data-integration",
+  "domain": "data",
+  "order": 8,
+  "title": "Data integration: Data Factory, Synapse, Fabric, Databricks, Stream Analytics",
+  "tagline": "Өгөгдлийг хаанаас хаашаа, ямар хэрэгслээр, хэр шууд хөдөлгөх вэ?",
+  "checked": "2026-10-16",
+  "sources": ["adf", "integrationruntime", "orchestrationchoice", "synapse", "fabric", "databricks", "stream", "streamprocessing", "datachoice"],
+  "analogy": {
+    "title": "Логистикийн диспетчер Оюун",
+    "story": "Оюун бол хоолны үйлдвэрийн логистикийн диспетчер. Тэр өөрөө ачаа тээвэрлэдэггүй: хуваарь гаргаж, аль ачааг хаанаас хаашаа хэдэн цагт хөдөлгөхийг зохион байгуулдаг. Энэ бол **Azure Data Factory**: pipeline-аар өгөгдлийг цуглуулж, зохицуулна.\n\nАчааг тээвэрлэх машин нь гурван янзтай (**integration runtime**). Нийтийн замаар явдаг ердийн машин (**Azure IR**): хотын нээлттэй замд явна. Компанийн хашаан дотор, хаалга хаалттай газраас ачаа гаргахад өөрийн хашаанд суудаг жолооч хэрэгтэй (**self-hosted IR**). Хуучин үйлдвэрийн тоног төхөөрөмжийг угсарсан нь хэвээр нь шилжүүлсэн цех (**Azure-SSIS IR**) гэж бий.\n\nАчааг хувиргах цех олон янз. Шууд урсаж буй тууз дээр энгийн шүүлт, тоолол хийдэг ангилах цех (**Stream Analytics**, SQL-ээр). Нарийн жор, туршилт, ML-ийн лаборатори (**Databricks**, Apache Spark). Агуулахын нягтлан (**Synapse**, SQL pool, serverless SQL). Эдгээр бүгдийг нэг байшинд, нэг агуулахтай (**OneLake**), түрээсээр өгдөг цогцолбор бол **Microsoft Fabric**.\n\nГэхдээ ангилах туузан цех нь *энгийн* ажилд зориулагдсан. Нарийн хувиргалт, ML бол Spark-ийн ажил. Алдаатай сонголт нь хурдан ч, зардал ч өгөхгүй.",
+    "mapping": [
+      { "real": "Тээвэрлэлтийг зохион байгуулах диспетчер", "azure": "Azure Data Factory (pipelines)" },
+      { "real": "Нийтийн замаар явдаг машин", "azure": "Azure integration runtime" },
+      { "real": "Хашаан доторх өөрийн жолооч", "azure": "Self-hosted integration runtime" },
+      { "real": "Хуучин үйлдвэрийн тоног төхөөрөмжийг хэвээр нь шилжүүлсэн цех", "azure": "Azure-SSIS integration runtime (lift and shift SSIS)" },
+      { "real": "Шууд урсаж буй туузан дээрх энгийн ангилалт", "azure": "Azure Stream Analytics" },
+      { "real": "Нарийн жор, ML-ийн лаборатори", "azure": "Azure Databricks (Apache Spark)" },
+      { "real": "Агуулахын нягтлан", "azure": "Azure Synapse Analytics (SQL pool, serverless SQL)" },
+      { "real": "Бүгдийг нэг байшинд нэгтгэсэн түрээсийн цогцолбор", "azure": "Microsoft Fabric (SaaS)" },
+      { "real": "Цогцолборын нэг нийтийн агуулах", "azure": "OneLake" }
+    ]
+  },
+  "illustration": {
+    "scene": ["Truck", "Factory", "Warehouse", "Waves", "FlaskConical", "Server", "Database"],
+    "caption": "Тээвэр (Truck, integration runtime), үйлдвэр (Factory), агуулах (Warehouse, OneLake / Synapse), урсгал (Waves, Stream Analytics), лаборатори (FlaskConical, Databricks)."
+  },
+  "mnemonics": [
+    {
+      "device": "Нийтийн · Дотоод · Хуучин",
+      "parts": [
+        { "key": "Нийтийн", "meaning": "Нийтийн endpoint-той эх үүсвэр, эсвэл Managed VNet + Private Link → **Azure IR** (serverless)" },
+        { "key": "Дотоод", "meaning": "Private network, on-premises, bring-your-own-driver эх үүсвэр → **self-hosted IR**" },
+        { "key": "Хуучин", "meaning": "Одоо байгаа SSIS package-ыг бага өөрчлөлтөөр ажиллуулах → **Azure-SSIS IR**" }
+      ],
+      "why": "Requirement → decision: «Эх үүсвэр аль сүлжээнд байна, SSIS хэрэгтэй юу?» гэж асуу. Нийтийн эсвэл private link-тэй бол Azure IR, private/on-premises бол self-hosted IR, SSIS lift-and-shift бол Azure-SSIS IR."
+    },
+    {
+      "device": "Урсгал · Spark · Агуулах · Бүгд",
+      "parts": [
+        { "key": "Урсгал", "meaning": "Шууд урсгал дээр SQL-ээр энгийн шүүлт, нэгтгэл, join → **Stream Analytics**" },
+        { "key": "Spark", "meaning": "Нарийн хувиргалт, ML pipeline, том өгөгдөл → **Azure Databricks** (эсвэл Fabric-ийн Spark)" },
+        { "key": "Агуулах", "meaning": "Data warehouse: тогтвортой ачаалал → dedicated SQL pool, тааварлашгүй → serverless SQL → **Synapse**" },
+        { "key": "Бүгд", "meaning": "Ingestion-аас report хүртэл нэг SaaS платформ, нэг OneLake → **Microsoft Fabric**" }
+      ],
+      "why": "Requirement → decision: «Өгөгдөл шууд урсаж байна уу, хувиргалт хэр нарийн вэ, нэг платформ хэрэгтэй юу?» гэж асуу. Энгийн real-time бол Stream Analytics, нарийн/ML бол Spark."
+    },
+    {
+      "device": "Зохион байгуулах · Хувиргах",
+      "parts": [
+        { "key": "Зохион байгуулах", "meaning": "Хуваарьт хөдөлгөөн, олон эх үүсвэрийн ETL/ELT orchestration → **Data Factory pipelines**" },
+        { "key": "Хувиргах", "meaning": "Data flow эсвэл Databricks, HDInsight, SQL Database зэрэг compute дээр хувиргах" }
+      ],
+      "why": "Requirement → decision: «Надад өгөгдөл зөөх, хуваарьлах хэрэгтэй юу, эсвэл өгөгдөл хувиргах compute хэрэгтэй юу?» гэж асуу. Pipeline нь хоёрыг холбоно: зохион байгуулалт нь Data Factory-ийнх, хүнд хувиргалт нь compute-ийнх."
+    }
+  ],
+  "keyFacts": [
+    {
+      "text": "**Azure Data Factory** нь hybrid ETL, ELT болон data integration-д зориулсан managed cloud service. **Pipeline**-аар олон төрлийн эх үүсвэрээс өгөгдөл цуглуулж, data flow-оор визуал эсвэл HDInsight, Databricks, SQL Database зэрэг compute-оор хувиргана.",
+      "source": "adf"
+    },
+    {
+      "text": "**Integration runtime (IR)** нь activity болон linked service хоорондын гүүр, data integration-д ашиглах compute. Гурван төрөл: **Azure**, **self-hosted**, **Azure-SSIS**.",
+      "source": "integrationruntime"
+    },
+    {
+      "text": "**Azure IR** нь бүрэн managed, serverless compute: нийтийн endpoint-той эх үүсвэрт холбогдоно. **Managed Virtual Network**-ийг идэвхжүүлбэл **Private Link**-ээр private network-ийн эх үүсвэрт холбогдоно.",
+      "source": "integrationruntime"
+    },
+    {
+      "text": "**Self-hosted IR** нь cloud data store болон private network дахь data store хооронд copy хийнэ, on-premises эсвэл Azure Virtual Network дахь compute руу transform activity dispatch хийнэ. SAP HANA, MySQL зэрэг bring-your-own-driver эх үүсвэрт ашиглана. JRE шаардлагатай.",
+      "source": "integrationruntime"
+    },
+    {
+      "text": "**Azure-SSIS IR** нь SSIS package-уудыг natively ажиллуулах бүрэн managed Azure VM cluster: одоо байгаа SSIS-ийг **lift and shift** хийж, SSDT, SSMS-тэй бараг өөрчлөлтгүй ашиглана. SSISDB catalog-ийг Azure SQL Database эсвэл SQL Managed Instance-д байрлуулна.",
+      "source": "integrationruntime"
+    },
+    {
+      "text": "Нарийн ETL workflow-ийг олон эх үүсвэрт зохион байгуулах шаардлагатай бол Learn нь **Fabric Data Factory**-г санал болгодог. Data Factory V2-ийн IR нь SSIS package-ыг managed Azure compute дээр natively ажиллуулж чадна.",
+      "source": "orchestrationchoice"
+    },
+    {
+      "text": "**Azure Synapse Analytics** нь data warehouse болон big data системийг нэгтгэсэн enterprise analytics service. Тогтвортой гүйцэтгэл, зардал хэрэгтэй бол **dedicated SQL pool**, төлөвлөгдөөгүй эсвэл burst ачаалалд үргэлж бэлэн **serverless SQL endpoint**. Apache Spark-тай нягт нэгдсэн.",
+      "source": "synapse"
+    },
+    {
+      "text": "**Microsoft Fabric** нь **SaaS** analytics платформ: Data Engineering, Data Factory, Data Science, Real-Time Intelligence, Data Warehouse зэрэг туршлагыг нэгтгэнэ. Бүх workload **OneLake** (Azure Data Lake Storage дээр суурилсан logical data lake)-ийн дээр ажиллаж, өгөгдөл хөдөлгөх, хуулбарлахгүйгээр хуваалцана.",
+      "source": "fabric"
+    },
+    {
+      "text": "**Azure Databricks** нь data, analytics, AI-д зориулсан нэгдсэн, нээлттэй платформ. **Lakehouse** нь data warehouse болон data lake-ийг нэгтгэнэ. Structured Streaming нь Delta Lake-тэй нягт нэгдэж streaming болон incremental өгөгдлийг боловсруулна.",
+      "source": "databricks"
+    },
+    {
+      "text": "**Azure Stream Analytics** нь бүрэн managed (PaaS) stream processing engine: submillisecond latency. Input нь Event Hubs, IoT Hub (reference data Blob эсвэл SQL Database). Output нь Blob, SQL Database, Data Lake, Cosmos DB, Event Hubs. Түр зуурын хязгаарлалттай **SQL query language** ашиглана.",
+      "source": "stream"
+    },
+    {
+      "text": "Stream Analytics нь **энгийн**, бага төвөгтэй real-time ажилд (filter, aggregate, join) тохиромжтой. Нарийн хувиргалт, ML pipeline, том өгөгдлийн ачаалалд Apache Spark дээр суурилсан үйлчилгээ (жишээ нь Databricks) тохирно. Fabric eventstreams нь drag-and-drop интерфейстэй.",
+      "source": "streamprocessing"
+    }
+  ],
+  "compare": {
+    "caption": "✓ нь Microsoft Learn-д шууд заасан. ✗ нь Learn тухайн боломжийг тухайн үйлчилгээний гол зорилго гэж заагаагүй гэсэн дүгнэлт (Data Factory нь Databricks зэрэг compute дуудаж хувиргаж чадах нь үүнд ордоггүй). ¹ Databricks lakehouse нь warehouse ба lake-ийг нэгтгэнэ гэсэн тайлбарт тулгуурласан.",
+    "columns": ["Үйлчилгээ", "Pipeline orchestration / data movement", "SQL data warehouse", "Spark / ML", "Real-time stream", "SaaS"],
+    "rows": [
+      ["Data Factory", "✓", "✗", "✗", "✗", "✗"],
+      ["Synapse Analytics", "✓", "✓", "✓", "✗", "✗"],
+      ["Microsoft Fabric", "✓", "✓", "✓", "✓", "✓"],
+      ["Azure Databricks", "✗", "✓¹", "✓", "✓", "✗"],
+      ["Stream Analytics", "✗", "✗", "✗", "✓", "✗"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Corporate network дотор байгаа on-premises өгөгдлөөс cloud руу copy хийхэд Azure integration runtime хангалттай.",
+      "truth": "**Azure IR** нийтийн endpoint-той (эсвэл Managed VNet + Private Link) эх үүсвэрт. Private network, on-premises бол **self-hosted IR**.",
+      "phrase_en": "copy data from a store inside a private corporate network to the cloud on a schedule"
+    },
+    {
+      "trap": "Одоо байгаа SSIS package-уудыг Data Factory pipeline болгон бүрэн дахин бичих ёстой.",
+      "truth": "**Azure-SSIS IR** нь SSIS package-ыг natively ажиллуулж, **lift and shift**-ийг бараг өөрчлөлтгүй болгоно (SSDT, SSMS ашиглана).",
+      "phrase_en": "existing SSIS packages must run in Azure with minimal rework"
+    },
+    {
+      "trap": "Stream Analytics нь Spark шиг нарийн хувиргалт, ML pipeline-д тохиромжтой.",
+      "truth": "**Stream Analytics** нь SQL-ээр энгийн (filter, aggregate, join) real-time ажилд. Нарийн хувиргалт, ML бол **Spark**-д суурилсан үйлчилгээ (Databricks, Fabric).",
+      "phrase_en": "complex transformations and machine learning pipelines on streaming data"
+    },
+    {
+      "trap": "Data Factory нь том өгөгдлийг өөрөө хувиргадаг учраас compute үйлчилгээ шаардлагагүй.",
+      "truth": "Data Factory нь **orchestration**: хувиргалтыг data flow эсвэл **Databricks, HDInsight, SQL Database** зэрэг compute-оор хийнэ.",
+      "phrase_en": "a pipeline must trigger a transformation that runs on an external compute cluster"
+    },
+    {
+      "trap": "Synapse dedicated SQL pool нь төлөвлөгдөөгүй, burst ачаалалд хамгийн тохиромжтой.",
+      "truth": "**Dedicated SQL pool** нь тогтвортой гүйцэтгэл, зардалд. Төлөвлөгдөөгүй, burst ачаалалд үргэлж бэлэн **serverless SQL endpoint**.",
+      "phrase_en": "unplanned or bursty queries must run without reserving processing power"
+    },
+    {
+      "trap": "Fabric нь workload бүрд өгөгдлийг тусад нь хуулбарлан хадгалдаг.",
+      "truth": "Fabric-ийн бүх workload **OneLake** дээр ажиллаж өгөгдлийг **хөдөлгөх, хуулбарлахгүйгээр** хуваалцана.",
+      "phrase_en": "multiple analytics workloads must share the same data without moving or duplicating it"
+    }
+  ],
+  "vocabulary": [
+    { "en": "orchestrate data movement and transformation", "mn": "өгөгдлийн хөдөлгөөн, хувиргалтыг зохион байгуулах" },
+    { "en": "reach a data store in a private network", "mn": "private network дахь data store-д хандах" },
+    { "en": "lift and shift existing SSIS packages", "mn": "одоо байгаа SSIS package-уудыг lift and shift хийх" },
+    { "en": "continuous windowed aggregation over a stream", "mn": "урсгал дээрх тасралтгүй цонхон (windowed) нэгтгэл" },
+    { "en": "unified lakehouse", "mn": "нэгдсэн lakehouse" },
+    { "en": "reserve processing power for predictable performance", "mn": "тогтвортой гүйцэтгэлд боловсруулах хүчийг нөөцлөх" },
+    { "en": "share data without moving or duplicating it", "mn": "өгөгдлийг хөдөлгөх, хуулбарлахгүйгээр хуваалцах" },
+    { "en": "fully managed stream processing engine", "mn": "бүрэн managed stream боловсруулах engine" }
+  ]
+}

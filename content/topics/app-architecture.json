@@ -1,0 +1,117 @@
+{
+  "id": "app-architecture",
+  "domain": "infrastructure",
+  "order": 12,
+  "title": "App architecture: messaging, Logic Apps, API Management, Redis",
+  "tagline": "Баталгаат захидал уу, хотын хонх уу, эсвэл хэзээ ч зогсдоггүй гол уу?",
+  "checked": "2026-10-17",
+  "sources": ["messaging", "sessions", "duplicates", "dlq", "filters", "logic", "apim", "apimpolicies", "cache", "redis", "patterns"],
+  "analogy": {
+    "title": "Сүрэг хотын шуудангийн дарга Дулмаа",
+    "story": "Дулмаа хотын бүх мэдээ, илгээмжийг хариуцдаг. Түүний дүрэм ганцхан: *илгээгч хариу хүлээж байна уу, үгүй юу?*\n\n**Баталгаат захидал** нь **Service Bus**. Нэг захидлыг *нэг* хүн гарын үсэг зурж авна. Нэг гэр бүлийн захидлуудыг дарааллаар нь өгнө (**sessions**). Нэг захидлыг хоёр удаа илгээвэл хоёр дахийг нь хаяна (**duplicate detection**). 10 удаа хүргэж чадаагүй захидал «хүргэгдээгүй» тавиур дээр очно (**dead-letter queue**).\n\n**Хотын төвийн хонх** нь **Event Grid**. «Ачаа ирлээ!» гэж дуугарна, хэн сонсож юу хийх нь хонхны хамаагүй. Хонх *түүх хадгалдаггүй*: өчигдрийн дуугаралтыг дахин сонсож болохгүй.\n\n**Хэзээ ч зогсдоггүй гол** нь **Event Hubs**. Хотын бүх мэдрэгчийн өгөгдөл гол шиг урсана. Хүн бүр өөрийн эргээс (**consumer group**) урсгалыг уншиж, хүсвэл хуулбарласан хэсгийг (**Capture**) дахин үзнэ.\n\nЖилийн тайлангийн цаасыг алба алгаар дамжуулдаг бичиг хэргийн ажилтан бол **Logic Apps**: бэлэн маягтаар (**connectors**) ажиллаж, код бичихгүй. Үүдний хаалгач бол **API Management**: хэн орохыг шалгаж (**validate-jwt**), хэт олон удаа ирэгчийг зогсооно (**rate limit**). Ширээний шургуулган дахь хаягийн хуулбар бол **Redis**: олдохгүй бол архиваас аваад хуулбарлана (**cache-aside**).\n\nГэхдээ шуудан хэчнээн сайн байсан ч *захидлын агуулга буруу* бол засахгүй. Мөн шургуулганы хуулбар хуучирч болно, тиймээс эрх хасах шиг *яг одоо* үнэн байх ёстой мэдээллийг хуулбараас бүү ав.",
+    "mapping": [
+      { "real": "Баталгаат захидал, нэг хүн гарын үсэг зурж авна", "azure": "Service Bus queue — competing consumers, нэг мессежийг нэг receiver" },
+      { "real": "Нэг гэр бүлийн захидлыг дарааллаар", "azure": "Service Bus sessions — session ID-аар FIFO" },
+      { "real": "«Хүргэгдээгүй» тавиур", "azure": "Dead-letter queue — MaxDeliveryCount (default 10) хэтэрвэл" },
+      { "real": "Хотын төвийн хонх", "azure": "Event Grid — discrete event, reactive routing, replay байхгүй" },
+      { "real": "Хэзээ ч зогсдоггүй гол", "azure": "Event Hubs — telemetry stream, consumer groups, Capture" },
+      { "real": "Бэлэн маягттай бичиг хэргийн ажилтан", "azure": "Logic Apps — connector, visual workflow" },
+      { "real": "Үүдний хаалгач", "azure": "API Management gateway — key/JWT шалгах, rate limit, quota" },
+      { "real": "Шургуулган дахь хаягийн хуулбар", "azure": "Azure Managed Redis + cache-aside pattern" }
+    ]
+  },
+  "illustration": {
+    "scene": ["Mailbox", "Bell", "Waves", "ClipboardList", "DoorOpen", "Archive"],
+    "caption": "Баталгаат захидал (Service Bus) → хонх (Event Grid) → гол (Event Hubs) → бичиг хэрэг (Logic Apps) → хаалгач (API Management) → шургуулга (Redis)",
+    "image": null
+  },
+  "mnemonics": [
+    {
+      "device": "Шаардлага → сонголт: «Илгээгч юу хүлээж байна вэ?»",
+      "parts": [
+        { "key": "Хариу, гэрээ, захиалга, санхүүгийн гүйлгээ", "meaning": "**Service Bus** — message, transactions, duplicate detection, FIFO (sessions)" },
+        { "key": "«Ийм юм болсон» гэж мэдэгдээд л болно", "meaning": "**Event Grid** — discrete event, reactive routing, serverless" },
+        { "key": "Их хэмжээний telemetry, дахин уншиж шинжлэх", "meaning": "**Event Hubs** — event stream, partition бүрт дараалал, Capture" },
+        { "key": "SaaS системүүдийг холбох, код бага", "meaning": "**Logic Apps** — 1,400+ managed connector, visual designer" },
+        { "key": "Байгаа API-д facade, бодлого, хэрэглэгчийн хандалт", "meaning": "**API Management** — gateway, management plane, developer portal" },
+        { "key": "Олон уншдаг, бага зэрэг хуучирсан ч болно", "meaning": "**Azure Managed Redis** + **cache-aside**" }
+      ],
+      "why": "Requirement → decision: «publisher хэрэглэгч юу хийхийг хүлээж байна уу?» гэж асуу. Хүлээж байвал (гэрээ байгаа) message → **Service Bus**. Хүлээхгүй бол event: салангид төлөв өөрчлөлт → **Event Grid**, цаг хугацааны цуваа, шинжилгээ → **Event Hubs**."
+    },
+    {
+      "device": "10 · 10 мин · 7 өдөр — «Service Bus хэдэн удаа, хэр удаан санах вэ?»",
+      "parts": [
+        { "key": "10", "meaning": "**MaxDeliveryCount** default **10** — хэтэрвэл dead-letter queue руу" },
+        { "key": "10 мин", "meaning": "**Duplicate detection** window default **10 минут** (min 20 секунд)" },
+        { "key": "7 өдөр", "meaning": "Duplicate detection window дээд тал нь **7 өдөр**" }
+      ],
+      "why": "Requirement → decision: «producer timeout-оор ижил MessageId-ийг хэр хугацааны дараа дахин илгээж болох вэ?» гэж асуу. Window-г тэр хугацаанаас урт, гэхдээ аль болох богино тавь: window том байх тусам throughput буурна."
+    }
+  ],
+  "keyFacts": [
+    { "text": "**Event** = төлөв өөрчлөлтийн хөнгөн мэдэгдэл, publisher юу хийгдэхийг хүлээдэггүй. **Message** = боловсруулах өгөгдөл, publisher ба consumer хооронд **гэрээ** байна.", "source": "messaging" },
+    { "text": "Үндсэн зорилго: **Event Grid** — reactive event routing, **Event Hubs** — big data streaming, ingestion, **Service Bus** — enterprise transactional messaging (order processing, санхүүгийн гүйлгээ).", "source": "messaging" },
+    { "text": "Дараалал: Event Grid — **баталгаа байхгүй**, Event Hubs — **partition бүрт**, Service Bus — **FIFO (sessions)**. Transactions, duplicate detection зөвхөн **Service Bus**-т. Capture / replay зөвхөн **Event Hubs**-т.", "source": "messaging" },
+    { "text": "**Sessions** нь ижил **session ID**-тай мессежийг нэг receiver-т exclusive lock-оор өгч, дараалал хадгална. **Basic tier** sessions дэмждэггүй, Standard, Premium дэмжинэ.", "source": "sessions" },
+    { "text": "**Duplicate detection** нь application-ий өгсөн **MessageId**-г window дотор санана: default **10 минут**, min 20 секунд, max **7 өдөр**. Давхар мессеж «амжилттай» хүлээн авсан мэт харагдаад хаягдана. Basic tier дэмждэггүй.", "source": "duplicates" },
+    { "text": "Peek-lock дээр settle хийгээгүй мессеж дахин хүргэгдэж delivery count өснө. **MaxDeliveryCount** (default 10) хэтэрвэл **dead-letter queue** руу `MaxDeliveryCountExceeded` шалтгаантай шилжинэ.", "source": "dlq" },
+    { "text": "Topic subscription-д **SQL filter**, **correlation filter** (property тэнцүү эсэх, олон нөхцөл бол AND), boolean **TrueFilter / FalseFilter** тавина. Subscription бүр зөвхөн өөрт хэрэгтэй мессежийг авна.", "source": "filters" },
+    { "text": "**Logic Apps** нь **1,400+** Microsoft-managed connector, visual designer-тэй workflow. Connector байхгүй бол Inline Code, **Azure Functions**, custom connector дуудна. **Standard** (single-tenant) нь virtual network-ээр хамгаалагдсан resource-д хялбар хандана.", "source": "logic" },
+    { "text": "**API Management** = API **gateway** (data plane), **management plane**, **developer portal**. Gateway нь backend-ийн facade: API key, JWT, certificate шалгаж, **quota**, **rate limit** мөрдүүлж, хариуг cache хийнэ.", "source": "apim" },
+    { "text": "APIM policy: **rate-limit** (by subscription / by key) нь богино хугацааны spike-аас хамгаална, **quota** нь урт хугацааны call volume, bandwidth хязгаар. **rate-limit-by-key**, **quota-by-key** нь **Consumption tier**-т байхгүй.", "source": "apimpolicies" },
+    { "text": "**Cache-aside**: cache-д байхгүй бол data store-оос уншаад cache-д хийнэ. Шинэчлэхдээ **эхлээд data store**-ийг шинэчилж, **дараа нь** cache item-ийг устга. Эсрэг дарааллаар хийвэл хуучин өгөгдөл cache-д буцаж орно.", "source": "cache" },
+    { "text": "**Azure Managed Redis** tier: **Memory Optimized** (8:1 memory:vCPU), **Balanced** (4:1), **Compute Optimized** (2:1), **Flash Optimized** (RAM + NVMe). **Active geo-replication** Flash Optimized-д **байхгүй**.", "source": "redis" },
+    { "text": "Cloud design patterns: **Retry**-г **Circuit Breaker**-тэй хослуулна (transient fault-д дахин оролдох, байнгын fault-д зогсох). **Queue-Based Load Leveling**-ийг **Competing Consumers**-тэй хослуулна (ачааллыг буфер хийж, боловсруулалтыг scale хийх).", "source": "patterns" }
+  ],
+  "compare": {
+    "caption": "Эх сурвалж: Choose between Azure Event Grid, Event Hubs, and Service Bus. Гурвуулаа at-least-once хүргэлттэй. Service Bus exactly-once нь sessions-тэй үед. Event Grid dead-letter дэмжинэ, Event Hubs дэмждэггүй.",
+    "columns": ["Сервис", "Өгөгдлийн загвар", "Дараалал", "Duplicate detection", "Transactions", "Capture / replay", "Хэзээ"],
+    "rows": [
+      ["**Event Grid**", "Event (discrete мэдэгдэл)", "✗", "✗", "✗", "✗", "Төлөв өөрчлөлтөд хариу өгөх, serverless"],
+      ["**Event Hubs**", "Event stream (цаг хугацааны цуваа)", "Partition бүрт", "✗", "✗", "✓ (Capture)", "Telemetry, real-time analytics"],
+      ["**Service Bus**", "Message (өндөр үнэ цэнэтэй)", "✓ FIFO (sessions)", "✓", "✓", "✗", "Order processing, санхүүгийн гүйлгээ, workflow"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Telemetry-г олон analytics хэрэглэгч дахин уншиж чадахаар хадгалахад Event Grid хангалттай.",
+      "truth": "Event Grid capture / replay дэмждэггүй. Stream хадгалж, consumer group тус бүр бие даан унших бол **Event Hubs** (**Capture**).",
+      "phrase_en": "retain the telemetry stream so multiple analytics consumers can replay it independently"
+    },
+    {
+      "trap": "Захиалга тус бүрийн мессежийг дарааллаар нь боловсруулахад ердийн Service Bus queue FIFO баталгаатай.",
+      "truth": "Дарааллыг **sessions** (session ID) баталгаажуулна. Захиалга бүрийн ID-г session ID болго: өөр захиалгууд зэрэг явна. **Basic tier** sessions дэмждэггүй.",
+      "phrase_en": "messages for the same order must be processed in sequence, while different orders proceed in parallel"
+    },
+    {
+      "trap": "Duplicate detection нь мессежийн агуулгыг харьцуулж давхардлыг илрүүлнэ.",
+      "truth": "Зөвхөн application-ий тавьсан **MessageId**-г window (default 10 мин, max 7 өдөр) дотор харьцуулна. MessageId-г бизнесийн ID-тай холбо.",
+      "phrase_en": "the producer may resend the same message after a network timeout"
+    },
+    {
+      "trap": "Cache-аа шинэчлэхдээ эхлээд cache item-ийг устгаад дараа нь database-ийг шинэчилнэ.",
+      "truth": "**Эхлээд data store**, дараа нь cache item устга. Эсрэгээр бол завсарт cache miss гарч хуучин утга cache-д буцаж орно.",
+      "phrase_en": "an application using cache-aside updates a record and must avoid repopulating stale data"
+    },
+    {
+      "trap": "API Management-ийн quota нь богино хугацааны spike-аас backend-ийг хамгаална.",
+      "truth": "Spike-аас **rate-limit** (by subscription / by key) хамгаална. **Quota** нь урт хугацааны call volume, bandwidth хязгаар. By-key хувилбарууд Consumption tier-т байхгүй.",
+      "phrase_en": "prevent short bursts from a single consumer from overloading the backend"
+    },
+    {
+      "trap": "SaaS системүүдийг холбох workflow-д Azure Functions дээр integration код бичих нь хамгийн бага хүчин чармайлт.",
+      "truth": "Managed connector, visual workflow бол **Logic Apps**. Connector байхгүй тусгай тооцоог л Functions-аар дуудна.",
+      "phrase_en": "integrate several SaaS applications with minimal custom code"
+    }
+  ],
+  "vocabulary": [
+    { "en": "competing consumers", "mn": "нэг queue-ээс олон worker өрсөлдөж мессеж авах" },
+    { "en": "dead-letter queue", "mn": "боловсруулж чадаагүй мессежийг тусгаарлах дэд queue" },
+    { "en": "peek-lock", "mn": "мессежийг түгжиж авах, settle хийтэл устгахгүй горим" },
+    { "en": "at-least-once delivery", "mn": "дор хаяж нэг удаа хүргэх (давхардаж болно)" },
+    { "en": "consumer group", "mn": "Event Hubs stream-ийг бие даан унших хэрэглэгчийн бүлэг" },
+    { "en": "facade", "mn": "backend-ийг нуух нэг нүүр хэсэг" },
+    { "en": "throttling", "mn": "хүсэлтийн хурдыг хязгаарлах" },
+    { "en": "stale data", "mn": "хуучирсан өгөгдөл" }
+  ]
+}

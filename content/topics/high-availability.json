@@ -1,0 +1,109 @@
+{
+  "id": "high-availability",
+  "domain": "continuity",
+  "order": 10,
+  "title": "High availability: availability sets, availability zones, multi-region",
+  "tagline": "Цахилгаан тасарвал кофе шопын аль нь үлдэх вэ: давхар, барилга, хот?",
+  "checked": "2026-10-17",
+  "sources": ["vmavail", "avset", "azoverview", "azsupport", "paired", "sqlha"],
+  "analogy": {
+    "title": "Паранойд кофе шопын эзэн Болд",
+    "story": "Болд хэзээ ч кофе шопоо хаахыг хүсдэггүй. Тиймээс хамгаалалтаа шат шатаар нэмсэн.\n\nЭхлээд нэг барилгын өөр өөр давхарт хоёр бариста тавьсан. Нэг давхрын цонх хагарвал нөгөө давхарт кофе хийгдсээр. Цэвэрлэгээг ч нэг давхраар л хийж, дараагийн давхарт орохоосоо өмнө 30 минут хүлээдэг. Энэ бол **availability set**: *fault domain* (давхар) болон *update domain* (цэвэрлэгээний ээлж). Гэхдээ барилгын цахилгаан, интернет тасарвал хоёр давхар хамт хаагдана.\n\nТиймээс хотын гурван өөр барилгад салбар нээлээ. Барилга бүр өөрийн цахилгаан, сүлжээ, хөргөлттэй, хоорондоо хэдхэн миллисекундын зайтай. Энэ бол **availability zones**. Нэг барилга унавал бусад нь ажиллана.\n\nХамгийн сүүлд өөр хотод салбар нээнэ. Энэ бол **multi-region**. Хоёр хотыг «хос» гэж нэрлэсэн ч гэсэн (**region pair**) ганц хотод үер ирэхэд нөгөө хот өөрөө нээгдэхгүй. Хэнийг хэзээ нээхээ Болд өөрөө төлөвлөх ёстой.\n\nХамгийн гол нь: бүх салбар нэг л буруу жороор кофе хийвэл бүгд адилхан муу кофе хийнэ. HA бол *унахаас* хамгаална, *алдаанаас* биш. Алдаанд backup хэрэгтэй.",
+    "mapping": [
+      { "real": "Нэг барилгын өөр давхруудад бариста", "azure": "Availability set — VM-үүдийг fault domain-д тараана" },
+      { "real": "Цэвэрлэгээг нэг давхраар, 30 минут хүлээж хийх", "azure": "Update domain — нэг удаад нэг update domain restart хийгдэнэ" },
+      { "real": "Барилгын цахилгаан тасрах", "azure": "Datacenter-level outage — availability set хамгаалахгүй" },
+      { "real": "Хотын гурван тусдаа барилга", "azure": "Availability zones — region бүрт 3, тусдаа power, network, cooling" },
+      { "real": "Хос хот боловч өөрөө нээгдэхгүй", "azure": "Region pair — автомат failover өгөхгүй" },
+      { "real": "Бүх салбар ижил буруу жор", "azure": "HA нь өгөгдлийн алдаанаас хамгаалахгүй — backup хэрэгтэй" }
+    ]
+  },
+  "illustration": {
+    "scene": ["Users", "Building2", "Building2", "Building2", "Globe"],
+    "caption": "Нэг барилгын бариста (availability set) → гурван барилга (availability zones) → өөр хот (multi-region)",
+    "image": null
+  },
+  "mnemonics": [
+    {
+      "device": "Давхар → Барилга → Хот: «Юу унахыг тэсвэрлэх вэ?»",
+      "parts": [
+        { "key": "Давхар", "meaning": "**Availability set** — fault domain, update domain. Нэг datacenter-ийн дотоод correlated failure" },
+        { "key": "Барилга", "meaning": "**Availability zone** — тусдаа datacenter. Цахилгаан, сүлжээ, хөргөлт тасрахаас хамгаална" },
+        { "key": "Хот", "meaning": "**Multi-region** — region бүхэлдээ унахад. HA/DR төлөвлөгөөг өөрөө хийнэ" }
+      ],
+      "why": "Requirement → decision: «хамгийн том ямар доголдлыг тэсвэрлэх ёстой вэ — server-ийн хэсэг, datacenter, region?» гэж асуу. Хүрээ томрох тусам зардал, төвөгтэй байдал нэмэгдэнэ. Region-д AZ байхгүй бол availability set хэрэгтэй."
+    },
+    {
+      "device": "2 · 3 · 30 — «Хоёр хуулбар, гурван zone, гучин минут»",
+      "parts": [
+        { "key": "2", "meaning": "**2+ VM** availability set-д. Мөн zone-redundant нөөц **2 ба түүнээс олон** zone ашиглавал zone доголдлыг тэсвэрлэнэ" },
+        { "key": "3", "meaning": "Дэмжигдсэн region бүрт **3 availability zone**" },
+        { "key": "30", "meaning": "Update domain restart хийгдсэний дараа **30 минут** сэргэх хугацаа, дараа нь дараагийн update domain" }
+      ],
+      "why": "Requirement → decision: «хэдэн хуулбар, хэдэн domain-д тарааж байна?» гэж өөрөөсөө асуу. Нэг VM нь availability set-д ч, zone-д ч өөрөө HA биш. Тоонууд нь Learn-ээс баталгаажсан, харин fault domain-ийн тоо region бүрт өөр."
+    }
+  ],
+  "keyFacts": [
+    { "text": "**Availability set** нь VM-үүдийг олон **fault domain**-д тараана. Хоёр буюу түүнээс олон VM үүсгэж, нэмэлт зардалгүй (зөвхөн VM-ийн төлбөр). Availability zone дэмждэггүй region-д онцгой хэрэгтэй.", "source": "avset" },
+    { "text": "Availability set нь **datacenter-level network outage**-д өртөж болно. Zone-ийн дүйцэхүйц resiliency өгөхгүй. Харин VM–VM latency zone-оос бага.", "source": "avset" },
+    { "text": "Managed availability set-д зөвхөн **managed disk**-тэй VM үүснэ. Managed-disk fault domain-ийн тоо region бүрт **2 эсвэл 3**.", "source": "avset" },
+    { "text": "Update domain: нэг удаад зөвхөн **нэг update domain** restart хийгдэнэ, дараагийн домайн руу шилжихээс өмнө **30 минут** сэргэнэ.", "source": "avset" },
+    { "text": "Microsoft өргөн боломжтой HA-д **Virtual Machine Scale Sets (flexible orchestration)**-ийг зөвлөдөг. Scale set-ийн VM-үүд олон zone, нэг zone эсвэл regional байж болно.", "source": "avset" },
+    { "text": "**Availability zone** нь region доторх физикээр тусдаа байршил. Дэмжигдсэн region бүрт **3** zone, тус бүр өөрийн **power, network, cooling**-тай.", "source": "vmavail" },
+    { "text": "Zone дээр replicate хийсэн VM-ээр datacenter алдагдахаас хамгаална. Харин **regional** (zone заагаагүй) VM нь аль zone-д байгааг мэдэх боломжгүй, **аль ч zone-ийн доголдол** үүнийг унагаж болно.", "source": "vmavail" },
+    { "text": "**Zone-redundant** нөөц нь service-ээр олон zone-д replicate/тархсан байдаг. **2 ба түүнээс олон zone** ашиглавал zone доголдолд тэсвэртэй.", "source": "azoverview" },
+    { "text": "Zone хоорондын latency зорилт нь ойролцоогоор **2 мс-ээс бага** (round-trip). Тиймээс zone дундуур **synchronous replication** боломжтой. Нэг region доторх zone хоорондын data transfer-д төлбөр авдаггүй.", "source": "azoverview" },
+    { "text": "Zone дэмжлэг service бүрт, tier бүрт, region бүрт адилгүй. Зарим service автоматаар zone-redundant, зарим нь **тохируулах** шаардлагатай.", "source": "azsupport" },
+    { "text": "**Region pair** нь region recovery sequence, sequential updating, data residency өгнө. Гэхдээ pair-д байршуулсан нь **автомат HA, DR, failover өгөхгүй**. Өөрөө төлөвлөнө.", "source": "paired" },
+    { "text": "Олон region **хос биш**, тэдгээр нь availability zone-ыг гол redundancy болгон ашигладаг. Pair-тэй, pair-гүй region-уудыг хослуулан бат бөх шийдэл бүтээж болно.", "source": "paired" }
+  ],
+  "compare": {
+    "caption": "¹ Availability set datacenter-level network outage-д өртөж болно. Эх сурвалж: Availability sets overview, Availability options for VMs, Region pairs.",
+    "columns": ["Сонголт", "Fault domain / hardware", "Datacenter-ийн power, network, cooling", "Region унах", "Шаардлага"],
+    "rows": [
+      ["**Availability set**", "✓", "✗¹", "✗", "2+ VM, managed disk. Zone байхгүй region-д тохиромжтой"],
+      ["**Availability zones**", "✓", "✓", "✗", "Region-д zone дэмжлэг. Service эсвэл VM-ийг 2+ zone-д"],
+      ["**Multi-region (region pair)**", "✓", "✓", "✓", "HA/DR төлөвлөгөөг **өөрөө** хийнэ, pair нь автомат failover биш"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Availability set бол datacenter бүхэлдээ алдагдахаас хамгаална.",
+      "truth": "Availability set нь **fault domain**-д тарааж correlated failure-ийг багасгана, харин datacenter-level network outage-д өртөнө. Datacenter-ийн хамгаалалтад **availability zones**.",
+      "phrase_en": "protect against the failure of an entire datacenter within a region"
+    },
+    {
+      "trap": "Хос (paired) region-д байршуулсан тул region унахад автоматаар нөгөө рүү шилжинэ.",
+      "truth": "Region pair нь **автомат HA, DR, failover өгөхгүй**. Failover, replication-ийг өөрөө төлөвлөж тохируулна.",
+      "phrase_en": "workload must automatically fail over to the paired region"
+    },
+    {
+      "trap": "Zone-redundant тохиргоо байгаа тул region бүхэлдээ унахад ч аюулгүй.",
+      "truth": "Zone redundancy нь **zone** доголдлоос хамгаална. Region-ийн хэмжээний доголдолд **multi-region** (failover group, Site Recovery гэх мэт).",
+      "phrase_en": "must remain available if an entire Azure region becomes unavailable"
+    },
+    {
+      "trap": "Zone заагаагүй (regional) VM автоматаар олон zone-д тархсан байдаг.",
+      "truth": "Regional VM аль zone-д байгаа нь **мэдэгдэхгүй**, аль ч zone-ийн доголдол үүнийг унагаж болно. Zone resiliency-д **олон zone-д** VM-үүдийг тараа.",
+      "phrase_en": "deploy virtual machines so that a single zone failure does not take down the application"
+    },
+    {
+      "trap": "Нэг VM-ийг availability set-д хийхэд өндөр бэлэн байдал хангагдана.",
+      "truth": "Availability set-д **2 ба түүнээс олон VM** хэрэгтэй. Нэг VM нь set-д байсан ч HA биш.",
+      "phrase_en": "ensure high availability for the application tier during planned maintenance"
+    },
+    {
+      "trap": "Service бүр, region бүр availability zone-ыг адилхан дэмжинэ.",
+      "truth": "Zone дэмжлэг **service, tier, region**-оос хамаарна. Zone байхгүй region-д **availability set** хэрэгтэй, зарим service-д zone-redundancy-г тохируулах шаардлагатай.",
+      "phrase_en": "region does not support availability zones"
+    }
+  ],
+  "vocabulary": [
+    { "en": "fault domain", "mn": "correlated failure-ийг багасгахаар VM-үүдийг тараадаг тусгаарлалтын нэгж" },
+    { "en": "update domain", "mn": "нэг дор restart хийж болох VM-үүдийн бүлэг" },
+    { "en": "zone-redundant", "mn": "олон zone-д service-ээр replicate хийгдсэн" },
+    { "en": "zonal", "mn": "нэг тодорхой zone-д байршсан" },
+    { "en": "region pair", "mn": "хос region (recovery priority, sequential update)" },
+    { "en": "withstand a zone failure", "mn": "zone доголдлыг тэсвэрлэх" }
+  ]
+}

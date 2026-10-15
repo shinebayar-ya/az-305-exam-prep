@@ -1,0 +1,272 @@
+[
+  {
+    "id": "Q01",
+    "domain": "identity",
+    "source": "rbac",
+    "prompt": "Dev баг зөвхөн нэг resource group-ийн VM-үүдийг удирдах ёстой. Хамгийн бага эрхийн шийдэл аль вэ?",
+    "options": [
+      "Subscription Owner",
+      "Resource group scope дээр Virtual Machine Contributor",
+      "Tenant Global Administrator",
+      "Subscription Contributor"
+    ],
+    "answer": 1,
+    "explanation": "VM-д зориулсан role-ийг шаардлагатай resource group дээр онооно. Subscription role-ууд хүрээг хэтрүүлнэ; Global Administrator нь Azure VM удирдах зориулалтын role биш.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q02",
+    "domain": "identity",
+    "source": "policy",
+    "prompt": "Бүх subscription-д зөвшөөрөгдсөн region-оос өөр газар шинэ resource үүсгэхийг хориглоно. Юуг сонгох вэ?",
+    "options": [
+      "Reader role",
+      "Azure Monitor dashboard",
+      "Management group scope дахь allowed locations deny policy",
+      "Resource tag дангаар"
+    ],
+    "answer": 2,
+    "explanation": "Azure Policy нь resource-ийн байршлын шаардлагыг enforce хийнэ. Role нь байршлын дүрэм биш; dashboard ажиглана; tag өөрөө хориг тавихгүй.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q03",
+    "domain": "identity",
+    "source": "logs",
+    "prompt": "Олон resource-ийн цуглуулсан log-ийг KQL-ээр хайж, хооронд нь шинжлэх шаардлагатай. Аль хэрэгсэл тохирох вэ?",
+    "options": [
+      "Log Analytics",
+      "Azure DNS",
+      "Azure Policy",
+      "Traffic Manager"
+    ],
+    "answer": 0,
+    "explanation": "Log Analytics нь Azure Monitor Logs дахь өгөгдлийг KQL-ээр query хийнэ. DNS ба Traffic Manager нь routing; Policy нь compliance-д зориулагдсан.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q04",
+    "domain": "identity",
+    "source": "identity",
+    "prompt": "VM дээрх app Entra authentication дэмждэг Storage-д credential хадгалахгүй хандана. Юу санал болгох вэ?",
+    "options": [
+      "Storage key-г source code-д бичих",
+      "Password-ийг VM image-д оруулах",
+      "Зөвхөн private endpoint",
+      "Managed identity + шаардлагатай data role"
+    ],
+    "answer": 3,
+    "explanation": "Managed identity token авч нэвтэрнэ, data role эрх олгоно. Key/password хадгалах нь шаардлагыг зөрчинө. Private endpoint нь сүлжээний холболт бөгөөд дангаараа authentication олгохгүй.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q05",
+    "domain": "identity",
+    "source": "vault",
+    "prompt": "Аппын third-party API secret болон TLS certificate-ийг төвлөрүүлэн хамгаалж удирдана. Аль үйлчилгээ вэ?",
+    "options": [
+      "Azure Key Vault",
+      "Azure DNS",
+      "Event Hubs",
+      "Load Balancer"
+    ],
+    "answer": 0,
+    "explanation": "Key Vault нь secret, key, certificate удирдана. Бусад нь DNS, event stream, traffic түгээлтийн үйлчилгээ.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q06",
+    "domain": "data",
+    "source": "pool",
+    "prompt": "SaaS-ийн олон Azure SQL database-ийн ачаалал өөр өөр цагт огцом өсдөг. Нөөц хуваалцаж зардлыг оновчлох сонголт?",
+    "options": [
+      "Database бүрд байнгын peak capacity",
+      "Нэг elastic pool-д тохирох database-уудыг оруулах",
+      "Бүх data-г Queue-д шилжүүлэх",
+      "Database бүрд тусдаа VM"
+    ],
+    "answer": 1,
+    "explanation": "Elastic pool нь database-уудын хооронд compute нөөц хуваалцана. Тус бүрийг peak-д бэлдэх нь сул ашиглалт үүсгэнэ; Queue нь relational database орлохгүй; VM нь удирдлагыг нэмнэ.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q07",
+    "domain": "data",
+    "source": "mi",
+    "prompt": "SQL Server workload SQL Agent, instance түвшний боломж шаарддаг. OS patching-ийг өөрөө хийхгүйгээр Azure руу шилжинэ. Аль нь хамгийн тохирох вэ?",
+    "options": [
+      "Azure Table Storage",
+      "Azure SQL Database single database",
+      "Azure SQL Managed Instance",
+      "SQL Server on Azure VM"
+    ],
+    "answer": 2,
+    "explanation": "Managed Instance нь SQL Server-тэй өндөр нийцтэй managed PaaS. Single database нь бүх instance боломжийг орлохгүй; VM OS удирдлага шаарддаг; Table Storage relational SQL workload биш.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q08",
+    "domain": "data",
+    "source": "redundancy",
+    "prompt": "Storage нэг region-ийн availability zone тасалдахад ажиллах ёстой. Өөр region-д хуулбар шаардахгүй. Аль redundancy тохирох вэ?",
+    "options": [
+      "LRS",
+      "ZRS",
+      "Зөвхөн нэг VM disk",
+      "Зөвхөн periodic export"
+    ],
+    "answer": 1,
+    "explanation": "ZRS нь primary region-ийн zone-уудын хооронд synchronous хуулбарлана. LRS нэг physical location-д; disk/export нь ижил zone resilience батлахгүй.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q09",
+    "domain": "data",
+    "source": "adf",
+    "prompt": "On-premises болон cloud эх үүсвэрээс хуваариар өгөгдөл татаж ETL/ELT pipeline зохион байгуулна. Аль үйлчилгээ вэ?",
+    "options": [
+      "Azure Front Door",
+      "Key Vault",
+      "Azure Data Factory",
+      "Azure Policy"
+    ],
+    "answer": 2,
+    "explanation": "Data Factory нь data integration ба pipeline orchestration-д зориулагдсан. Front Door traffic, Key Vault secret, Policy governance хариуцна.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q10",
+    "domain": "continuity",
+    "source": "asr",
+    "prompt": "VM workload-ийг хоёрдогч region руу replicate хийж, disaster үед failover ба failback зохион байгуулна. Юуг сонгох вэ?",
+    "options": [
+      "Azure Site Recovery",
+      "Azure Monitor дангаар",
+      "Azure DNS zone дангаар",
+      "Resource lock"
+    ],
+    "answer": 0,
+    "explanation": "Site Recovery нь replication, failover/failback бүхий disaster recovery үйлчилгээ. Monitoring, DNS болон lock нь workload replication хийхгүй.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q11",
+    "domain": "continuity",
+    "source": "backup",
+    "prompt": "VM-ийн өмнөх recovery point-оос устгасан өгөгдлөө сэргээх шаардлагатай. Юу сонгох вэ?",
+    "options": [
+      "Traffic Manager",
+      "ExpressRoute",
+      "Azure Policy",
+      "Azure Backup"
+    ],
+    "answer": 3,
+    "explanation": "Azure Backup нь recovery point-оос restore хийхэд зориулагдсан. Routing, connectivity, compliance үйлчилгээ нь өгөгдлийн backup хадгалахгүй.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q12",
+    "domain": "continuity",
+    "source": "redundancy",
+    "prompt": "Geo-replicated Storage ашиглавал region сүйрэхэд хамгийн сүүлийн write бүр заавал secondary-д очсон гэж үзэж болох уу?",
+    "options": [
+      "Тийм, geo replication үргэлж synchronous",
+      "Үгүй, cross-region replication asynchronous тул data loss боломжтой",
+      "Тийм, DNS TTL тэг байхад",
+      "Тийм, Reader role өгвөл"
+    ],
+    "answer": 1,
+    "explanation": "Geo replication asynchronous тул бүх сүүлийн write очсон баталгаа байхгүй. DNS болон RBAC нь replication lag-ийг арилгахгүй. RPO шаардлагаа тусад нь үнэлнэ.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q13",
+    "domain": "infrastructure",
+    "source": "routing",
+    "prompt": "Олон region-д байрлах public HTTPS app-д global layer-7 routing болон edge acceleration шаардлагатай. Аль үйлчилгээ тохирох вэ?",
+    "options": [
+      "Azure Front Door",
+      "Regional Load Balancer",
+      "Azure DNS private zone",
+      "Application Gateway дангаар нэг region-д"
+    ],
+    "answer": 0,
+    "explanation": "Front Door global HTTP(S) delivery хийдэг. Regional Load Balancer L7 боломжгүй; private DNS нь public delivery биш; нэг regional gateway нь global edge шийдэл биш.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q14",
+    "domain": "infrastructure",
+    "source": "private",
+    "prompt": "VNet-ээс Storage үйлчилгээнд private IP-гаар хандахыг хүсэж байна. Аль бүрэлдэхүүн тохирох вэ?",
+    "options": [
+      "Public IP",
+      "Traffic Manager",
+      "Private endpoint",
+      "NAT Gateway дангаар"
+    ],
+    "answer": 2,
+    "explanation": "Private endpoint нь VNet-ийн private IP-тай network interface ашиглана. DNS-ийг зөв тохируулж, public access-ийг шаардлагад нийцүүлэн тусад нь хязгаарлана. Бусад сонголт private service endpoint үүсгэхгүй.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q15",
+    "domain": "infrastructure",
+    "source": "express",
+    "prompt": "On-premises datacenter-ийг Azure-тай public internet-ээр дамжихгүй provider-ийн private connectivity-ээр холбоно. Аль нь вэ?",
+    "options": [
+      "Internet site-to-site VPN",
+      "ExpressRoute",
+      "Azure Front Door",
+      "Public Load Balancer"
+    ],
+    "answer": 1,
+    "explanation": "ExpressRoute provider-аар private connection байгуулна. Internet VPN нь internet ашиглана; Front Door ба Load Balancer нь datacenter private circuit биш. Private гэдэг нь автоматаар бүх traffic encrypted гэсэн үг биш.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q16",
+    "domain": "infrastructure",
+    "source": "messaging",
+    "prompt": "Захиалгын workflow-д brokered queue, transaction, dead-letter болон duplicate detection шаардлагатай. Аль үйлчилгээ вэ?",
+    "options": [
+      "Event Hubs",
+      "Azure DNS",
+      "Event Grid дангаар",
+      "Azure Service Bus"
+    ],
+    "answer": 3,
+    "explanation": "Service Bus нь enterprise messaging-ийн эдгээр боломжийг дэмжинэ. Event Hubs stream ingestion; Event Grid event routing; DNS message broker биш. Tier ба тохиргоог хэрэгжүүлэхдээ шалгана.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q17",
+    "domain": "infrastructure",
+    "source": "messaging",
+    "prompt": "Маш олон төхөөрөмжийн telemetry stream-ийг ingest хийж, consumer-ууд тусад нь унших шаардлагатай. Аль нь хамгийн тохирох вэ?",
+    "options": [
+      "Azure Event Hubs",
+      "Azure Policy",
+      "Key Vault",
+      "Service Bus queue"
+    ],
+    "answer": 0,
+    "explanation": "Event Hubs high-throughput stream ingestion ба consumer group-д зориулагдсан. Service Bus нь transactional messaging-д илүү тохирно; Policy/Key Vault stream platform биш.",
+    "checked": "2026-10-15"
+  },
+  {
+    "id": "Q18",
+    "domain": "infrastructure",
+    "source": "migrate",
+    "prompt": "On-premises server-үүдийг Azure руу шилжүүлэхээс өмнө discovery, readiness ба sizing assessment хийнэ. Аль эхлэл зөв вэ?",
+    "options": [
+      "Бүх VM-ийг шууд ижил хэмжээгээр үүсгэх",
+      "Azure DNS record нэмэх",
+      "Azure Migrate assessment",
+      "Key Vault secret үүсгэх"
+    ],
+    "answer": 2,
+    "explanation": "Azure Migrate нь discovery, assessment, migration-ийн төвлөрсөн хэрэгсэл. Шууд ижил sizing хийх нь assessment биш; DNS болон secret нь readiness үнэлэхгүй.",
+    "checked": "2026-10-15"
+  }
+]

@@ -1,0 +1,175 @@
+{
+  "id": "governance",
+  "domain": "identity",
+  "order": 4,
+  "title": "Governance: management groups, Azure Policy, tags, landing zones",
+  "tagline": "Дүрмийг хаана тогтоож, хэн ч зөрчөхөд яах вэ?",
+  "checked": "2026-10-16",
+  "sources": ["policy", "effects", "effectaudit", "effectdeny", "effectmodify", "effectdine", "remediate", "policyscope", "mgroups", "armoverview", "subscriptiondesign", "tags", "locks", "landingzone"],
+  "analogy": {
+    "title": "Хэт дүрэмтэй хотын дарга Нямаа",
+    "story": "Хотын дарга Нямаа хотоо дүүрэг, хотхон, орон сууцаар зохион байгуулсан. Дүүрэг дээр тогтоосон дүрэм доторх бүх хотхон, орон сууцад *өвлөгдөнө*. Хотхон бүр өөрийн төсөв, өөрийн квоттой тусдаа нэгж, орон сууц нь хамт баригдаж, хамт нураагддаг хэсэг. Энэ бол **management group → subscription → resource group**.\n\nНямаа барилгын дүрмийг гурван янзаар хэрэгжүүлдэг. Шалгагч зөрчлийг *тэмдэглээд* л өнгөрнө (**Audit**). Зөвшөөрөл олгоогүй бол барилга эхлэх ч үгүй (**Deny**). Дутуу байвал өөрөө засна, шошго нь байхгүй бол нааж өгнө (**Modify**), эсвэл дутуу галын дохиолол байвал нэмж суулгана (**DeployIfNotExists**). Эдгээр нь **Azure Policy**: ажилтан ямар эрхтэй байхаас үл хамааран, барилгын *байдал* дүрэмд нийцэх ёстой.\n\nБарилгад шошго (**tag**) наадаг: «зардал: маркетинг», «орчин: production». Гэхдээ орон сууцны шошго доторх тавилгад *автоматаар* очдоггүй, тус тусад нь наах хэрэгтэй. Хамгийн чухал барилгад «**нурааж болохгүй**» гэсэн тэмдэг (**lock**) тавьсан бол эзэн нь ч нураах эрхгүй. Хотын ерөнхий төлөвлөгөө бол **landing zone**: нийтийн дэд бүтэц (platform) ба иргэд барьдаг орон сууц (workload).\n\nГэхдээ дүрэм нь *юу байх ёстойг* шийднэ. *Хэн* барьж болохыг тэр шийддэггүй. Энэ бол өмнөх сэдэв: RBAC.",
+    "mapping": [
+      { "real": "Дүүрэг", "azure": "Management group" },
+      { "real": "Тусдаа төсөв, квоттой хотхон", "azure": "Subscription" },
+      { "real": "Хамт баригдаж, хамт нурдаг орон сууц", "azure": "Resource group" },
+      { "real": "Дүүргийн дүрэм доторх бүх хотхонд өвлөгдөх", "azure": "Policy / role assignment inheritance" },
+      { "real": "Зөрчлийг зөвхөн тэмдэглэх шалгагч", "azure": "Audit effect" },
+      { "real": "Зөвшөөрөл олгохгүй байх", "azure": "Deny effect" },
+      { "real": "Шошгыг өөрөө нааж, засаж өгөх", "azure": "Modify effect" },
+      { "real": "Дутуу галын дохиолол байвал нэмж суулгах", "azure": "DeployIfNotExists effect" },
+      { "real": "Барилгын шошго: «зардал», «орчин»", "azure": "Tags" },
+      { "real": "«Нурааж болохгүй» тэмдэг", "azure": "Resource lock (CanNotDelete)" },
+      { "real": "Хотын ерөнхий төлөвлөгөө", "azure": "Azure landing zone" }
+    ]
+  },
+  "illustration": {
+    "scene": ["Landmark", "Building2", "Tag", "Lock", "ClipboardList", "Users", "KeyRound"],
+    "caption": "Хотын захиргаа (Landmark), барилга (Building2), шошго (Tag), lock, дүрмийн жагсаалт (Policy), хүмүүс, эрх (RBAC)."
+  },
+  "mnemonics": [
+    {
+      "device": "Бүлэг · Нэгж · Хамт · Шошго",
+      "parts": [
+        { "key": "Бүлэг", "meaning": "Олон subscription-д, мөн ирээдүйн subscription-д нэг дүрэм → **management group**" },
+        { "key": "Нэгж", "meaning": "Тусдаа billing, quota, governance хил → **subscription**" },
+        { "key": "Хамт", "meaning": "Хамт deploy хийж, хамт устгах lifecycle → **resource group**" },
+        { "key": "Шошго", "meaning": "Зардлаар бүлэглэх, эрхийг өөрчлөхгүйгээр ангилах → **tag**" }
+      ],
+      "why": "Requirement → decision: «Энэ шаардлага хэдэн subscription-д хамаарах вэ, хамт амьдрах уу, эсвэл зүгээр л ангилах уу?» гэж асуу. Хил хэрэгтэй бол subscription, нэг lifecycle бол resource group, тархсан resource-ыг тоолох бол tag."
+    },
+    {
+      "device": "Мэдэгдэх · Хориглох · Засах · Нэмэх",
+      "parts": [
+        { "key": "Мэдэгдэх", "meaning": "Зөрчлийг бүртгэнэ, request-ийг зогсоохгүй → **Audit**" },
+        { "key": "Хориглох", "meaning": "Нийцэхгүй request-ийг татгалзана → **Deny**" },
+        { "key": "Засах", "meaning": "Property эсвэл tag нэмэх, өөрчлөх, устгах → **Modify**" },
+        { "key": "Нэмэх", "meaning": "Нөхцөл таарахад template deploy хийж дутуу resource нэмэх → **DeployIfNotExists**" }
+      ],
+      "why": "Requirement → decision: «Зөрчлийг зөвхөн мэдэгдэх үү, хаах уу, өөрөө засах уу, дутууг нэмэх уу?» гэж асуу. Pilot эсвэл measure бол Audit, хатуу хаах бол Deny, tag/property автоматаар тааруулах бол Modify."
+    },
+    {
+      "device": "Хэн · Юу · Хамгаалах",
+      "parts": [
+        { "key": "Хэн", "meaning": "Хэрэглэгч ямар үйлдэл хийж чадах вэ → **Azure RBAC**" },
+        { "key": "Юу", "meaning": "Resource-ийн байдал дүрэмд нийцэх ёстой, хэн хийснээс үл хамааран → **Azure Policy**" },
+        { "key": "Хамгаалах", "meaning": "Эрхтэй хүн ч санамсаргүй устгахаас сэргийлэх → **Resource lock**" }
+      ],
+      "why": "Requirement → decision: «Асуудал хүнд үү (эрх), resource-ийн тохиргоонд уу (дүрэм), эсвэл санамсаргүй устгалд уу (lock)?» гэж асуу."
+    }
+  ],
+  "keyFacts": [
+    {
+      "text": "Management group tree нь **зургаан түвшин** хүртэл гүнтэй (root болон subscription түвшин тоологдохгүй), нэг directory-д **10,000** management group байж болно. Management group болон subscription бүр **ганц parent**-тэй. Нэг management group доторх бүх subscription ижил Entra tenant-д итгэнэ.",
+      "source": "mgroups"
+    },
+    {
+      "text": "Management group-д оноосон policy болон role нь доторх бүх subscription-д **өвлөгдөнө**: нэг assignment олон subscription-д хүрнэ.",
+      "source": "mgroups"
+    },
+    {
+      "text": "**Subscription** нь management, billing, scale-ийн нэгж бөгөөд quota, cost, governance, security, identity хяналтын хил болдог.",
+      "source": "subscriptiondesign"
+    },
+    {
+      "text": "**Resource group** нь нэг Azure шийдэлд хамаарах resource-уудыг нэг бүлэг болгон удирдах хайрцаг. Subscription дээрх policy бүх resource group-д, resource group дээрх policy зөвхөн тухайн group-д хамаарна.",
+      "source": "armoverview"
+    },
+    {
+      "text": "**Azure Policy** нь байгууллагын стандартыг хэрэгжүүлж, compliance-ийг олон scope дээр үнэлнэ. Compliance dashboard болон олон resource-д bulk remediation санал болгоно, нийтлэг хэрэглээнд зориулсан built-in definition-уудтай.",
+      "source": "policy"
+    },
+    {
+      "text": "Policy нь resource-ийн *байдлыг* хэн өөрчилснөөс үл хамааран шалгана. **Azure RBAC** нь хэрэглэгчийн үйлдэлд төвлөрнө. Хэрэглэгч эрхтэй байсан ч үр дүн нь non-compliant бол Policy create/update-ийг блоклоно.",
+      "source": "policy"
+    },
+    {
+      "text": "Policy definition-ийг хадгалсан байршил (management group эсвэл subscription) нь assign хийх боломжтой scope-г тодорхойлно. Хэд хэдэн subscription-д хэрэглэх бол management group-д хадгал.",
+      "source": "policyscope"
+    },
+    {
+      "text": "**Audit** нь non-compliant resource үед activity log-д warning event үүсгэнэ, харин request-ийг **зогсоохгүй**.",
+      "source": "effectaudit"
+    },
+    {
+      "text": "**Deny** нь policy definition-д нийцэхгүй request-ийг Resource Provider руу илгээхээс өмнө зогсоож, амжилтгүй болгоно.",
+      "source": "effectdeny"
+    },
+    {
+      "text": "**Modify** нь create/update үед subscription эсвэл resource-ийн property, tag-ийг нэмж, өөрчилж, устгана. Одоо байгаа non-compliant resource-ийг **remediation task**-аар засна.",
+      "source": "effectmodify"
+    },
+    {
+      "text": "**DeployIfNotExists** нь нөхцөл таарахад template deployment ажиллуулж, дутуу resource-ийг нэмнэ.",
+      "source": "effectdine"
+    },
+    {
+      "text": "Remediation үед policy assignment нь **managed identity** (policy service үүсгэсэн system-assigned эсвэл өөрийн user-assigned) ашиглана. Тэр identity-д шаардлагатай хамгийн бага Azure role олгоно.",
+      "source": "remediate"
+    },
+    {
+      "text": "**Tag** нь key-value metadata. Resource group болон subscription дээр тавьсан tag resource-уудад **өвлөгдөхгүй**. Resource, resource group, subscription тус бүр дээд тал нь **50** tag name-value pair авна.",
+      "source": "tags"
+    },
+    {
+      "text": "**Lock**: `CanNotDelete` (уншиж, өөрчилж болно, устгаж болохгүй) ба `ReadOnly` (уншихаас бусдыг хаана). Parent scope-ийн lock дараа нэмсэн resource-д ч өвлөгдөнө, хамгийн хатуу lock давамгайлна. Lock-той resource агуулсан resource group-ийн устгал бүхэлдээ хаагдана.",
+      "source": "locks"
+    },
+    {
+      "text": "**Azure landing zone** нь олон subscription-тай Azure орчныг удирдах, хамгаалах, томруулах архитектур: **platform landing zone** ба тэдгээрийн guardrail дотор workload баг ажилладаг **workload landing zone**.",
+      "source": "landingzone"
+    }
+  ],
+  "compare": {
+    "caption": "✓ нь Microsoft Learn-д шууд заасан. ✗ нь Learn тухайн чадварыг заагаагүй гэсэн дүгнэлт. DeployIfNotExists-ийн managed identity нь remediation-ийн ерөнхий тайлбараас гаргасан.",
+    "columns": ["Effect", "Request-ийг зогсооно", "Property / tag өөрчилнө", "Template deploy хийнэ", "Remediation-д managed identity"],
+    "rows": [
+      ["Audit", "✗", "✗", "✗", "✗"],
+      ["Deny", "✓", "✗", "✗", "✗"],
+      ["Modify", "✗", "✓", "✗", "✓"],
+      ["DeployIfNotExists", "✗", "✗", "✓", "✓"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Contributor-д resource үүсгэх эрх байгаа тул зөвшөөрөгдсөн region-оос гадна deploy хийж чадна.",
+      "truth": "Policy нь хэн хийснээс үл хамааран **create/update-ийг блоклоно**. Эрх (RBAC) биш **Azure Policy**, хаах бол **Deny**.",
+      "phrase_en": "deployments outside approved regions must fail regardless of the caller's permissions"
+    },
+    {
+      "trap": "Audit effect нь зөрчилтэй deployment-ийг хаадаг.",
+      "truth": "**Audit** нь activity log-д warning event үүсгэнэ, request-ийг **зогсоохгүй**. Хаах бол **Deny**.",
+      "phrase_en": "report violations without blocking deployment or changing resources"
+    },
+    {
+      "trap": "Subscription эсвэл resource group дээр tag тавивал доторх бүх resource автоматаар өвлөнө.",
+      "truth": "Tag **өвлөгдөхгүй**. Resource-уудад автоматаар нэмэхийн тулд **Modify** effect бүхий policy ашиглана (одоо байгаа resource-д remediation task).",
+      "phrase_en": "a department label must be applied to every resource, including existing ones, without manual work"
+    },
+    {
+      "trap": "Нэг resource дээр lock тавиад resource group-ийг устгавал зөвхөн тэр resource үлдэнэ.",
+      "truth": "Lock-той resource байвал **resource group-ийн устгал бүхэлдээ хаагдана**: хэсэгчилсэн устгал гарахгүй. Parent scope-ийн lock дараа нэмсэн resource-д ч өвлөгдөнө.",
+      "phrase_en": "deleting the resource group fails even though the other resources are unlocked"
+    },
+    {
+      "trap": "Subscription-ийг хоёр management group-д зэрэг оруулж болно.",
+      "truth": "Management group болон subscription бүр **ганц parent**-тэй. Tree нь зургаан түвшин хүртэл гүнтэй.",
+      "phrase_en": "a subscription must belong to two business units at the same time in the hierarchy"
+    },
+    {
+      "trap": "Modify эсвэл DeployIfNotExists policy assign хийхэд одоо байгаа resource-ууд автоматаар засагдана.",
+      "truth": "Одоо байгаа non-compliant resource-ийг **remediation task**-аар засна. Remediation нь **managed identity** ашигладаг тул түүнд хамгийн бага шаардлагатай Azure role олгоно.",
+      "phrase_en": "existing resources must be brought into compliance after the policy is assigned"
+    }
+  ],
+  "vocabulary": [
+    { "en": "apply a baseline to all current and future subscriptions", "mn": "суурь дүрмийг одоогийн болон ирээдүйн бүх subscription-д хэрэгжүүлэх" },
+    { "en": "enforce compliance regardless of the user's permissions", "mn": "хэрэглэгчийн эрхээс үл хамааран compliance хэрэгжүүлэх" },
+    { "en": "audit noncompliant resources without blocking deployment", "mn": "deployment-ийг хаахгүйгээр non-compliant resource-ийг audit хийх" },
+    { "en": "automatically add or update a tag", "mn": "tag-ийг автоматаар нэмэх, шинэчлэх" },
+    { "en": "remediate existing resources", "mn": "одоо байгаа resource-ийг засах (remediate)" },
+    { "en": "prevent accidental deletion", "mn": "санамсаргүй устгахаас сэргийлэх" },
+    { "en": "separate billing and quota boundary", "mn": "billing, quota-ийн тусдаа хил" },
+    { "en": "group resources that share the same lifecycle", "mn": "ижил lifecycle-тай resource-уудыг бүлэглэх" }
+  ]
+}

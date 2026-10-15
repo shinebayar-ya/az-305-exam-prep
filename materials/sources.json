@@ -1,0 +1,919 @@
+{
+  "rbac": {
+    "id": "rbac",
+    "title": "Azure RBAC",
+    "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview",
+    "checked": "2026-10-15",
+    "topic": "authz-access"
+  },
+  "policy": {
+    "id": "policy",
+    "title": "Azure Policy",
+    "url": "https://learn.microsoft.com/en-us/azure/governance/policy/overview",
+    "checked": "2026-10-15",
+    "topic": "governance"
+  },
+  "logs": {
+    "id": "logs",
+    "title": "Log Analytics",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-overview",
+    "checked": "2026-10-15",
+    "topic": "monitoring"
+  },
+  "identity": {
+    "id": "identity",
+    "title": "Managed identities",
+    "url": "https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview",
+    "checked": "2026-10-15",
+    "topic": "authz-access"
+  },
+  "vault": {
+    "id": "vault",
+    "title": "Key Vault",
+    "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/overview",
+    "checked": "2026-10-15",
+    "topic": "authz-access"
+  },
+  "pool": {
+    "id": "pool",
+    "title": "SQL elastic pools",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/elastic-pool-overview",
+    "checked": "2026-10-15",
+    "topic": "relational"
+  },
+  "mi": {
+    "id": "mi",
+    "title": "SQL Managed Instance",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-sql/managed-instance/sql-managed-instance-paas-overview",
+    "checked": "2026-10-15",
+    "topic": "relational"
+  },
+  "redundancy": {
+    "id": "redundancy",
+    "title": "Storage redundancy",
+    "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy",
+    "checked": "2026-10-15",
+    "topic": "storage"
+  },
+  "adf": {
+    "id": "adf",
+    "title": "Data Factory",
+    "url": "https://learn.microsoft.com/en-us/azure/data-factory/introduction",
+    "checked": "2026-10-15",
+    "topic": "data-integration"
+  },
+  "asr": {
+    "id": "asr",
+    "title": "Site Recovery",
+    "url": "https://learn.microsoft.com/en-us/azure/site-recovery/site-recovery-overview",
+    "checked": "2026-10-15",
+    "topic": "backup-dr"
+  },
+  "backup": {
+    "id": "backup",
+    "title": "Azure Backup",
+    "url": "https://learn.microsoft.com/en-us/azure/backup/backup-overview",
+    "checked": "2026-10-15",
+    "topic": "backup-dr"
+  },
+  "routing": {
+    "id": "routing",
+    "title": "Load balancing options",
+    "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/load-balancing-overview",
+    "checked": "2026-10-15",
+    "topic": "load-balancing"
+  },
+  "private": {
+    "id": "private",
+    "title": "Private endpoints",
+    "url": "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview",
+    "checked": "2026-10-15",
+    "topic": "network-security"
+  },
+  "express": {
+    "id": "express",
+    "title": "ExpressRoute",
+    "url": "https://learn.microsoft.com/en-us/azure/expressroute/expressroute-introduction",
+    "checked": "2026-10-15",
+    "topic": "network-connectivity"
+  },
+  "messaging": {
+    "id": "messaging",
+    "title": "Messaging comparison",
+    "url": "https://learn.microsoft.com/en-us/azure/service-bus-messaging/compare-messaging-services",
+    "checked": "2026-10-15",
+    "topic": "app-architecture"
+  },
+  "migrate": {
+    "id": "migrate",
+    "title": "Azure Migrate",
+    "url": "https://learn.microsoft.com/en-us/azure/migrate/migrate-services-overview",
+    "checked": "2026-10-15",
+    "topic": "migration"
+  },
+  "pim": {
+    "id": "pim",
+    "title": "Pim Configure",
+    "url": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",
+    "checked": "2026-10-15",
+    "topic": "authz-access"
+  },
+  "conditional": {
+    "id": "conditional",
+    "title": "Overview",
+    "url": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview",
+    "checked": "2026-10-15",
+    "topic": "authn-entra"
+  },
+  "hybrid": {
+    "id": "hybrid",
+    "title": "Choose Ad Authn",
+    "url": "https://learn.microsoft.com/en-us/entra/identity/hybrid/connect/choose-ad-authn",
+    "checked": "2026-10-15",
+    "topic": "authn-entra"
+  },
+  "reviews": {
+    "id": "reviews",
+    "title": "Access Reviews Overview",
+    "url": "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview",
+    "checked": "2026-10-15",
+    "topic": "authz-access"
+  },
+  "entitlement": {
+    "id": "entitlement",
+    "title": "Entitlement Management Overview",
+    "url": "https://learn.microsoft.com/en-us/entra/id-governance/entitlement-management-overview",
+    "checked": "2026-10-15",
+    "topic": "authz-access"
+  },
+  "monitor": {
+    "id": "monitor",
+    "title": "Data Platform",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/fundamentals/data-platform",
+    "checked": "2026-10-15",
+    "topic": "monitoring"
+  },
+  "diagnostics": {
+    "id": "diagnostics",
+    "title": "Diagnostic Settings",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/platform/diagnostic-settings",
+    "checked": "2026-10-15",
+    "topic": "monitoring"
+  },
+  "alerts": {
+    "id": "alerts",
+    "title": "Alerts Types",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-types",
+    "checked": "2026-10-15",
+    "topic": "monitoring"
+  },
+  "sqlchoose": {
+    "id": "sqlchoose",
+    "title": "Azure Sql Iaas Vs Paas What Is Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-sql/azure-sql-iaas-vs-paas-what-is-overview",
+    "checked": "2026-10-15",
+    "topic": "relational"
+  },
+  "cosmos": {
+    "id": "cosmos",
+    "title": "Consistency Levels",
+    "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/consistency-levels",
+    "checked": "2026-10-15",
+    "topic": "cosmos-db"
+  },
+  "blobtiers": {
+    "id": "blobtiers",
+    "title": "Access Tiers Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/storage/blobs/access-tiers-overview",
+    "checked": "2026-10-15",
+    "topic": "storage"
+  },
+  "files": {
+    "id": "files",
+    "title": "Storage Introduction",
+    "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-introduction",
+    "checked": "2026-10-15",
+    "topic": "storage"
+  },
+  "datachoice": {
+    "id": "datachoice",
+    "title": "Data Store Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/data-store-overview",
+    "checked": "2026-10-15",
+    "topic": "data-integration"
+  },
+  "sqlha": {
+    "id": "sqlha",
+    "title": "Business Continuity High Availability Disaster Recover Hadr Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/business-continuity-high-availability-disaster-recover-hadr-overview",
+    "checked": "2026-10-15",
+    "topic": "relational"
+  },
+  "sqlbackup": {
+    "id": "sqlbackup",
+    "title": "Automated Backups Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/automated-backups-overview",
+    "checked": "2026-10-15",
+    "topic": "relational"
+  },
+  "blobprotect": {
+    "id": "blobprotect",
+    "title": "Data Protection Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/storage/blobs/data-protection-overview",
+    "checked": "2026-10-15",
+    "topic": "storage"
+  },
+  "compute": {
+    "id": "compute",
+    "title": "Compute Decision Tree",
+    "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/compute-decision-tree",
+    "checked": "2026-10-15",
+    "topic": "compute"
+  },
+  "network": {
+    "id": "network",
+    "title": "Hub Spoke",
+    "url": "https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke",
+    "checked": "2026-10-15",
+    "topic": "network-connectivity"
+  },
+  "vpn": {
+    "id": "vpn",
+    "title": "Vpn Gateway About Vpngateways",
+    "url": "https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-about-vpngateways",
+    "checked": "2026-10-15",
+    "topic": "network-connectivity"
+  },
+  "cache": {
+    "id": "cache",
+    "title": "Cache Aside",
+    "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside",
+    "checked": "2026-10-15",
+    "topic": "app-architecture"
+  },
+  "workload": {
+    "id": "workload",
+    "title": "Workload Identity Federation",
+    "url": "https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation",
+    "checked": "2026-10-15",
+    "topic": "authz-access"
+  },
+  "rbacdata": {
+    "id": "rbacdata",
+    "title": "Storage",
+    "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/storage",
+    "checked": "2026-10-15",
+    "topic": "authz-access"
+  },
+  "serverless": {
+    "id": "serverless",
+    "title": "Serverless Tier Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/serverless-tier-overview",
+    "checked": "2026-10-15",
+    "topic": "relational"
+  },
+  "partition": {
+    "id": "partition",
+    "title": "Partitioning Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/partitioning-overview",
+    "checked": "2026-10-15",
+    "topic": "cosmos-db"
+  },
+  "stream": {
+    "id": "stream",
+    "title": "Stream Analytics Introduction",
+    "url": "https://learn.microsoft.com/en-us/azure/stream-analytics/stream-analytics-introduction",
+    "checked": "2026-10-15",
+    "topic": "data-integration"
+  },
+  "runtime": {
+    "id": "runtime",
+    "title": "Create Self Hosted Integration Runtime",
+    "url": "https://learn.microsoft.com/en-us/azure/data-factory/create-self-hosted-integration-runtime",
+    "checked": "2026-10-15",
+    "topic": "data-integration"
+  },
+  "sessions": {
+    "id": "sessions",
+    "title": "Message Sessions",
+    "url": "https://learn.microsoft.com/en-us/azure/service-bus-messaging/message-sessions",
+    "checked": "2026-10-15",
+    "topic": "app-architecture"
+  },
+  "duplicates": {
+    "id": "duplicates",
+    "title": "Duplicate Detection",
+    "url": "https://learn.microsoft.com/en-us/azure/service-bus-messaging/duplicate-detection",
+    "checked": "2026-10-15",
+    "topic": "app-architecture"
+  },
+  "dlq": {
+    "id": "dlq",
+    "title": "Service Bus Dead Letter Queues",
+    "url": "https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-dead-letter-queues",
+    "checked": "2026-10-15",
+    "topic": "app-architecture"
+  },
+  "filters": {
+    "id": "filters",
+    "title": "Topic Filters",
+    "url": "https://learn.microsoft.com/en-us/azure/service-bus-messaging/topic-filters",
+    "checked": "2026-10-15",
+    "topic": "app-architecture"
+  },
+  "apim": {
+    "id": "apim",
+    "title": "Api Management Key Concepts",
+    "url": "https://learn.microsoft.com/en-us/azure/api-management/api-management-key-concepts",
+    "checked": "2026-10-15",
+    "topic": "app-architecture"
+  },
+  "apimpolicies": {
+    "id": "apimpolicies",
+    "title": "Api Management Policies",
+    "url": "https://learn.microsoft.com/en-us/azure/api-management/api-management-policies",
+    "checked": "2026-10-15",
+    "topic": "app-architecture"
+  },
+  "logic": {
+    "id": "logic",
+    "title": "Logic Apps Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview",
+    "checked": "2026-10-15",
+    "topic": "app-architecture"
+  },
+  "nat": {
+    "id": "nat",
+    "title": "Nat Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview",
+    "checked": "2026-10-15",
+    "topic": "network-connectivity"
+  },
+  "firewall": {
+    "id": "firewall",
+    "title": "Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/firewall/overview",
+    "checked": "2026-10-15",
+    "topic": "network-security"
+  },
+  "nsg": {
+    "id": "nsg",
+    "title": "Network Security Groups Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview",
+    "checked": "2026-10-15",
+    "topic": "network-security"
+  },
+  "waf": {
+    "id": "waf",
+    "title": "Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/web-application-firewall/overview",
+    "checked": "2026-10-15",
+    "topic": "network-security"
+  },
+  "tm": {
+    "id": "tm",
+    "title": "Traffic Manager Routing Methods",
+    "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-routing-methods",
+    "checked": "2026-10-15",
+    "topic": "load-balancing"
+  },
+  "patterns": {
+    "id": "patterns",
+    "title": "Patterns",
+    "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/",
+    "checked": "2026-10-15",
+    "topic": "app-architecture"
+  },
+  "autoscale": {
+    "id": "autoscale",
+    "title": "Autoscale Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-overview",
+    "checked": "2026-10-15",
+    "topic": "compute"
+  },
+  "migrationstrategy": {
+    "id": "migrationstrategy",
+    "title": "Select Cloud Migration Strategy",
+    "url": "https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/plan/select-cloud-migration-strategy",
+    "checked": "2026-10-15",
+    "topic": "migration"
+  },
+  "workbooks": {
+    "id": "workbooks",
+    "title": "Workbooks Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/visualize/workbooks-overview",
+    "checked": "2026-10-15",
+    "topic": "monitoring"
+  },
+  "appinsights": {
+    "id": "appinsights",
+    "title": "App Insights Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview",
+    "checked": "2026-10-15",
+    "topic": "monitoring"
+  },
+  "endpoints": {
+    "id": "endpoints",
+    "title": "Virtual Network Service Endpoints Overview",
+    "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview",
+    "checked": "2026-10-15",
+    "topic": "network-security"
+  },
+  "activitylog": {
+    "id": "activitylog",
+    "title": "Activity log",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/activity-log",
+    "checked": "2026-10-16",
+    "topic": "monitoring"
+  },
+  "metrics": {
+    "id": "metrics",
+    "title": "Azure Monitor Metrics",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/data-platform-metrics",
+    "checked": "2026-10-16",
+    "topic": "monitoring"
+  },
+  "alertsoverview": {
+    "id": "alertsoverview",
+    "title": "Alerts overview",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-overview",
+    "checked": "2026-10-16",
+    "topic": "monitoring"
+  },
+  "phs": {
+    "id": "phs",
+    "title": "Password hash synchronization",
+    "url": "https://learn.microsoft.com/en-us/entra/identity/hybrid/connect/whatis-phs",
+    "checked": "2026-10-16",
+    "topic": "authn-entra"
+  },
+  "mfa": {
+    "id": "mfa",
+    "title": "How Entra multifactor authentication works",
+    "url": "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-howitworks",
+    "checked": "2026-10-16",
+    "topic": "authn-entra"
+  },
+  "authmethods": {
+    "id": "authmethods",
+    "title": "Authentication methods in Entra ID",
+    "url": "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-methods",
+    "checked": "2026-10-16",
+    "topic": "authn-entra"
+  },
+  "securitydefaults": {
+    "id": "securitydefaults",
+    "title": "Security defaults",
+    "url": "https://learn.microsoft.com/en-us/entra/fundamentals/security-defaults",
+    "checked": "2026-10-16",
+    "topic": "authn-entra"
+  },
+  "b2b": {
+    "id": "b2b",
+    "title": "B2B collaboration overview",
+    "url": "https://learn.microsoft.com/en-us/entra/external-id/what-is-b2b",
+    "checked": "2026-10-16",
+    "topic": "authn-entra"
+  },
+  "externalid": {
+    "id": "externalid",
+    "title": "External ID overview",
+    "url": "https://learn.microsoft.com/en-us/entra/external-id/external-identities-overview",
+    "checked": "2026-10-16",
+    "topic": "authn-entra"
+  },
+  "scope": {
+    "id": "scope",
+    "title": "Understand scope for Azure RBAC",
+    "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/scope-overview",
+    "checked": "2026-10-16",
+    "topic": "authz-access"
+  },
+  "plane": {
+    "id": "plane",
+    "title": "Control plane and data plane operations",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/control-plane-and-data-plane",
+    "checked": "2026-10-16",
+    "topic": "authz-access"
+  },
+  "directoryroles": {
+    "id": "directoryroles",
+    "title": "Azure roles, Entra roles, classic administrator roles",
+    "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory-admin-roles",
+    "checked": "2026-10-16",
+    "topic": "authz-access"
+  },
+  "privroles": {
+    "id": "privroles",
+    "title": "Azure privileged built-in roles",
+    "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/privileged",
+    "checked": "2026-10-16",
+    "topic": "authz-access"
+  },
+  "kvrbac": {
+    "id": "kvrbac",
+    "title": "Azure RBAC for Key Vault",
+    "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/rbac-guide",
+    "checked": "2026-10-16",
+    "topic": "authz-access"
+  },
+  "effects": {
+    "id": "effects",
+    "title": "Policy effect basics",
+    "url": "https://learn.microsoft.com/en-us/azure/governance/policy/concepts/effect-basics",
+    "checked": "2026-10-16",
+    "topic": "governance"
+  },
+  "effectaudit": {
+    "id": "effectaudit",
+    "title": "Policy audit effect",
+    "url": "https://learn.microsoft.com/en-us/azure/governance/policy/concepts/effect-audit",
+    "checked": "2026-10-16",
+    "topic": "governance"
+  },
+  "effectdeny": {
+    "id": "effectdeny",
+    "title": "Policy deny effect",
+    "url": "https://learn.microsoft.com/en-us/azure/governance/policy/concepts/effect-deny",
+    "checked": "2026-10-16",
+    "topic": "governance"
+  },
+  "effectmodify": {
+    "id": "effectmodify",
+    "title": "Policy modify effect",
+    "url": "https://learn.microsoft.com/en-us/azure/governance/policy/concepts/effect-modify",
+    "checked": "2026-10-16",
+    "topic": "governance"
+  },
+  "remediate": {
+    "id": "remediate",
+    "title": "Remediate non-compliant resources",
+    "url": "https://learn.microsoft.com/en-us/azure/governance/policy/how-to/remediate-resources",
+    "checked": "2026-10-16",
+    "topic": "governance"
+  },
+  "policyscope": {
+    "id": "policyscope",
+    "title": "Policy scope",
+    "url": "https://learn.microsoft.com/en-us/azure/governance/policy/concepts/scope",
+    "checked": "2026-10-16",
+    "topic": "governance"
+  },
+  "mgroups": {
+    "id": "mgroups",
+    "title": "Management groups overview",
+    "url": "https://learn.microsoft.com/en-us/azure/governance/management-groups/overview",
+    "checked": "2026-10-16",
+    "topic": "governance"
+  },
+  "armoverview": {
+    "id": "armoverview",
+    "title": "Azure Resource Manager overview",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/overview",
+    "checked": "2026-10-16",
+    "topic": "governance"
+  },
+  "subscriptiondesign": {
+    "id": "subscriptiondesign",
+    "title": "Landing zone subscription design",
+    "url": "https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions",
+    "checked": "2026-10-16",
+    "topic": "governance"
+  },
+  "tags": {
+    "id": "tags",
+    "title": "Use tags to organize resources",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources",
+    "checked": "2026-10-16",
+    "topic": "governance"
+  },
+  "locks": {
+    "id": "locks",
+    "title": "Lock your resources",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/lock-resources",
+    "checked": "2026-10-16",
+    "topic": "governance"
+  },
+  "landingzone": {
+    "id": "landingzone",
+    "title": "What is an Azure landing zone",
+    "url": "https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/",
+    "checked": "2026-10-16",
+    "topic": "governance"
+  },
+  "effectdine": {
+    "id": "effectdine",
+    "title": "Policy deployIfNotExists effect",
+    "url": "https://learn.microsoft.com/en-us/azure/governance/policy/concepts/effect-deploy-if-not-exists",
+    "checked": "2026-10-16",
+    "topic": "governance"
+  },
+  "purchasing": {
+    "id": "purchasing",
+    "title": "Compare vCore and DTU purchasing models",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/purchasing-models",
+    "checked": "2026-10-16",
+    "topic": "relational"
+  },
+  "elasticpool": {
+    "id": "elasticpool",
+    "title": "Elastic pools",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/elastic-pool-overview",
+    "checked": "2026-10-16",
+    "topic": "relational"
+  },
+  "hyperscale": {
+    "id": "hyperscale",
+    "title": "Hyperscale service tier",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/service-tier-hyperscale",
+    "checked": "2026-10-16",
+    "topic": "relational"
+  },
+  "sqlzone": {
+    "id": "sqlzone",
+    "title": "Local and zone redundancy for SQL Database",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/high-availability-sla-local-zone-redundancy",
+    "checked": "2026-10-16",
+    "topic": "relational"
+  },
+  "sqlvm": {
+    "id": "sqlvm",
+    "title": "SQL Server on Azure VMs overview",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-sql/virtual-machines/windows/sql-server-on-azure-vm-iaas-what-is-overview",
+    "checked": "2026-10-16",
+    "topic": "relational"
+  },
+  "requestunits": {
+    "id": "requestunits",
+    "title": "Request Units",
+    "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/request-units",
+    "checked": "2026-10-16",
+    "topic": "cosmos-db"
+  },
+  "throughputoffer": {
+    "id": "throughputoffer",
+    "title": "Choose manual or autoscale throughput",
+    "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/how-to-choose-offer",
+    "checked": "2026-10-16",
+    "topic": "cosmos-db"
+  },
+  "cosmosserverless": {
+    "id": "cosmosserverless",
+    "title": "Cosmos DB serverless",
+    "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/serverless",
+    "checked": "2026-10-16",
+    "topic": "cosmos-db"
+  },
+  "globaldist": {
+    "id": "globaldist",
+    "title": "Distribute data globally",
+    "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/distribute-data-globally",
+    "checked": "2026-10-16",
+    "topic": "cosmos-db"
+  },
+  "multiwrite": {
+    "id": "multiwrite",
+    "title": "Multi-region writes",
+    "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/multi-region-writes",
+    "checked": "2026-10-16",
+    "topic": "cosmos-db"
+  },
+  "cosmosapi": {
+    "id": "cosmosapi",
+    "title": "Choose an API",
+    "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/choose-api",
+    "checked": "2026-10-16",
+    "topic": "cosmos-db"
+  },
+  "cosmosbackup": {
+    "id": "cosmosbackup",
+    "title": "Online backup and restore",
+    "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/online-backup-and-restore",
+    "checked": "2026-10-16",
+    "topic": "cosmos-db"
+  },
+  "cosmosintro": {
+    "id": "cosmosintro",
+    "title": "Cosmos DB introduction",
+    "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/introduction",
+    "checked": "2026-10-16",
+    "topic": "cosmos-db"
+  },
+  "integrationruntime": {
+    "id": "integrationruntime",
+    "title": "Integration runtime in Data Factory",
+    "url": "https://learn.microsoft.com/en-us/azure/data-factory/concepts-integration-runtime",
+    "checked": "2026-10-16",
+    "topic": "data-integration"
+  },
+  "synapse": {
+    "id": "synapse",
+    "title": "What is Azure Synapse Analytics",
+    "url": "https://learn.microsoft.com/en-us/azure/synapse-analytics/overview-what-is",
+    "checked": "2026-10-16",
+    "topic": "data-integration"
+  },
+  "fabric": {
+    "id": "fabric",
+    "title": "Microsoft Fabric overview",
+    "url": "https://learn.microsoft.com/en-us/fabric/get-started/microsoft-fabric-overview",
+    "checked": "2026-10-16",
+    "topic": "data-integration"
+  },
+  "databricks": {
+    "id": "databricks",
+    "title": "Azure Databricks introduction",
+    "url": "https://learn.microsoft.com/en-us/azure/databricks/introduction/",
+    "checked": "2026-10-16",
+    "topic": "data-integration"
+  },
+  "streamprocessing": {
+    "id": "streamprocessing",
+    "title": "Choose a stream processing technology",
+    "url": "https://learn.microsoft.com/en-us/azure/architecture/data-guide/technology-choices/stream-processing",
+    "checked": "2026-10-16",
+    "topic": "data-integration"
+  },
+  "orchestrationchoice": {
+    "id": "orchestrationchoice",
+    "title": "Choose a data pipeline orchestration technology",
+    "url": "https://learn.microsoft.com/en-us/azure/architecture/data-guide/technology-choices/pipeline-orchestration-data-movement",
+    "checked": "2026-10-16",
+    "topic": "data-integration"
+  },
+  "fog": {
+    "id": "fog",
+    "title": "Failover groups overview & best practices (Azure SQL Database)",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/failover-group-sql-db",
+    "checked": "2026-10-17",
+    "topic": "backup-dr"
+  },
+  "softdelete": {
+    "id": "softdelete",
+    "title": "Secure by default with soft delete for Azure Backup",
+    "url": "https://learn.microsoft.com/en-us/azure/backup/backup-azure-security-feature-cloud",
+    "checked": "2026-10-17",
+    "topic": "backup-dr"
+  },
+  "asrarch": {
+    "id": "asrarch",
+    "title": "Azure to Azure disaster recovery architecture",
+    "url": "https://learn.microsoft.com/en-us/azure/site-recovery/azure-to-azure-architecture",
+    "checked": "2026-10-17",
+    "topic": "backup-dr"
+  },
+  "azoverview": {
+    "id": "azoverview",
+    "title": "What are Azure availability zones?",
+    "url": "https://learn.microsoft.com/en-us/azure/reliability/availability-zones-overview",
+    "checked": "2026-10-17",
+    "topic": "high-availability"
+  },
+  "azsupport": {
+    "id": "azsupport",
+    "title": "Azure services that support availability zones",
+    "url": "https://learn.microsoft.com/en-us/azure/reliability/availability-zones-service-support",
+    "checked": "2026-10-17",
+    "topic": "high-availability"
+  },
+  "avset": {
+    "id": "avset",
+    "title": "Availability sets overview",
+    "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/availability-set-overview",
+    "checked": "2026-10-17",
+    "topic": "high-availability"
+  },
+  "vmavail": {
+    "id": "vmavail",
+    "title": "Availability options for Azure Virtual Machines",
+    "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/availability",
+    "checked": "2026-10-17",
+    "topic": "high-availability"
+  },
+  "paired": {
+    "id": "paired",
+    "title": "Azure region pairs and nonpaired regions",
+    "url": "https://learn.microsoft.com/en-us/azure/reliability/regions-paired",
+    "checked": "2026-10-17",
+    "topic": "high-availability"
+  },
+  "appsvcplans": {
+    "id": "appsvcplans",
+    "title": "What are Azure App Service plans?",
+    "url": "https://learn.microsoft.com/en-us/azure/app-service/overview-hosting-plans",
+    "checked": "2026-10-17",
+    "topic": "compute"
+  },
+  "funcscale": {
+    "id": "funcscale",
+    "title": "Azure Functions scale and hosting",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-functions/functions-scale",
+    "checked": "2026-10-17",
+    "topic": "compute"
+  },
+  "acacompare": {
+    "id": "acacompare",
+    "title": "Comparing Container Apps with other Azure container options",
+    "url": "https://learn.microsoft.com/en-us/azure/container-apps/compare-options",
+    "checked": "2026-10-17",
+    "topic": "compute"
+  },
+  "aci": {
+    "id": "aci",
+    "title": "What is Azure Container Instances?",
+    "url": "https://learn.microsoft.com/en-us/azure/container-instances/container-instances-overview",
+    "checked": "2026-10-17",
+    "topic": "compute"
+  },
+  "aks": {
+    "id": "aks",
+    "title": "What is Azure Kubernetes Service (AKS)?",
+    "url": "https://learn.microsoft.com/en-us/azure/aks/what-is-aks",
+    "checked": "2026-10-17",
+    "topic": "compute"
+  },
+  "batch": {
+    "id": "batch",
+    "title": "What is Azure Batch?",
+    "url": "https://learn.microsoft.com/en-us/azure/batch/batch-technical-overview",
+    "checked": "2026-10-17",
+    "topic": "compute"
+  },
+  "vmss": {
+    "id": "vmss",
+    "title": "What are Virtual Machine Scale Sets?",
+    "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview",
+    "checked": "2026-10-17",
+    "topic": "compute"
+  },
+  "redis": {
+    "id": "redis",
+    "title": "What is Azure Managed Redis?",
+    "url": "https://learn.microsoft.com/en-us/azure/redis/overview",
+    "checked": "2026-10-17",
+    "topic": "app-architecture"
+  },
+  "peering": {
+    "id": "peering",
+    "title": "Azure Virtual Network peering",
+    "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview",
+    "checked": "2026-10-17",
+    "topic": "network-connectivity"
+  },
+  "virtualwan": {
+    "id": "virtualwan",
+    "title": "What is Azure Virtual WAN?",
+    "url": "https://learn.microsoft.com/en-us/azure/virtual-wan/virtual-wan-about",
+    "checked": "2026-10-17",
+    "topic": "network-connectivity"
+  },
+  "ddos": {
+    "id": "ddos",
+    "title": "What is Azure DDoS Protection?",
+    "url": "https://learn.microsoft.com/en-us/azure/ddos-protection/ddos-protection-overview",
+    "checked": "2026-10-17",
+    "topic": "network-security"
+  },
+  "frontdoor": {
+    "id": "frontdoor",
+    "title": "What is Azure Front Door?",
+    "url": "https://learn.microsoft.com/en-us/azure/frontdoor/front-door-overview",
+    "checked": "2026-10-17",
+    "topic": "load-balancing"
+  },
+  "appgw": {
+    "id": "appgw",
+    "title": "What is Azure Application Gateway?",
+    "url": "https://learn.microsoft.com/en-us/azure/application-gateway/overview",
+    "checked": "2026-10-17",
+    "topic": "load-balancing"
+  },
+  "loadbalancer": {
+    "id": "loadbalancer",
+    "title": "What is Azure Load Balancer?",
+    "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview",
+    "checked": "2026-10-17",
+    "topic": "load-balancing"
+  },
+  "dms": {
+    "id": "dms",
+    "title": "What is Azure Database Migration Service?",
+    "url": "https://learn.microsoft.com/en-us/azure/dms/dms-overview",
+    "checked": "2026-10-17",
+    "topic": "migration"
+  },
+  "databox": {
+    "id": "databox",
+    "title": "What is Azure Data Box?",
+    "url": "https://learn.microsoft.com/en-us/azure/databox/data-box-overview",
+    "checked": "2026-10-17",
+    "topic": "migration"
+  },
+  "datatransfer": {
+    "id": "datatransfer",
+    "title": "Azure Storage migration guide",
+    "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-choose-data-transfer-solution",
+    "checked": "2026-10-17",
+    "topic": "migration"
+  }
+}

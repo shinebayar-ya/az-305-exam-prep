@@ -1,0 +1,111 @@
+{
+  "id": "load-balancing",
+  "domain": "infrastructure",
+  "order": 15,
+  "title": "Load balancing: Front Door, Traffic Manager, Application Gateway, Load Balancer",
+  "tagline": "Зочдод зөвхөн хаягийг хэлэх үү, онгоцны буудлаас нь тосох уу?",
+  "checked": "2026-10-17",
+  "sources": ["routing", "tm", "frontdoor", "appgw", "loadbalancer"],
+  "analogy": {
+    "title": "Дэлхийн зочид буудлын сүлжээний менежер Оюун",
+    "story": "Оюун 5 тивд зочид буудалтай. Өдөр бүр мянган зочин ирнэ, тэр бүгдийг *зөв буудал, зөв давхарт* хүргэх ёстой. Түүний асуулт хоёр: *дэлхий даяар уу, нэг хотод уу? зочны захиалгын хуудсыг уншиж байна уу, үгүй юу?*\n\n**Утасны лавлах** нь **Traffic Manager**. Зочин «хамгийн ойр буудал хаана вэ?» гэж залгахад лавлах зөвхөн *хаягийг* хэлнэ (DNS). Зочин тэнд өөрөө явна, лавлах замд нь дагалдахгүй. Лавлах хэд хэдэн дүрэмтэй: үндсэн буудал, эвдэрвэл нөөц (**Priority**), жингээр хуваах (**Weighted**), хамгийн бага latency (**Performance**), зочны улсаар (**Geographic**).\n\n**Онгоцны буудал бүрт байдаг консьерж** нь **Front Door**. 118+ хотын онгоцны буудалд (edge) зочныг тосож, цүнхийг нь шалгаад (**WAF**), Microsoft-ийн хувийн автобусаар буудал руу хүргэнэ. Байнга асуудаг брошюрыг (static content) гартаа бэлэн барьдаг.\n\n**Буудлын лоббины ресепшн** нь **Application Gateway**. Нэг хотод, захиалгын хуудсыг *уншина*: «/spa» гэвэл 3-р давхар, «/restaurant» гэвэл 1-р давхар (**URL path-based routing**). Цүнхийг энд ч шалгаж болно (**WAF_v2**).\n\n**Лифтний диспетчер** нь **Load Balancer**. Захиалгын хуудсыг уншихгүй, зөвхөн хүнийг сул лифт рүү маш хурдан илгээнэ (layer 4, TCP / UDP). Эвдэрсэн лифт рүү хэнийг ч явуулахгүй (**health probe**).\n\nГэхдээ хэн ч буудлын *өрөөг* өөрөө засахгүй. Load balancing нь зөвхөн эрүүл endpoint руу чиглүүлнэ: app эсвэл өгөгдөл муудвал зөв газар хүргэсэн ч зочин гомдолтой үлдэнэ.",
+    "mapping": [
+      { "real": "Утасны лавлах, зөвхөн хаягийг хэлнэ", "azure": "Traffic Manager — DNS-based, траффикийг өөрөө дамжуулахгүй" },
+      { "real": "Лавлахын дүрмүүд", "azure": "Routing method: Priority, Weighted, Performance, Geographic, Multivalue, Subnet" },
+      { "real": "Онгоцны буудал бүрийн консьерж", "azure": "Azure Front Door — global, HTTP(S), Microsoft edge" },
+      { "real": "Цүнх шалгах", "azure": "WAF — Front Door эсвэл Application Gateway дээр" },
+      { "real": "Лоббины ресепшн захиалга уншина", "azure": "Application Gateway — regional, layer 7, URL path, host header" },
+      { "real": "Лифтний диспетчер", "azure": "Azure Load Balancer — layer 4 TCP / UDP, pass-through" },
+      { "real": "Эвдэрсэн лифтийг алгасах", "azure": "Health probe — зөвхөн эрүүл instance руу илгээнэ" }
+    ]
+  },
+  "illustration": {
+    "scene": ["BookOpen", "Globe", "DoorOpen", "Building2", "Users"],
+    "caption": "Утасны лавлах (Traffic Manager) → онгоцны буудлын консьерж (Front Door) → лоббины ресепшн (Application Gateway) → лифтний диспетчер (Load Balancer)",
+    "image": null
+  },
+  "mnemonics": [
+    {
+      "device": "Шаардлага → сонголт: 2 асуулт, 4 хайрцаг",
+      "parts": [
+        { "key": "Global + HTTP(S)", "meaning": "**Azure Front Door** — edge-д TLS дуусгах, WAF, caching" },
+        { "key": "Global + non-HTTP(S)", "meaning": "**Traffic Manager** — DNS-ээр endpoint сонгох (эсвэл global **Load Balancer**)" },
+        { "key": "Regional + HTTP(S)", "meaning": "**Application Gateway** — URL path, host header, WAF_v2" },
+        { "key": "Regional + non-HTTP(S)", "meaning": "**Load Balancer** — layer 4 TCP / UDP, ultralow latency" }
+      ],
+      "why": "Requirement → decision: «нэг region уу, олон region уу?» ба «HTTP(S) layer 7 онцлог (path routing, TLS offload, WAF) хэрэгтэй юу?» гэж асуу. Хоёр хариулт нэг хайрцгийг сонгоно."
+    },
+    {
+      "device": "Traffic Manager-ийн 6 арга: «ПЖГГ + Олон + Subnet»",
+      "parts": [
+        { "key": "Priority", "meaning": "Үндсэн endpoint, эрүүл биш бол нөөц руу (active / passive failover)" },
+        { "key": "Weighted", "meaning": "Жингээр (1–1000) хуваах: аажмаар шинэ хувилбар руу шилжих" },
+        { "key": "Performance", "meaning": "Хамгийн бага **network latency** (газарзүйн зай биш)" },
+        { "key": "Geographic", "meaning": "DNS query-ийн байршлаар: **data sovereignty**, localization" },
+        { "key": "Multivalue", "meaning": "Нэг хариунд олон эрүүл endpoint, зөвхөн External IPv4 / IPv6" },
+        { "key": "Subnet", "meaning": "Хэрэглэгчийн IP хүрээг тодорхой endpoint-д холбох" }
+      ],
+      "why": "Requirement → decision: «DNS хариуг юунд үндэслэж сонгох вэ: нөөц, хувь, хурд, улс уу?» гэж асуу. Failover бол Priority, canary бол Weighted, хурд бол Performance, хууль эрх зүй бол Geographic."
+    }
+  ],
+  "keyFacts": [
+    { "text": "**HTTP(S)** load balancer нь **layer 7**: SSL offload, WAF, path-based routing, session affinity. **Non-HTTP(S)** нь layer 4 TCP / UDP эсвэл **DNS-based**.", "source": "routing" },
+    { "text": "**Front Door** — global, HTTP(S). **Traffic Manager** — global, non-HTTP(S). **Application Gateway** — regional, HTTP(S), TCP, TLS. **Load Balancer** — regional эсвэл global, non-HTTP(S).", "source": "routing" },
+    { "text": "Traffic Manager ба Load Balancer нь HTTP(S) траффик ч дамжуулж чадна, гэхдээ **layer 7 онцлоггүй**. Traffic Manager траффикийг **өөрөө дамжуулахгүй**: DNS-ээр client-ийг endpoint руу чиглүүлнэ.", "source": "routing" },
+    { "text": "**Traffic Manager** profile бүр 6 routing method-ийн **нэгийг** хэрэглэнэ: Priority, Weighted, Performance, Geographic, Multivalue, Subnet.", "source": "tm" },
+    { "text": "**Performance** routing нь газарзүйн зай биш **network latency**-ээр сонгоно (Internet Latency Table). Client-ийн биш, **recursive DNS service**-ийн IP-г ашиглана.", "source": "tm" },
+    { "text": "**Weighted** routing-ийн жин 1–1000 (default 1). Аажмаар upgrade хийх, Azure руу migration, cloud-bursting-д тохиромжтой. **Geographic** нь **data sovereignty**, localization-д.", "source": "tm" },
+    { "text": "**Multivalue** нь нэг DNS хариунд олон эрүүл endpoint буцаана, зөвхөн бүх endpoint **External**, IPv4 / IPv6 хаягтай үед ажиллана.", "source": "tm" },
+    { "text": "**Azure Front Door** нь 100 metro бүсийн **118+ edge location**-оор, SSL-ийг **edge**-д дуусгана. Built-in **layer 3–4 DDoS** хамгаалалт, WAF, bot manager, origin руу **Private Link**.", "source": "frontdoor" },
+    { "text": "**Application Gateway** нь **layer 7**: URL path-based routing, multiple-site hosting, header rewrite, cookie-based session affinity, TLS termination, end-to-end TLS, **WAF**, autoscaling, zone redundancy.", "source": "appgw" },
+    { "text": "Application Gateway-ийн одоогийн SKU нь **Standard_v2**, **WAF_v2**. v1 SKU (Standard, WAF) **2026-04-28**-нд retire болсон.", "source": "appgw" },
+    { "text": "**Azure Load Balancer** нь TCP / UDP-ийн сая сая flow, **pass-through** load balancing-ээр ultralow latency. Availability zone дотор ба хооронд тараана, **health probe**-оор зөвхөн эрүүл instance руу илгээнэ.", "source": "loadbalancer" }
+  ],
+  "compare": {
+    "caption": "Эх сурвалж: Load balancing options, Traffic Manager routing methods, What is Azure Front Door?, What is Azure Application Gateway?, What is Azure Load Balancer?. Load Balancer нь regional эсвэл global. Application Gateway TCP, TLS-ийг ч дэмжинэ. WAF нь Application Gateway-д WAF_v2 SKU-тэй.",
+    "columns": ["Сервис", "Хамрах хүрээ", "Траффик", "Layer 7 (path routing, TLS offload)", "WAF", "Траффикийг дамжуулах"],
+    "rows": [
+      ["**Azure Front Door**", "Global", "HTTP(S)", "✓", "✓", "✓ (edge proxy)"],
+      ["**Traffic Manager**", "Global", "Non-HTTP(S) (ямар ч)", "✗", "✗", "✗ (зөвхөн DNS)"],
+      ["**Application Gateway**", "Regional", "HTTP(S), TCP, TLS", "✓", "✓ (WAF_v2)", "✓"],
+      ["**Load Balancer**", "Regional / global", "Non-HTTP(S) (TCP / UDP)", "✗", "✗", "✓ (pass-through)"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Traffic Manager нь proxy: client-ийн траффик Traffic Manager-ээр дамжиж endpoint руу очно.",
+      "truth": "**Traffic Manager** зөвхөн DNS хариу өгнө, client endpoint руу **шууд** холбогдоно. Proxy, layer 7 хэрэгтэй бол **Front Door**.",
+      "phrase_en": "clients must connect directly to regional endpoints without an additional reverse proxy"
+    },
+    {
+      "trap": "Олон region-д HTTP app-ийг WAF, edge TLS-тэй хамгаалахад Traffic Manager + Load Balancer хангалттай.",
+      "truth": "Хоёулаа layer 7 онцлоггүй. Global HTTP(S), edge TLS termination, WAF бол **Azure Front Door**.",
+      "phrase_en": "a global web application requires TLS termination at the edge and a web application firewall"
+    },
+    {
+      "trap": "Нэг region-ийн app-д URL path-аар (/images, /video) өөр backend руу илгээхэд Load Balancer тохирно.",
+      "truth": "Load Balancer нь layer 4, URL уншихгүй. Regional path-based routing бол **Application Gateway**.",
+      "phrase_en": "route requests for /images and /video to different backend pools within one region"
+    },
+    {
+      "trap": "Performance routing нь хэрэглэгчийг газарзүйн хувьд хамгийн ойр region руу илгээнэ.",
+      "truth": "**Network latency**-ээр сонгоно (Internet Latency Table), мөн recursive DNS-ийн IP-г ашиглана. Улсаар заавал хуваах бол **Geographic**.",
+      "phrase_en": "users in a specific country must always be served from an in-country endpoint"
+    },
+    {
+      "trap": "Шинэ Application Gateway-д v1 Standard SKU сонгож болно.",
+      "truth": "v1 SKU 2026-04-28-нд retire болсон. **Standard_v2** эсвэл **WAF_v2**.",
+      "phrase_en": "deploy a new application gateway with autoscaling and zone redundancy"
+    }
+  ],
+  "vocabulary": [
+    { "en": "layer 7 / layer 4 load balancing", "mn": "HTTP түвшний / TCP, UDP түвшний ачаалал хуваарилалт" },
+    { "en": "TLS termination (SSL offload)", "mn": "шифрлэлтийг gateway дээр тайлах" },
+    { "en": "path-based routing", "mn": "URL зам дээр үндэслэн чиглүүлэх" },
+    { "en": "session affinity", "mn": "нэг хэрэглэгчийг нэг backend-д барих" },
+    { "en": "health probe", "mn": "backend-ийн эрүүл эсэхийг шалгах хүсэлт" },
+    { "en": "edge location", "mn": "хэрэглэгчид ойр Microsoft-ийн сүлжээний цэг" },
+    { "en": "pass-through", "mn": "траффикийг задлахгүй шууд дамжуулах" },
+    { "en": "data sovereignty", "mn": "өгөгдөл тодорхой улсын хууль, хил дотор байх шаардлага" }
+  ]
+}

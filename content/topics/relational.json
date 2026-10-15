@@ -1,0 +1,164 @@
+{
+  "id": "relational",
+  "domain": "data",
+  "order": 5,
+  "title": "Relational data: Azure SQL Database, Managed Instance, SQL Server on VM",
+  "tagline": "Ямар хэмжээний гал тогоо түрээслэх вэ, алдвал яаж буцаах вэ?",
+  "checked": "2026-10-16",
+  "sources": ["sqlchoose", "mi", "sqlvm", "purchasing", "serverless", "elasticpool", "hyperscale", "sqlzone", "sqlbackup", "sqlha", "datachoice"],
+  "analogy": {
+    "title": "Гал тогооч Цэндийн гурван түрээс",
+    "story": "Гал тогооч Цэнд хоол хийх газраа гурван янзаар авч болно. Эхнийх нь хоосон өрөө түрээслээд тавилга, зуух, угаалгын машиныг бүгдийг өөрөө авах: шал хүртэл өөрийнх. Энэ бол **SQL Server on Azure VM**: SQL Server-тэй 100% нийцтэй, OS-ийн түвшинд хандалттай, гэхдээ бүх засвар үйлчилгээ чинх.\n\nХоёр дахь нь бэлэн тоноглогдсон гал тогоо, тусдаа хаалга, тусдаа түгжээтэй. Зуух, сав суулга хэвийн ажилладаг, харин шал, цахилгааны самбарт Цэнд хүрэхгүй. Энэ бол **SQL Managed Instance**: SQL Server-тэй бараг 100% нийцтэй, instance-ийн түвшний боломжтой, native VNet-тэй, гэхдээ OS-ийн хандалтгүй. Гурав дахь нь зүгээр л нэг хоолны сав захиалах: Энэ бол **SQL Database**, нэг database, instance-ийн хамаарал байхгүй, хамгийн бага удирдлага.\n\nҮнийг нь хоёр янзаар тооцно. **DTU** бол бэлэн багц цэс (хоол, ундаа, амттан нэг үнэд), **vCore** бол хэсэг бүрийг тусад нь сонгох. Олон жижиг захиалагчтай бол нэг том тогоо хуваалцана (**elastic pool**): хэн нэг нь оргил цагтай үед нөгөө нь амарна. Захиалга хааяа л ирдэг бол тогооч унтаж, ажиллаагүй цагт зөвхөн агуулахын үнэ төлөгдөнө (**serverless**). Агуулахыг тогооч гарнаас салгаж томруулдаг тохиргоо бол **Hyperscale**.\n\nЦэнд долоо хоног бүр бүтэн хэв, өдөр бүр нэмэлт, 5-10 минут тутам бичилт хийдэг тул «хоёр цагийн өмнөх байдал»-аар буцаж чадна. Гэхдээ энэ нь **өгөгдлийн алдаанаас** хамгаалдаг: *барилга шатахаас* биш. Нэг зон ажиллахгүй болох, бүхэл бүтэн бүс унах нь өөр асуулт, өөр шийдэл (zone redundancy, geo-failover).",
+    "mapping": [
+      { "real": "Өрөө түрээслээд бүх тавилгыг өөрөө авах", "azure": "SQL Server on Azure VM (OS-level access)" },
+      { "real": "Бэлэн тоноглосон, тусдаа хаалгатай гал тогоо", "azure": "SQL Managed Instance" },
+      { "real": "Нэг хоолны сав захиалах", "azure": "Azure SQL Database" },
+      { "real": "Бэлэн багц цэс", "azure": "DTU purchasing model" },
+      { "real": "Хэсэг бүрийг тусад нь сонгох", "azure": "vCore purchasing model" },
+      { "real": "Олон захиалагчийн хуваалцсан том тогоо", "azure": "Elastic pool" },
+      { "real": "Захиалгагүй үед унтдаг тогооч", "azure": "Serverless compute tier (auto-pause)" },
+      { "real": "Агуулахыг гал тогооноос тусад нь томруулах", "azure": "Hyperscale" },
+      { "real": "Долоо хоног бүрийн хэв, өдөр бүрийн нэмэлт, минут тутмын бичилт", "azure": "Full / differential / log backups → point-in-time restore" },
+      { "real": "Өөр барилгад хоёр дахь гал тогоо", "azure": "Zone redundancy" }
+    ]
+  },
+  "illustration": {
+    "scene": ["ChefHat", "Utensils", "Server", "Database", "Users", "Archive", "Timer"],
+    "caption": "Гал тогооч (ChefHat), хоол (Utensils), сервер, database, захиалагчид, backup-ийн агуулах, унтдаг тогооч (serverless)."
+  },
+  "mnemonics": [
+    {
+      "device": "OS · Instance · Database",
+      "parts": [
+        { "key": "OS", "meaning": "OS-ийн хандалт, өөрийн agent шаардлагатай → **SQL Server on Azure VM**" },
+        { "key": "Instance", "meaning": "Instance-ийн түвшний нийцэл, SQL Server-тэй бараг 100%, native VNet, platform удирдлага бага → **SQL Managed Instance**" },
+        { "key": "Database", "meaning": "Нэг database, instance-ийн хамаарал байхгүй, хамгийн бага удирдлага → **SQL Database**" }
+      ],
+      "why": "Requirement → decision: «Надад OS, instance-ийн feature, эсвэл зөвхөн database хэрэгтэй юу?» гэж асуу. OS-ийн хандалт заавал бол VM. OS хэрэггүй ч instance-ийн нийцэл (жишээ нь CLR) хэрэгтэй бол MI. Хамгийн бага удирдлага, instance-ийн хамааралгүй бол SQL Database."
+    },
+    {
+      "device": "Багц · Хэсэг · Унтах · Хуваалцах",
+      "parts": [
+        { "key": "Багц", "meaning": "Бэлэн, bundled CPU/memory/I/O → **DTU** model" },
+        { "key": "Хэсэг", "meaning": "Compute, storage-ийг тусад нь сонгох → **vCore** model (recommended)" },
+        { "key": "Унтах", "meaning": "Хааяа л ашиглагддаг single database, идэвхгүй үед зөвхөн storage төлөх → **serverless**" },
+        { "key": "Хуваалцах", "meaning": "Олон database, оргил нь өөр өөр цагт → **elastic pool**" }
+      ],
+      "why": "Requirement → decision: «Ачаалал тасралтгүй юу, хааяа юу, олон database-д хуваагдсан уу?» гэж асуу. Идэвхгүй үе байвал serverless, олон database-ийн оргил ялгаатай бол elastic pool."
+    },
+    {
+      "device": "Буцаах · Хадгалах · Зон",
+      "parts": [
+        { "key": "Буцаах", "meaning": "Алдаатай устгал, өөрчлөлтийн өмнөх цаг руу → **point-in-time restore** (retention дотор, шинэ database болж сэргэнэ)" },
+        { "key": "Хадгалах", "meaning": "Олон жил (10 жил хүртэл) хадгалах → **long-term retention (LTR)**" },
+        { "key": "Зон", "meaning": "Нэг availability zone унахад → **zone redundancy**" }
+      ],
+      "why": "Requirement → decision: «Асуудал өгөгдлийн алдаа уу (backup), infrastructure-ийн доголдол уу (HA)?» гэж асуу. Хоёр цагийн өмнөх алдаа backup-аар, zone унах нь zone redundancy-ээр шийдэгдэнэ. Region унах нь тусдаа сэдэв (backup-dr)."
+    }
+  ],
+  "keyFacts": [
+    {
+      "text": "Azure SQL гурван хэлбэртэй: **SQL Database** (PaaS), **SQL Managed Instance** (SQL Server-тэй бараг 100% нийцтэй, ихэнх migration-д тохиромжтой), **SQL Server on Azure VM** (100% нийцэл, OS-ийн түвшний хандалт). PaaS нь удирдлагын ачааллыг багасгах ч custom үйлдлийг хязгаарлана: жишээ нь **CLR** SQL Database-д дэмжигдэхгүй, MI-д дэмжигдэнэ.",
+      "source": "sqlchoose"
+    },
+    {
+      "text": "**SQL Managed Instance** нь SQL Server-тэй нийцэл, customer instance-уудын бүрэн тусгаарлалтыг **native VNet** дэмжлэгтэй хослуулна. Cross-database query болон transaction дэмжинэ.",
+      "source": "mi"
+    },
+    {
+      "text": "**SQL Server on Azure VM** дээр хүссэн version, edition, OS-тэй image сонгоно. **Azure Hybrid Benefit**-ээр өөрийн SQL Server лицензээ хуваарилж хөнгөлөлт авна, харин VM-ийн compute, storage, backup-ийн төлбөр хэвээр.",
+      "source": "sqlvm"
+    },
+    {
+      "text": "**vCore model** (recommended) нь compute болон storage-ийг тусад нь сонгуулна. **DTU model** нь CPU, memory, read, write-ийн bundled хэмжүүр бөгөөд урьдчилан тохируулсан багцаар (Basic, Standard, Premium) зарагдана. DTU-г database-д хуваарилсан DTU-ээр тооцож төлнө.",
+      "source": "purchasing"
+    },
+    {
+      "text": "**Serverless** нь compute-ийг ачаалалд тааруулан автоматаар томруулж, секунд тутам ашигласнаар тооцно. Идэвхгүй үед **auto-pause** хийж зөвхөн storage-ийн төлбөр авна, дараагийн login-д дахин асна. Serverless нь single database-д зориулагдсан.",
+      "source": "serverless"
+    },
+    {
+      "text": "**Elastic pool** дахь database-ууд нэг server дээр тогтсон хэмжээний resource-ыг хуваалцана. Олон database-ийн хэрэглээ янз бүр, урьдчилан тааварлашгүй үед peak-д тааруулж илүү захиалахаас сэргийлнэ. Database тус бүрийн төлбөр байхгүй: pool-ийн дээд eDTU/vCore-ээр цаг тутам, ашигласан эсэхээс үл хамааран тооцогдоно.",
+      "source": "elasticpool"
+    },
+    {
+      "text": "**Hyperscale** нь engine-ийг урт хугацааны storage-аас салгана: compute-г data шилжүүлэлгүйгээр хурдан томруулна, storage 128 TB хүртэл (pool 100 TB) автоматаар өснө. Backup нь file snapshot-аар хэмжээнээс үл хамааран хурдан. 30 хүртэл named replica. SQL лицензийн төлбөргүй тул Azure Hybrid Benefit хамаарахгүй.",
+      "source": "hyperscale"
+    },
+    {
+      "text": "Zone redundancy-гүй үед failover нэг datacenter дотор болдог тул гамшгийн үед database хүртээмжгүй болж, сэргээх цорын ганц арга нь geo-failover зэрэг DR шийдэл. Local redundancy нь datacenter дотор, **zone redundancy** нь availability zone-ийн outage-аас хамгаална.",
+      "source": "sqlzone"
+    },
+    {
+      "text": "**Business Critical / Premium** (local storage model) нь нэг primary болон гурван хүртэл secondary replica-тай. Read-only холболтыг secondary руу чиглүүлж (**read scale-out**) нэмэлт төлбөргүйгээр analytics ачааллыг салгаж болно.",
+      "source": "sqlzone"
+    },
+    {
+      "text": "Backup автоматаар хийгдэнэ: долоо хоног бүр full, 12 эсвэл 24 цаг тутам differential, 5-10 минут тутам transaction log. **Point-in-time restore**-ийн анхдагч хугацаа долоо хоног бөгөөд Basic-аас бусад tier-д тохируулж болно. **Long-term retention** нь 10 жил хүртэл хадгална.",
+      "source": "sqlbackup"
+    },
+    {
+      "text": "Backup storage redundancy анхдагчаар **geo-redundant** бөгөөд locally, zone, geo-zone redundant сонголттой. Тохиргоо short-term болон LTR backup-д хоёуланд хамаарна. **Hyperscale**-д үүсгэх үедээ л сонгоно, дараа нь өөрчилж болохгүй.",
+      "source": "sqlbackup"
+    },
+    {
+      "text": "Restore нь тухайн server дээр **өөр нэртэй шинэ database** үүсгэнэ, анхныхыг дарж бичихгүй. Region-д хандах боломжгүй үед geo-replicated backup-аас **geo-restore** хийж, дурын region-ийн server дээр шинэ database үүсгэнэ.",
+      "source": "sqlbackup"
+    },
+    {
+      "text": "Backup нь өгөгдлийн эвдрэл, санамсаргүй устгалаас хамгаалдаг; PaaS-ийн availability нь hardware, software доголдлоос хамгаалдаг. Хоёр нь өөр өөр асуудлыг шийднэ.",
+      "source": "sqlha"
+    }
+  ],
+  "compare": {
+    "caption": "✓ нь Microsoft Learn-д шууд заасан (¹ MI-ийн нийцэл «бараг 100%»; VM дээрх CLR нь 100% нийцлээс гаргасан дүгнэлт). ✗ нь Learn тухайн боломжийг заагаагүй эсвэл PaaS хязгаарыг заасны дүгнэлт.",
+    "columns": ["Deployment", "PaaS (platform удирдлага бага)", "OS-level access", "SQL Server-тэй ~100% нийцэл", "CLR"],
+    "rows": [
+      ["SQL Database", "✓", "✗", "✗", "✗"],
+      ["SQL Managed Instance", "✓", "✗", "✓¹", "✓"],
+      ["SQL Server on Azure VM", "✗", "✓", "✓", "✓¹"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Managed Instance нь SQL Server-тэй бараг 100% нийцдэг тул OS-ийн хандалт ч өгдөг.",
+      "truth": "OS-level access болон 100% нийцэл өгөх нь **SQL Server on Azure VM**. MI нь PaaS: instance-ийн түвшний нийцэлтэй ч OS-ийн хандалтгүй.",
+      "phrase_en": "a vendor requires installing a custom OS-level agent and full OS control"
+    },
+    {
+      "trap": "Instance-ийн feature (жишээ нь CLR) хэрэгтэй ч хамгийн бага удирдлага гэж SQL Database сонгоно.",
+      "truth": "**CLR** SQL Database-д дэмжигдэхгүй. Instance-ийн нийцэл хэрэгтэй, OS-ийн хандалт хэрэггүй бол **SQL Managed Instance**.",
+      "phrase_en": "a migration depends on instance-level compatibility but not OS access, and administration must be minimized"
+    },
+    {
+      "trap": "Elastic pool-д database бүр тусдаа үнэтэй, pool зөвхөн хамтдаа удирдах зориулалттай.",
+      "truth": "Database тус бүрийн төлбөр **байхгүй**: pool-ийн дээд eDTU/vCore-ээр цаг тутам тооцогдоно. Оргил нь өөр өөр цагт тохиох олон database-д зардлыг бууруулна.",
+      "phrase_en": "many independent databases peak at different times and idle capacity must be reduced"
+    },
+    {
+      "trap": "Serverless database auto-pause хийсэн үед ямар ч төлбөр гарахгүй.",
+      "truth": "Pause үед **storage-ийн** төлбөр л үлддэг, compute төлбөр зогсоно. Дараагийн login эсвэл үйл ажиллагаанд автоматаар дахин асна.",
+      "phrase_en": "a database is used only intermittently and compute should not be billed while it is idle"
+    },
+    {
+      "trap": "Point-in-time restore-ийн хугацаанаас илүү (жилүүдээр) backup хадгалахад retention-ийг нэмэгдүүлэхэд хангалттай.",
+      "truth": "Ердийн PITR хугацаа (анхдагч долоо хоног) -аас урт хугацаанд **long-term retention (LTR)** тохируулна: 10 жил хүртэл.",
+      "phrase_en": "backups must be retained for years, beyond ordinary point-in-time restore windows"
+    },
+    {
+      "trap": "Zone redundancy идэвхжүүлээгүй ч SQL Database нэг zone унахад өөр zone руу өөрөө шилжинэ.",
+      "truth": "Zone redundancy-гүй бол failover **нэг datacenter дотор** болдог. Zone outage-аас хамгаалахын тулд **zone redundancy** идэвхжүүлнэ, region-ийн алдааг geo-failover шийднэ.",
+      "phrase_en": "the database must tolerate an availability zone failure without relying on another region"
+    }
+  ],
+  "vocabulary": [
+    { "en": "minimize patching and database infrastructure management", "mn": "patch болон database infrastructure-ийн удирдлагыг багасгах" },
+    { "en": "requires OS-level access", "mn": "OS-ийн түвшний хандалт шаардлагатай" },
+    { "en": "pool compute across many databases", "mn": "олон database-ийн compute-г нэгтгэн хуваалцах" },
+    { "en": "automatically pause during inactive periods", "mn": "идэвхгүй үед автоматаар pause хийх" },
+    { "en": "scale storage independently of compute", "mn": "storage-ийг compute-оос үл хамааран томруулах" },
+    { "en": "restore to a point in time before the deletion", "mn": "устгалын өмнөх цаг руу сэргээх" },
+    { "en": "retain backups for up to 10 years", "mn": "backup-ийг 10 жил хүртэл хадгалах" },
+    { "en": "tolerate an availability zone outage", "mn": "availability zone-ийн outage-ийг тэсвэрлэх" }
+  ]
+}

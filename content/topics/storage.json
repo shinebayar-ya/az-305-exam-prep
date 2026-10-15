@@ -1,0 +1,106 @@
+{
+  "id": "storage",
+  "domain": "data",
+  "order": 7,
+  "title": "Storage accounts: redundancy & access tiers",
+  "tagline": "Түлхүүрийн хуулбараа хэдэн газар нуух вэ, хөргөгчинд хэр удаан хадгалах вэ?",
+  "checked": "2026-10-16",
+  "sources": ["redundancy", "blobtiers", "blobprotect", "files"],
+  "analogy": {
+    "title": "Гэрийн түлхүүрийн паранойа",
+    "story": "Та гэрийн түлхүүрээ алдахаас үхтлээ айдаг хүн. Тиймээс хуулбар хийлгэнэ.\n\n**LRS** — гурван хуулбараа *нэг* шүүгээнд хийчихсэн. Нэг нь хугарвал зүгээр. Харин байшин шатвал гурвуулаа хамт алга. **ZRS** — хуулбаруудаа нэг хотын *өөр өөр* байранд (ээж, ах, найз) тараасан. Нэг байр усанд автсан ч бусад нь онгойлгоно.\n\n**GRS** — нэг хуулбарыг өөр хотын эмээ рүү шуудангаар явуулна. Шуудан удаан (**async**), тиймээс эмээгийн хуулбар үргэлж жаахан хоцорсон. Тэгээд эмээ хатуу: та \"одооноос танайх миний гэр\" гэж албан ёсоор зарлах (**failover**) хүртэл түлхүүрийг хэнд ч өгөхгүй. **RA-GRS** бол эелдэг эмээ — хүссэн үед түлхүүрийн *зургийг* (read-only) явуулж өгнө.\n\nХамгийн гол нь: та өөрөө түлхүүрээ хогийн саванд хаявал бүх хуулбар нэгэн зэрэг \"хаягдсан\" болно. Хуулбар бол галаас хамгаална, тэнэглэлээс биш.",
+    "mapping": [
+      { "real": "Нэг шүүгээнд 3 хуулбар", "azure": "LRS — нэг datacenter" },
+      { "real": "Хотын 3 өөр байранд", "azure": "ZRS — 3+ availability zone, synchronous" },
+      { "real": "Эмээ рүү шуудангаар", "azure": "GRS / GZRS — secondary region, asynchronous" },
+      { "real": "Эмээ зургийг явуулдаг", "azure": "RA-GRS / RA-GZRS — secondary-оос унших" },
+      { "real": "Өөрөө хогийн саванд хаях", "azure": "Delete/overwrite бүх хуулбарт хэрэгжинэ" },
+      { "real": "Хөлдөөгчийн гүнд мах", "azure": "Archive tier — эхлээд rehydrate хийнэ" }
+    ]
+  },
+  "illustration": {
+    "scene": ["KeyRound","Archive","Building2","Building2","Building2","Mailbox","UserRound"],
+    "caption": "Шүүгээ (LRS) → хотын 3 байр (ZRS) → өөр хотын эмээ (GRS) → эмээ + 3 байр (GZRS)",
+    "image": null
+  },
+  "mnemonics": [
+    {
+      "device": "L → Z → G → GZ: «Locker, Zone, Globe, Globe+Zone»",
+      "parts": [
+        { "key": "L", "meaning": "**Locker** — нэг datacenter. Drive, server, rack доголдлыг тэсвэрлэнэ" },
+        { "key": "Z", "meaning": "**Zone** — нэг region-ийн 3+ zone. Datacenter/zone унасан ч read, write хийнэ" },
+        { "key": "G", "meaning": "**Globe** — primary дээр LRS + өөр region рүү async хуулбар" },
+        { "key": "GZ", "meaning": "**Globe + Zone** — primary дээр ZRS + өөр region рүү async хуулбар" },
+        { "key": "RA-", "meaning": "**Read Access** угтвар — secondary-оос failover-гүйгээр унших" }
+      ],
+      "why": "Requirement → decision: эхлээд «ямар хэмжээний доголдлыг тэсвэрлэх вэ — rack, zone, region?» гэж асуу. Хүрээ томрох тусам үсэг уртасна. Дараа нь «secondary-оос уншиж байх ёстой юу?» гэж асуу — тийм бол урд нь RA- нэм."
+    },
+    {
+      "device": "30 · 90 · 180 — «Сар, улирал, хагас жил»",
+      "parts": [
+        { "key": "0", "meaning": "**Hot** — доод хугацаагүй, хандалт хямд, хадгалалт үнэтэй" },
+        { "key": "30", "meaning": "**Cool** — хамгийн багадаа 30 хоног (нэг сар)" },
+        { "key": "90", "meaning": "**Cold** — хамгийн багадаа 90 хоног (нэг улирал)" },
+        { "key": "180", "meaning": "**Archive** — хамгийн багадаа 180 хоног (хагас жил), offline" }
+      ],
+      "why": "Хугацаанаас өмнө устгах, дарж бичих, өөр tier руу зөөвөл үлдсэн хоногийн төлбөрийг (prorated early deletion) төлнө. Шаардлагаас эхэл: «хэр олон уншдаг вэ, уншихдаа хэр хурдан хэрэгтэй вэ?»"
+    }
+  ],
+  "keyFacts": [
+    { "text": "**LRS** өгөгдлийг primary region-ийн *нэг* физик datacenter дотор хуулбарлана. Drive, server, rack доголдлоос хамгаална, харин datacenter-ийн гамшгаас хамгаалахгүй.", "source": "redundancy" },
+    { "text": "**ZRS** primary region-ийн 3 ба түүнээс дээш availability zone руу *synchronous* хуулна. Нэг zone ажиллахгүй болсон ч read, write хоёулаа ажиллана.", "source": "redundancy" },
+    { "text": "**GRS / GZRS** secondary region руу *asynchronous* хуулна. Failover хийхээс өмнө secondary-г унших, бичих боломжгүй. Унших хэрэгтэй бол **RA-GRS / RA-GZRS** сонгоно.", "source": "redundancy" },
+    { "text": "Secondary region нь primary-ийн хос region-оор тодорхойлогдоно, **өөрчлөх боломжгүй**. GZRS-ийг зөвхөн availability zone-той, хос region-той region дэмжинэ.", "source": "redundancy" },
+    { "text": "Redundancy тохиргоо **storage account түвшинд** хамаарна. Өөр шаардлагатай өгөгдлийг тусдаа account-д хадгал.", "source": "redundancy" },
+    { "text": "Delete болон overwrite **бүх хуулбарт зэрэг** хэрэгжинэ. Redundancy нь hardware доголдлоос хамгаална, өгөгдөл өөрчлөх үйлдлээс биш.", "source": "redundancy" },
+    { "text": "Санамсаргүй устгал, дарж бичилтээс хамгаалах үндсэн алхмууд: account дээр **Resource Manager lock**, **container soft delete**, **blob soft delete**.", "source": "blobprotect" },
+    { "text": "**Archive** tier offline. Уншихаас өмнө hot, cool эсвэл cold руу **rehydrate** хийнэ — **15 цаг хүртэл** үргэлжилж болно.", "source": "blobtiers" },
+    { "text": "Archive tier-ийг зөвхөн **LRS, GRS, RA-GRS** дэмжинэ. ZRS, GZRS, RA-GZRS дэмжихгүй.", "source": "blobtiers" },
+    { "text": "Account-ийн default access tier нь зөвхөн hot, cool эсвэл cold байж болно. **Archive default байж болохгүй.**", "source": "blobtiers" },
+    { "text": "**Azure Files** RA-GRS, RA-GZRS-ийг дэмжихгүй.", "source": "redundancy" }
+  ],
+  "compare": {
+    "caption": "¹ Primary region унасан үед write-ийг сэргээхэд account failover хэрэгтэй. Эх сурвалж: Storage redundancy, Access tiers.",
+    "columns": ["Redundancy", "Datacenter / zone унах", "Region унах", "Outage үед secondary-оос унших", "Archive tier"],
+    "rows": [
+      ["LRS", "✗", "✗", "✗", "✓"],
+      ["ZRS", "✓", "✗", "✗", "✗"],
+      ["GRS / RA-GRS", "✓¹", "✓¹", "Зөвхөн **RA-GRS**", "✓"],
+      ["GZRS / RA-GZRS", "✓", "✓¹", "Зөвхөн **RA-GZRS**", "✗"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "GRS байгаа тул primary region унахад app secondary-оос шууд уншина.",
+      "truth": "GRS / GZRS-ийн secondary failover хүртэл уншигдахгүй. Унших шаардлага байвал **RA-GRS / RA-GZRS**.",
+      "phrase_en": "must be able to read data if the primary region becomes unavailable"
+    },
+    {
+      "trap": "Хамгийн хямд, хамгийн найдвартай гэж GZRS + Archive tier сонгох.",
+      "truth": "Archive tier зөвхөн **LRS, GRS, RA-GRS** дээр. Zone redundancy + archive хэрэгтэй гэсэн хослол боломжгүй.",
+      "phrase_en": "minimize storage costs for data that is rarely accessed"
+    },
+    {
+      "trap": "Redundancy байгаа учир санамсаргүй устгалаас хамгаалагдсан.",
+      "truth": "Устгал бүх хуулбарт зэрэг очно. **Soft delete** (blob/container), **versioning** эсвэл **lock** хэрэгтэй.",
+      "phrase_en": "recover blobs that are accidentally deleted or overwritten"
+    },
+    {
+      "trap": "Archive дахь blob-ыг шууд уншиж болно, зүгээр л удаан.",
+      "truth": "Archive = offline. Эхлээд online tier руу **rehydrate** хийнэ (15 цаг хүртэл).",
+      "phrase_en": "flexible latency requirements, on the order of hours"
+    },
+    {
+      "trap": "Azure Files share-д read-access secondary хэрэгтэй гэж RA-GZRS сонгох.",
+      "truth": "Azure Files **RA-GRS / RA-GZRS дэмжихгүй**.",
+      "phrase_en": "file shares must remain available during a regional outage"
+    }
+  ],
+  "vocabulary": [
+    { "en": "remain available if a datacenter fails", "mn": "datacenter доголдсон ч ажиллаж байх" },
+    { "en": "read access to the secondary region", "mn": "secondary region-оос унших эрх" },
+    { "en": "minimize storage costs", "mn": "хадгалалтын зардлыг хамгийн бага байлгах" },
+    { "en": "rehydrate", "mn": "archive-аас online tier руу буцааж сэргээх" },
+    { "en": "early deletion penalty", "mn": "доод хугацаанаас өмнө устгасны төлбөр" }
+  ]
+}

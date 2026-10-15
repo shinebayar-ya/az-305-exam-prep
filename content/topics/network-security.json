@@ -1,0 +1,115 @@
+{
+  "id": "network-security",
+  "domain": "infrastructure",
+  "order": 14,
+  "title": "Network security: NSG, Azure Firewall, WAF, Private Endpoint vs Service Endpoint, DDoS Protection",
+  "tagline": "Хаалга бүрт жижүүр тавих уу, төв харуулын цэг барих уу, эсвэл үерийн далан босгох уу?",
+  "checked": "2026-10-17",
+  "sources": ["nsg", "firewall", "waf", "private", "endpoints", "ddos"],
+  "analogy": {
+    "title": "Сэжигч цайзын эзэн Цэцэг",
+    "story": "Цэцэг өөрийн цайзад хэнийг ч итгэдэггүй. Тиймээс хамгаалалтын давхарга бүрт өөр хамгаалагч тавьсан.\n\n**Өрөө бүрийн хаалган дээрх жагсаалт** нь **NSG**. «Энэ хаягаас, энэ портоор орж болно, бусад нь үгүй.» Жагсаалтыг дээрээс доош уншиж, эхний таарсан мөрөөр шийднэ (**priority** 100–4096, бага тоо түрүүлнэ). Жагсаалтын хамгийн доор үргэлж «бусад бүгд хориотой» (**DenyAllInbound**) гэж бичээстэй.\n\n**Төв хаалганы харуулын цэг** нь **Azure Firewall**. Бүх хорооллын (spoke) траффик энд шалгагдана: гарах, орох, хорооллын хооронд. Энгийн харуул (**Standard**) хар жагсаалтаар шалгана, дээд зэргийн харуул (**Premium**) ачааны дотрыг нээж харна (**TLS inspection**, **IDPS**).\n\n**Захидлын агуулгыг уншдаг шалгагч** нь **WAF**. Захидлын дотор хортой үг (*SQL injection*, *cross-site scripting*) байвал буцаана. Тэр зөвхөн веб захидлыг (HTTP) уншина.\n\nЗахын дэлгүүрт (PaaS) явах хоёр арга бий. **Service endpoint** бол цайзаас дэлгүүр хүртэлх тусгай зам: дэлгүүр нийтийн хаягтаа хэвээр, харин «Цэцэгийн цайзаас ирсэн бол оруул» гэдэг. **Private endpoint** бол дэлгүүрийн салбарыг *цайзын дотор* нээх: цайзын хаяг (private IP) авна, тиймээс тусгай хаягийн дэвтэр (**private DNS zone**) хэрэгтэй.\n\nДайсан мянган хүнийг зэрэг илгээж хаалгыг бөглөх гэвэл **далан** хэрэгтэй: **DDoS Protection**. Гэхдээ далан нь *үерийг* (layer 3, 4) зогсооно, захидлын агуулгыг (layer 7) уншихгүй. Тиймээс далан ба WAF хоёулаа хэрэгтэй.\n\nГэхдээ цайзын хана хэчнээн өндөр байсан ч *түлхүүрээ алдсан* хүнийг хамгаалахгүй. Хэн нэвтрэх эрхтэй вэ гэдэг нь identity-ийн асуудал.",
+    "mapping": [
+      { "real": "Өрөө бүрийн хаалган дээрх жагсаалт", "azure": "NSG — subnet, NIC дээрх allow / deny rule, priority дарааллаар" },
+      { "real": "«Бусад бүгд хориотой» гэсэн доод мөр", "azure": "Default rule DenyAllInbound — priority 65500" },
+      { "real": "Төв хаалганы харуулын цэг", "azure": "Azure Firewall — stateful, east-west ба north-south траффик" },
+      { "real": "Ачааны дотрыг нээж харах харуул", "azure": "Azure Firewall Premium — TLS inspection, signature-based IDPS" },
+      { "real": "Захидлын агуулгыг уншдаг шалгагч", "azure": "WAF — SQL injection, XSS-ээс HTTP түвшинд хамгаална" },
+      { "real": "Цайзаас дэлгүүр хүртэлх тусгай зам", "azure": "Service endpoint — VNet identity, service нийтийн endpoint-тэй хэвээр" },
+      { "real": "Дэлгүүрийн салбарыг цайзын дотор нээх", "azure": "Private endpoint — VNet-ийн private IP-тэй network interface" },
+      { "real": "Үерийн далан", "azure": "DDoS Protection — layer 3, 4 mitigation" }
+    ]
+  },
+  "illustration": {
+    "scene": ["DoorOpen", "Landmark", "Fingerprint", "KeyRound", "Building2", "Waves"],
+    "caption": "Хаалганы жагсаалт (NSG) → төв харуул (Azure Firewall) → агуулга шалгагч (WAF) → дэлгүүрийн салбар цайзын дотор (Private endpoint) → далан (DDoS Protection)",
+    "image": null
+  },
+  "mnemonics": [
+    {
+      "device": "Шаардлага → сонголт: «Ямар түвшинд, юуг шалгах вэ?»",
+      "parts": [
+        { "key": "IP, port, protocol-оор allow / deny", "meaning": "**NSG** — subnet эсвэл NIC дээрх энгийн дүрэм" },
+        { "key": "Олон spoke-ийн траффикийг төвд шалгах", "meaning": "**Azure Firewall** — stateful, L3–L7, threat intelligence" },
+        { "key": "TLS-ийн дотрыг харах, IDPS", "meaning": "**Azure Firewall Premium**" },
+        { "key": "Веб app-д SQL injection, XSS", "meaning": "**WAF** — Application Gateway, Front Door дээр" },
+        { "key": "Үерийн халдлага, public IP хамгаалах", "meaning": "**DDoS Protection** — L3, L4" }
+      ],
+      "why": "Requirement → decision: «траффикийг аль OSI түвшинд, хаана шалгах вэ?» гэж асуу. L3/L4 энгийн дүрэм → NSG. Төвлөрсөн stateful шалгалт → Azure Firewall. HTTP payload → WAF. Их хэмжээний flood → DDoS Protection. Эдгээр нь бие биеэ орлохгүй, давхарлана."
+    },
+    {
+      "device": "«Service endpoint-ийг ажилладаг, private endpoint-ийг байдаг гэж санах»",
+      "parts": [
+        { "key": "Service endpoint", "meaning": "Subnet-ийн **identity**-г service-д өгнө. Service **нийтийн endpoint**-тэй хэвээр, on-premises-ээс шууд хүрэхгүй" },
+        { "key": "Private endpoint", "meaning": "Service-ийг VNet-д **private IP**-тэй оруулна. **Private DNS zone** хэрэгтэй, тодорхой resource-д холбогдоно" }
+      ],
+      "why": "Requirement → decision: «service-ийг private IP-ээр хүрэх ёстой юу, public access-ийг бүр хаах уу, on-premises-ээс хүрэх үү?» гэж асуу. Тийм бол private endpoint. Зөвхөн VNet-ээс ирсэн траффикийг зөвшөөрөх, private IP шаардахгүй бол service endpoint."
+    }
+  ],
+  "keyFacts": [
+    { "text": "**NSG** rule-ийн **priority** 100–4096, бага тоо түрүүлж боловсруулагдана. Траффик нэг rule-д таармагц боловсруулалт **зогсоно**. Default rule-ууд хамгийн бага priority-тэй (65000–65500), тиймээс custom rule үргэлж түрүүлнэ.", "source": "nsg" },
+    { "text": "Default inbound rule: **AllowVNetInBound** (65000), **AllowAzureLoadBalancerInBound** (65001), **DenyAllInbound** (65500). Rule-ийн source / destination-д IP, CIDR, **service tag**, **application security group** тавина.", "source": "nsg" },
+    { "text": "**Application security groups** нь VM-үүдийг app бүтцээр бүлэглэж, тодорхой IP хаяг гараар хадгалахгүйгээр security policy-г дахин ашиглана.", "source": "nsg" },
+    { "text": "**Azure Firewall** нь built-in high availability-тэй, бүрэн **stateful firewall as a service**. **East-west** ба **north-south** траффикийг шалгана. SKU: **Basic**, **Standard**, **Premium**.", "source": "firewall" },
+    { "text": "**Azure Firewall Standard**: L3–L7 filtering, Microsoft threat intelligence (мэдэгдэж буй хортой IP, domain-ийг блоклох). **Premium**: 50+ ангиллын 67,000+ signature-тэй **signature-based IDPS**.", "source": "firewall" },
+    { "text": "**WAF** нь web application-ийг SQL injection, cross-site scripting зэрэг нийтлэг exploit-оос **төвлөрсөн** хамгаална. **Application Gateway**, **Front Door** Standard/Premium дээр ажиллана.", "source": "waf" },
+    { "text": "**Private endpoint** нь VNet-ийн **private IP**-тэй network interface, Private Link-ээр service-д (Storage, Cosmos DB, SQL Database, өөрийн service) холбогдож, service-ийг VNet-д оруулна.", "source": "private" },
+    { "text": "Private endpoint-д тусдаа DNS тохиргоо, ихэвчлэн **private DNS zone** хэрэгтэй: FQDN нь private endpoint-ийн **private IP** рүү resolve хийх ёстой.", "source": "private" },
+    { "text": "**Service endpoint** нь VNet identity-г service-д сунгаж, **virtual network rule**-ээр resource-ийг VNet-д хязгаарлана. Траффик Azure **backbone**-оор шууд явна, service endpoint route нь BGP, UDR-аас давуу.", "source": "endpoints" },
+    { "text": "Service endpoint-ээр VNet-д хязгаарласан resource нь default-аар **on-premises-ээс хүрэхгүй**. On-premises-ийг зөвшөөрөхөд түүний public (NAT) IP-г resource-ийн IP firewall-д нэмнэ.", "source": "endpoints" },
+    { "text": "**DDoS Protection** нь **layer 3, 4** дээр хамгаална. Web app-ийн **layer 7** хамгаалалтад **WAF** нэмэх хэрэгтэй. Tier: **DDoS Network Protection** (VNet дахь resource), **DDoS IP Protection** (public IP тус бүрээр төлөх).", "source": "ddos" },
+    { "text": "**DDoS IP Protection** нь Network Protection-ийн core feature-тэй ижил, гэхдээ **DDoS rapid response**, cost protection, WAF хөнгөлөлт **байхгүй**.", "source": "ddos" }
+  ],
+  "compare": {
+    "caption": "Эх сурвалж: NSG overview, What is Azure Firewall?, What is Azure Web Application Firewall?, What is Azure DDoS Protection?. Azure Firewall Premium нь TLS inspection, IDPS нэмнэ. WAF нь Application Gateway, Front Door зэрэгт хавсарна.",
+    "columns": ["Сервис", "OSI түвшин", "HTTP payload шалгах", "Төвлөрсөн (олон spoke)", "Хаана байрлах"],
+    "rows": [
+      ["**NSG**", "L3–L4 (IP, port, protocol)", "✗", "✗", "Subnet эсвэл network interface"],
+      ["**Azure Firewall**", "L3–L7", "Premium-д IDPS", "✓", "Hub VNet (hub-spoke-ийн төв)"],
+      ["**WAF**", "L7 (HTTP)", "✓ (SQL injection, XSS)", "Web app-ийн хэмжээнд", "Application Gateway, Front Door"],
+      ["**DDoS Protection**", "L3–L4", "✗", "VNet / public IP-ийн хэмжээнд", "VNet (Network) эсвэл public IP (IP Protection)"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Azure Firewall-тай бол web app-ийг SQL injection-оос WAF-гүйгээр хамгаалж чадна.",
+      "truth": "HTTP халдлагаас **WAF** (Application Gateway, Front Door дээр) хамгаална. DDoS Protection ч layer 7-д WAF шаарддаг.",
+      "phrase_en": "a public web application must be protected from SQL injection and cross-site scripting"
+    },
+    {
+      "trap": "Service endpoint нь PaaS service-д VNet дотор private IP өгнө.",
+      "truth": "Service endpoint нь зөвхөн VNet **identity**-г өгнө, service **нийтийн endpoint**-тэй хэвээр. Private IP бол **private endpoint**.",
+      "phrase_en": "the storage account must be reachable through a private IP address in the virtual network"
+    },
+    {
+      "trap": "Private endpoint үүсгэхэд DNS-ийг өөрчлөх шаардлагагүй.",
+      "truth": "FQDN нь private IP рүү resolve хийх ёстой, ихэвчлэн **private DNS zone** тохируулна.",
+      "phrase_en": "clients still resolve the service name to its public IP after a private endpoint is created"
+    },
+    {
+      "trap": "NSG-д priority 4000-ийн allow rule, 200-ийн deny rule байвал allow давуу.",
+      "truth": "**Бага тоо** түрүүлнэ: 200-ийн rule эхэлж таарч, боловсруулалт **зогсоно**.",
+      "phrase_en": "a deny rule with priority 200 and an allow rule with priority 4000 match the same traffic"
+    },
+    {
+      "trap": "Service endpoint тохируулсан storage-д on-premises-ээс автоматаар хүрнэ.",
+      "truth": "Default-аар on-premises-ээс хүрэхгүй. On-premises-ийн **public (NAT) IP**-г IP firewall-д нэмэх, эсвэл **private endpoint** ашиглана.",
+      "phrase_en": "on-premises clients must reach a storage account that is restricted to a virtual network"
+    },
+    {
+      "trap": "DDoS IP Protection ба Network Protection яг ижил, зөвхөн үнээр ялгаатай.",
+      "truth": "Core feature ижил, гэхдээ IP Protection-д **DDoS rapid response**, cost protection, WAF хөнгөлөлт байхгүй. Тэдгээр хэрэгтэй бол **DDoS Network Protection**.",
+      "phrase_en": "the company requires access to DDoS rapid response support during an attack"
+    }
+  ],
+  "vocabulary": [
+    { "en": "network security group (NSG)", "mn": "subnet, NIC дээрх allow / deny дүрмийн жагсаалт" },
+    { "en": "service tag", "mn": "Azure service-ийн IP prefix-үүдийн бүлгийн нэр" },
+    { "en": "application security group", "mn": "VM-үүдийг app бүтцээр бүлэглэх" },
+    { "en": "east-west / north-south traffic", "mn": "дотоод сүлжээ хоорондын / гадна-дотны траффик" },
+    { "en": "intrusion detection and prevention (IDPS)", "mn": "халдлага илрүүлэх, сэргийлэх систем" },
+    { "en": "private DNS zone", "mn": "VNet доторх хувийн DNS бүс" },
+    { "en": "data exfiltration", "mn": "өгөгдлийг зөвшөөрөлгүй гадагш гаргах" },
+    { "en": "volumetric attack", "mn": "их хэмжээний траффикаар дүүргэх халдлага" }
+  ]
+}

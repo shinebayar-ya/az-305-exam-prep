@@ -1,0 +1,162 @@
+{
+  "id": "authn-entra",
+  "domain": "identity",
+  "order": 2,
+  "title": "Authentication: Microsoft Entra ID",
+  "tagline": "Хэн нэвтэрч байгааг хаана, хэдэн баталгаагаар шалгах вэ?",
+  "checked": "2026-10-16",
+  "sources": ["hybrid", "phs", "mfa", "authmethods", "securitydefaults", "conditional", "b2b", "externalid"],
+  "analogy": {
+    "title": "Клубын хэт ажилсаг хаалгач Дорж",
+    "story": "Клубын хаалгач Дорж хүн бүрээс «Та хэн бэ?» гэж асуудаг. Энэ бол **authentication**. Нэг л зүйлээр, жишээ нь нууц үгээр, танихаас хэтэрхий эмзэг гэж үзээд гурван төрлийн баталгаа шаардана: толгойд байгаа зүйл (нууц үг), гарт байгаа зүйл (утас, түлхүүр), биед байгаа зүйл (хурууны хээ, царай). Хоёр ба түүнээс олон төрлийг нийлүүлбэл **MFA**.\n\nДоржийн хаалганы дэргэд «хэрэв … бол …» дүрмийн самбар өлгөөтэй. «Хэрэв та гадаадаас ирсэн бол хоёр баталгаа», «хэрэв таны утас танигдаагүй бол орохыг хорино». Энэ бол **Conditional Access**. Самбар хоосон байхад ч Дорж хамгийн үндсэн дүрмийг мэддэг: бүгдээс хоёр баталгаа, хуучин хаалгыг хаа. Энэ бол **security defaults**.\n\nХуучин клубын гишүүдийн жагсаалтыг (on-premises Active Directory) шинэ хаалгачид шилжүүлэх гурван арга бий. Жагсаалтын хуулбарыг (нууц үгийн hash) шинэ хаалгачид өгчихвөл тэр өөрөө шалгана (**PHS**). Хуулбар өгөхгүй, хаалгач бүрд хуучин клуб рүү утсаар лавлуулна (**PTA**). Эсвэл шийдвэрийг бүхэлд нь хуучин клубын хаалгачид даатгана (**federation**). Хамтрагч компанийн ажилтан өөрийнхөө үнэмлэхээр зочны хуудсанд бичигдэж ордог (**B2B guest**).\n\nГэхдээ Дорж таныг *танина* л. Таныг VIP өрөөнд орж болох эсэхийг тэр шийддэггүй: тэр бол **authorization**, өөр хүний ажил.",
+    "mapping": [
+      { "real": "Хаалгач Дорж", "azure": "Microsoft Entra ID" },
+      { "real": "«Та хэн бэ?» гэж лавлах", "azure": "Authentication" },
+      { "real": "Мэддэг, барьдаг, биед байгаа гурван төрлийн баталгаа", "azure": "MFA: something you know / have / are" },
+      { "real": "«Хэрэв … бол …» дүрмийн самбар", "azure": "Conditional Access policy" },
+      { "real": "Самбар хоосон үед ч үйлчилдэг үндсэн дүрэм", "azure": "Security defaults" },
+      { "real": "Хуучин клубын гишүүдийн жагсаалт", "azure": "On-premises Active Directory" },
+      { "real": "Жагсаалтын хуулбарыг шинэ хаалгачид өгөх", "azure": "Password hash synchronization (PHS)" },
+      { "real": "Хаалгач бүрд хуучин клуб руу утсаар лавлуулах", "azure": "Pass-through authentication (PTA)" },
+      { "real": "Шийдвэрийг хуучин клубын хаалгачид даатгах", "azure": "Federation (жишээ нь AD FS)" },
+      { "real": "Хамтрагч ажилтан өөрийн үнэмлэхээр зочны хуудсанд бичигдэх", "azure": "B2B collaboration guest" }
+    ]
+  },
+  "illustration": {
+    "scene": ["DoorOpen", "UserRound", "KeyRound", "Smartphone", "Fingerprint", "ClipboardList", "Users"],
+    "caption": "Хаалга (Entra ID), зочин, нууц үг, утас, хурууны хээ (MFA-ийн гурван төрөл), дүрмийн самбар (Conditional Access), зочдын жагсаалт (B2B)."
+  },
+  "mnemonics": [
+    {
+      "device": "Хуулбар · Асуух · Даатгах",
+      "parts": [
+        { "key": "Хуулбар", "meaning": "Нэмэлт infrastructure хэрэггүй, хамгийн энгийн → **password hash synchronization**" },
+        { "key": "Асуух", "meaning": "Нууц үгийг on-premises AD-д шалгуулна, federation farm хэрэггүй → **pass-through authentication**" },
+        { "key": "Даатгах", "meaning": "Одоо байгаа federation / нэг identity provider чухал, custom sign-in → **federation (AD FS)**" }
+      ],
+      "why": "Requirement → decision: «Нууц үг хаана шалгагдах ёстой вэ, ямар нэмэлт infrastructure байж болох вэ?» гэж асуу. Хамгийн бага infrastructure бол PHS. On-prem дээр шалгах шаардлага байвал PTA. Одоо байгаа federation эсвэл гуравдагч талын sign-in шаардлагатай бол federation. On-premises directory огт байхгүй бол hybrid sign-in method хэрэггүй (cloud-only)."
+    },
+    {
+      "device": "Суурь · Дүрэм · Хаалт",
+      "parts": [
+        { "key": "Суурь", "meaning": "Free tier, тохируулга хэрэггүй, үндсэн хамгаалалт → **security defaults**" },
+        { "key": "Дүрэм", "meaning": "Нөхцөл бүрт өөр шаардлага (байршил, төхөөрөмж, апп) → **Conditional Access policy**" },
+        { "key": "Хаалт", "meaning": "Хамгийн хатуу шийдвэр → **Block access**" }
+      ],
+      "why": "Requirement → decision: «Надад нөхцөл тус бүрээр тохируулах эрх хэрэгтэй юу, эсвэл нэг суурь хамгаалалт хангалттай юу?» гэж асуу. Тохируулга хэрэгтэй бол Conditional Access, түүгээр security defaults-ийг орлуулах бол security defaults-ийг унтраа."
+    },
+    {
+      "device": "Хамтрагч · Хэрэглэгч",
+      "parts": [
+        { "key": "Хамтрагч", "meaning": "Гадны хамтрагч *манай ажилтны* аппад нэвтэрнэ → **B2B collaboration** (guest)" },
+        { "key": "Хэрэглэгч", "meaning": "Үйлчлүүлэгч *манай бүтээсэн* аппад нэвтэрнэ → **External ID** (external tenant, CIAM)" }
+      ],
+      "why": "Requirement → decision: «Нэвтрэгч хэн бэ, аль аппад нэвтрэх вэ?» гэж асуу. Хамтрагч + дотоод апп → B2B guest. Хэрэглэгч + таны бүтээсэн consumer/customer апп → External ID."
+    }
+  ],
+  "keyFacts": [
+    {
+      "text": "Cloud-only identity нь зөвхөн cloud-д оршино. On-premises directory-той бол hybrid sign-in method сонгоно: **password hash synchronization**, **pass-through authentication** эсвэл **federation**.",
+      "source": "hybrid"
+    },
+    {
+      "text": "**PHS** нь Microsoft Entra Connect-аар on-premises AD-ийн нууц үгийн *hash*-ийг cloud дахь Entra руу синк хийнэ. Хэрэглэгч нэг л нууц үгтэй болно.",
+      "source": "phs"
+    },
+    {
+      "text": "**PHS** бол on-premises directory объектод authentication идэвхжүүлэх хамгийн энгийн арга: нэмэлт infrastructure хэрэггүй. **Microsoft Entra ID Protection** нь аль sign-in method сонгосноос үл хамааран PHS шаарддаг.",
+      "source": "hybrid"
+    },
+    {
+      "text": "**PTA** нь on-premises сервер дээр ажилладаг agent-ээр нууц үгийг on-premises AD-д шалгана, шалгалт cloud-д хийгдэхгүй. Дор хаяж нэг, **гурван agent** санал болгоно. Agent нь domain controller-д хандах ёстой бөгөөд perimeter network-д байрлуулахыг дэмжихгүй. PTA болон federation хоёулаа domain controller-ийн хариултаас хамаарна.",
+      "source": "hybrid"
+    },
+    {
+      "text": "**Federation** үед Entra ID нууц үг шалгах процессыг AD FS зэрэг тусдаа итгэмжлэгдсэн системд шилжүүлнэ. Энэ нь on-premises infrastructure-д илүү их хөрөнгө оруулалт шаардаж, ажиллуулах, асуудал шийдэхэд cloud authentication-аас төвөгтэй.",
+      "source": "hybrid"
+    },
+    {
+      "text": "**MFA** нь дараах гурваас хоёр ба түүнээс олныг шаардана: мэддэг зүйл (нууц үг), эзэмшдэг зүйл (утас, hardware key), биеийн шинж (хурууны хээ, царай).",
+      "source": "mfa"
+    },
+    {
+      "text": "Microsoft **phishing-resistant** аргыг зөвлөдөг: **Windows Hello for Business**, **passkeys (FIDO2)**, certificate-based authentication. SMS, email OTP, authenticator app-тай MFA нь remote phishing-д өртөмтгий.",
+      "source": "authmethods"
+    },
+    {
+      "text": "**Security defaults** нь нэмэлт зардалгүй, P1/P2 license шаарддаггүй. Бүх хэрэглэгч (администратор ч) MFA-д бүртгүүлж, legacy authentication хаагдана. Conditional Access policy-гоор орлуулах бол security defaults-ийг **disable** хийх ёстой.",
+      "source": "securitydefaults"
+    },
+    {
+      "text": "**Conditional Access** нь signal-уудыг нэгтгэж, шийдвэр гаргаж, бодлого хэрэгжүүлнэ. Policy нь **first-factor authentication дууссаны дараа** хэрэгждэг бөгөөд DoS-ээс хамгаалах хамгаалалтын эхний шугам биш.",
+      "source": "conditional"
+    },
+    {
+      "text": "Conditional Access-ийн шийдвэрүүд: MFA шаардах гэх мэт нөхцөлт зөвшөөрөл, эсвэл **Block access** (хамгийн хатуу шийдвэр). Signal: байршил (улс, IP хүрээ), төхөөрөмжийн платформ ба төлөв.",
+      "source": "conditional"
+    },
+    {
+      "text": "**B2B guest** нь өөрийн work, school эсвэл social identity-ээр нэвтэрнэ. Урилга хүлээн авсны дараа манай directory-д user object болж, user type нь ихэвчлэн “guest”, UPN-д `#EXT#` агуулна.",
+      "source": "b2b"
+    },
+    {
+      "text": "**Cross-tenant access settings** нь гадны Entra tenant-тай нэвтрэх эсэхийг (inbound / outbound) удирдаж, бусад Entra байгууллагын MFA болон төхөөрөмжийн claim-д итгэж болно. **External collaboration settings** нь аль хэрэглэгч guest урих эрхтэйг шийднэ.",
+      "source": "b2b"
+    },
+    {
+      "text": "**External ID** дахь external tenant нь consumer болон business customer-ийн аппад зориулсан **CIAM**. B2B collaboration нь ажилтнууд хамтрагчидтайгаа хамтрах (workforce tenant) тохиолдолд ашиглагдана.",
+      "source": "externalid"
+    }
+  ],
+  "compare": {
+    "caption": "✓ нь Microsoft Learn-ийн тайлбарт шууд заасан. ✗ нь Learn тухайн шаардлагыг заагаагүй эсвэл эсрэгээр нь заасны дүгнэлт. PHS-ийн ‘cloud’ шалгалт нь hash cloud-д синк хийгддэгээс гаргасан дүгнэлт.",
+    "columns": ["Sign-in method", "Нууц үг хаана шалгагдах вэ", "Нэмэлт on-prem infrastructure хэрэггүй", "Custom / гуравдагч талын sign-in"],
+    "rows": [
+      ["Password hash synchronization", "Cloud (синк хийсэн hash-аар)", "✓", "✗"],
+      ["Pass-through authentication", "On-premises AD (agent-ээр)", "✗", "✗"],
+      ["Federation (AD FS)", "Federation систем (жишээ нь AD FS)", "✗", "✓"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Conditional Access нууц үг шалгахаас өмнө ажиллаж, нэвтрэх оролдлогыг эхнээс нь хаадаг.",
+      "truth": "Conditional Access policy **first-factor authentication дууссаны дараа** хэрэгждэг. DoS зэрэг халдлагаас хамгаалах эхний шугам биш.",
+      "phrase_en": "policies are evaluated only after the user completes the first authentication step"
+    },
+    {
+      "trap": "Conditional Access policy үүсгэхэд security defaults автоматаар унтардаг, хоёуланг нь зэрэг ашиглаж болно.",
+      "truth": "Conditional Access-ээр security defaults-ийг орлуулах бол **security defaults-ийг disable** хийх ёстой. Security defaults нь тохируулга хийх боломжгүй суурь хамгаалалт.",
+      "phrase_en": "implement Conditional Access policies that replace the preconfigured baseline protections"
+    },
+    {
+      "trap": "Pass-through authentication нь нууц үгийг cloud-д шалгадаг тул on-premises сервер унахад ч ажиллана.",
+      "truth": "**PTA** нь нууц үгийг agent-ээр **on-premises AD**-д шалгана. PTA ба federation хоёулаа domain controller-ийн хариултаас хамаарна. Agent-ийг perimeter network-д байрлуулахыг дэмжихгүй.",
+      "phrase_en": "password validation must occur against on-premises Active Directory, with no federation farm"
+    },
+    {
+      "trap": "Sign-in method PTA эсвэл federation бол Entra ID Protection-д password hash sync хэрэггүй.",
+      "truth": "**Microsoft Entra ID Protection** нь сонгосон sign-in method-оос үл хамааран **password hash synchronization** шаарддаг.",
+      "phrase_en": "a premium identity protection feature is required regardless of the chosen sign-in method"
+    },
+    {
+      "trap": "B2B guest-д манай tenant дотор шинэ данс, нууц үг үүсгэж, identity-г нь бид удирдана.",
+      "truth": "Guest нь **өөрийн identity**-ээр (work, school, social) нэвтэрнэ. Манай directory-д **guest user object** (`#EXT#`) болж харагдана. Partner өөрийн identity management-ээ ашигладаг тул гадаад администраторын ачаалал үүсэхгүй.",
+      "phrase_en": "partners use their own credentials, so there is no external administrative overhead"
+    },
+    {
+      "trap": "SMS эсвэл authenticator app-ийн кодтой MFA бол phishing-д бүрэн тэсвэртэй.",
+      "truth": "Microsoft SMS, email OTP, authenticator app-ийг remote phishing-д өртөмтгий гэж үздэг. **Phishing-resistant** нь Windows Hello for Business, **passkeys (FIDO2)**, certificate-based authentication.",
+      "phrase_en": "sign-in must use a phishing-resistant authentication method"
+    }
+  ],
+  "vocabulary": [
+    { "en": "validate passwords against on-premises Active Directory", "mn": "нууц үгийг on-premises AD-д шалгах" },
+    { "en": "synchronize password hashes to the cloud", "mn": "нууц үгийн hash-ийг cloud руу синк хийх" },
+    { "en": "an existing federation must remain the authority", "mn": "одоо байгаа federation эрх мэдэлтэй хэвээр байх" },
+    { "en": "enforce multifactor authentication for all users", "mn": "бүх хэрэглэгчид MFA-г заавал болгох" },
+    { "en": "block legacy authentication protocols", "mn": "legacy authentication протоколуудыг хаах" },
+    { "en": "invite an external partner as a guest user", "mn": "гадны хамтрагчийг guest хэрэглэгчээр урих" },
+    { "en": "trust MFA claims from another tenant", "mn": "өөр tenant-ийн MFA claim-д итгэх" },
+    { "en": "customer identity and access management", "mn": "үйлчлүүлэгчийн identity ба access management (CIAM)" }
+  ]
+}

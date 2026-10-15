@@ -1,0 +1,122 @@
+{
+  "id": "compute",
+  "domain": "infrastructure",
+  "order": 11,
+  "title": "Compute: VMs, App Service, Functions, containers, Batch",
+  "tagline": "Хоосон гал тогоо түрээслэх үү, хоолны машин дуудах уу?",
+  "checked": "2026-10-17",
+  "sources": ["compute", "autoscale", "appsvcplans", "funcscale", "acacompare", "aci", "aks", "batch", "vmss"],
+  "analogy": {
+    "title": "Хоолны бизнес эхэлсэн Бат",
+    "story": "Бат зочдод хоол өгөх гэж байна. Асуулт нь нэг: *хэр их зүйлийг өөрөө хариуцах вэ?*\n\n**Хоосон гал тогоо түрээслэх** нь **Virtual Machines**. Зуух, хөргөгч, цэвэрлэгээ, аюулгүй байдлын шинэчлэл бүгд Батын хариуцлага. Хүссэн хоолоо хийж чадна, гэхдээ гал тогооны эзэн нь тэр.\n\n**Хоолны газрын лангуу** нь **App Service**. Гал тогоо бэлэн, Бат зөвхөн хоолоо хийнэ. Гэхдээ нэг гал тогоог (**App Service plan**) хэд хэдэн лангуу хуваалцдаг, тиймээс нэгийг нь томруулбал бүгд хамт томорно.\n\n**Захиалгаар ирдэг хоолны машин** нь **Azure Functions**. Захиалга орвол л тогооч ирнэ. Захиалга байхгүй бол машин унтсан (*scale to zero*), эхний захиалгад жаахан удна (*cold start*). Тогоочийг байнга ажил дээр байлгавал (**Premium**, **always ready**) удаан хүлээхгүй.\n\nХоолыг **хайрцагт** (container) савлавал дараах сонголтууд гарна. **Container Instances** бол нэг хайрцгийг шууд халаах, гар аргаар. **Container Apps** бол кейтеринг компани: Kubernetes-ийг ард нь нууж, захиалгаар тогооч нэмнэ. **AKS** бол өөрийн кейтеринг, ерөнхий тогооч (**Kubernetes API**) нь Батын гарт.\n\nХурим болбол 1000 хүний хоол нэг дор хэрэгтэй. Энэ бол **Batch**: олон тогооч зэрэг, жижиг ажлуудыг хуваан хийнэ. Зочин олширвол тогооч нэмдэг дүрмийг (**autoscale**) тавьж болно. Харин тогоочийг хасахдаа бүгдийн ажил дуусах (*бүх* rule биелэх) хүртэл хүлээнэ.\n\nГэхдээ гал тогоо хэчнээн сайн байсан ч жор муу бол хоол муу. Compute сонголт нь *код, өгөгдлийн алдааг* засахгүй. Мөн нэг тогооч, нэг гал тогоо гэдэг нь өөрөө өндөр бэлэн байдал биш.",
+    "mapping": [
+      { "real": "Хоосон гал тогоо түрээслэх", "azure": "Virtual Machines — IaaS, OS-ийг өөрөө удирдана" },
+      { "real": "Нэг гал тогоог хуваалцсан лангууд", "azure": "App Service plan — plan дахь app-ууд ижил VM instance хуваалцаж, хамт scale хийгдэнэ" },
+      { "real": "Захиалгаар ирдэг хоолны машин", "azure": "Azure Functions — event-driven, scale to zero боломжтой" },
+      { "real": "Нэг хайрцгийг шууд халаах", "azure": "Azure Container Instances — бүрэн orchestration байхгүй" },
+      { "real": "Кейтеринг компани (Kubernetes ард нуугдсан)", "azure": "Azure Container Apps — Kubernetes API-д шууд хандахгүй" },
+      { "real": "Өөрийн кейтеринг, ерөнхий тогооч өөрийнх", "azure": "AKS — Kubernetes API, control plane-д шууд хандана" },
+      { "real": "Хуримын 1000 хүний хоол", "azure": "Azure Batch — pool, job, task-аар зэрэгцээ ажил" },
+      { "real": "Тогооч нэмэх, хасах дүрэм", "azure": "Autoscale — scale out: аль нэг rule, scale in: бүх rule" }
+    ]
+  },
+  "illustration": {
+    "scene": ["Warehouse", "Utensils", "Truck", "ChefHat", "Users"],
+    "caption": "Түрээсийн гал тогоо (VM) → лангуу (App Service) → хоолны машин (Functions) → кейтеринг (containers) → хурим (Batch)",
+    "image": null
+  },
+  "mnemonics": [
+    {
+      "device": "Шаардлага → сонголт: «Юунд хандах хэрэгтэй вэ?»",
+      "parts": [
+        { "key": "OS-д хандах, lift-and-shift", "meaning": "**Virtual Machines** — OS, networking, patching-ийг өөрөө хариуцна" },
+        { "key": "Kubernetes API, control plane", "meaning": "**AKS** — Kubernetes-д шууд хандана. Container Apps ийм хандалт өгөхгүй" },
+        { "key": "Контейнер, Kubernetes-ийн нарийн төвөгтэй байдалгүй", "meaning": "**Container Apps** — serverless microservice, KEDA, scale to zero" },
+        { "key": "Нэг контейнер, orchestration хэрэггүй", "meaning": "**Container Instances** — секундэд эхэлнэ, VM удирдахгүй" },
+        { "key": "Веб app, API, код дээр төвлөрөх", "meaning": "**App Service** — platform дэд бүтцийг хариуцна" },
+        { "key": "Event-д хариу өгөх код", "meaning": "**Azure Functions** — trigger дээр ажиллана" },
+        { "key": "Зэрэгцээ, өндөр throughput ажил", "meaning": "**Azure Batch** — pool, job, task" }
+      ],
+      "why": "Requirement → decision: «ямар түвшний хяналт надад хэрэгтэй вэ — OS, Kubernetes API, зөвхөн контейнер, эсвэл зөвхөн код?» гэж асуу. Хяналт нэмэгдэх тусам operational overhead өснө: VM ба AKS өндөр, Container Apps ба App Service бага, Functions ба ACI маш бага."
+    },
+    {
+      "device": "5 · 10 · 30 · 230 — «Functions хэр удаан ажиллах вэ?»",
+      "parts": [
+        { "key": "5", "meaning": "**Consumption plan** — default timeout **5 минут**" },
+        { "key": "10", "meaning": "**Consumption plan** — дээд тал нь **10 минут**" },
+        { "key": "30", "meaning": "**Flex Consumption, Premium, Dedicated** — default **30 минут**, дээд тал нь хязгааргүй" },
+        { "key": "230", "meaning": "HTTP trigger-ийн хариу өгөх дээд хугацаа **230 секунд**, ямар ч plan-д" }
+      ],
+      "why": "Requirement → decision: «функц хэр удаан ажиллах вэ, HTTP-ээр хариу хүлээж байгаа юу?» гэж асуу. 10 минутаас урт бол Consumption биш. HTTP дээр 230 секундээс урт бол асинхрон хэв маяг (queue гэх мэт) хэрэгтэй."
+    }
+  ],
+  "keyFacts": [
+    { "text": "**Virtual Machines** нь IaaS: VM-ээ та удирдана. **App Service**, **Container Apps** нь PaaS, **Azure Functions** нь FaaS. Autoscale чадвар нь ангилалаас биш **service-ээс** хамаарна (VM-ийг scale set-ээр scale хийж болно).", "source": "compute" },
+    { "text": "Operational overhead: **VMs** ба **AKS** өндөр, **App Service** ба **Container Apps** бага, **Functions** ба **Container Instances** маш бага. **Batch** дунд зэрэг.", "source": "compute" },
+    { "text": "**AKS** нь Kubernetes API, control plane-д **шууд** хандалт өгнө. **Container Apps** нь Kubernetes API-д шууд хандалт **өгдөггүй**. Тийм хандалт хэрэгтэй бол AKS сонго.", "source": "acacompare" },
+    { "text": "**Container Apps** нь KEDA, Dapr дээр суурилсан serverless container: event-driven scaling, **scale to zero**, traffic splitting, jobs дэмжинэ.", "source": "acacompare" },
+    { "text": "**Container Instances** нь VM удирдахгүйгээр Linux, Windows container-ийг **секундэд** эхлүүлнэ. Container group доторх контейнерууд ижил host, local network, storage, lifecycle хуваалцана.", "source": "aci" },
+    { "text": "**AKS** үүсгэхэд control plane **үнэ төлбөргүй** үүснэ, зөвхөн node-уудын төлбөр төлнө. **AKS Automatic** нь node, scaling, upgrade-ийг автоматжуулдаг, **AKS Standard** нь node pool-ыг та удирдана.", "source": "aks" },
+    { "text": "**App Service plan** дахь бүх app, deployment slot ижил VM instance-ууд дээр ажиллаж, **хамт scale** хийгдэнэ. App тус бүрийн compute-ийг тусгаарлахад тусдаа plan үүсгэнэ. **Free, Shared** tier scale out хийж чадахгүй.", "source": "appsvcplans" },
+    { "text": "**Functions timeout**: Consumption plan default **5**, max **10** минут. Flex Consumption, Premium, Dedicated default **30** минут, дээд тал нь хязгааргүй. HTTP trigger-ийн хариу өгөх дээд хугацаа **230 секунд**.", "source": "funcscale" },
+    { "text": "**Cold start**: Consumption, Flex Consumption нь idle үед zero хүртэл scale хийнэ. **Premium**, **Flex Consumption** нь **always ready** instance-ээр cold start-аас сэргийлнэ. Dedicated plan-д cold start асуудал биш.", "source": "funcscale" },
+    { "text": "**Flex Consumption** нь **virtual network integration** дэмжиж, 1000 хүртэл instance-д scale хийнэ.", "source": "funcscale" },
+    { "text": "**Azure Batch** нь pool (VM node), job, task-аар зэрэгцээ ажил гүйцэтгэнэ. Нарийн scheduler, custom cluster шаардлагатай HPC-д **CycleCloud** тохиромжтой.", "source": "batch" },
+    { "text": "**Virtual Machine Scale Sets** нь VM-үүдийг demand-д автоматаар нэмэх, хасах, мөн availability zone, fault domain-д тараана. **Flexible orchestration** нь 1,000 VM хүртэл fault domain тусгаарлалттай HA өгнө.", "source": "vmss" },
+    { "text": "**Autoscale** rule-ууд metric эсвэл цагийн хуваарьтай. **Scale out**: ямар нэг rule биелбэл. **Scale in**: **бүх** rule биелбэл. Profile бүрт 10 хүртэл rule, setting бүрт 20 хүртэл profile.", "source": "autoscale" }
+  ],
+  "compare": {
+    "caption": "Эх сурвалж: Choose an Azure compute service, Container solutions in Azure, What is Azure Batch?. AKS-ийн «Operational overhead» нь cluster management, upgrade, security-ийг хамарна.",
+    "columns": ["Сервис", "Hosting model", "Operational overhead", "Тохирох баг, ажил"],
+    "rows": [
+      ["**Virtual Machines**", "IaaS", "Өндөр (OS, patching бүгд өөрөө)", "Уламжлалт IT operations туршлагатай баг"],
+      ["**App Service**", "PaaS", "Бага", "Код дээр төвлөрсөн developer, веб app, API"],
+      ["**Azure Functions**", "FaaS", "Маш бага", "Event-driven код бичдэг developer"],
+      ["**Container Apps**", "PaaS (Kubernetes нуугдсан)", "Бага", "Kubernetes-ийн төвөгтэй байдалгүй cloud-native pattern"],
+      ["**AKS**", "Managed Kubernetes", "Өндөр (cluster management, upgrade)", "Kubernetes API, control plane хэрэгтэй, Kubernetes туршлагатай DevOps баг"],
+      ["**Container Instances**", "Managed container instance", "Маш бага (orchestration байхгүй)", "Нэг container эсвэл container group энгийнээр ажиллуулах"],
+      ["**Azure Batch**", "Scheduling as a service", "Дунд зэрэг (job, pool)", "Зэрэгцээ, өндөр throughput, HPC ажил"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Container Apps ашиглаад kubectl, Kubernetes API-аар кластераа шууд удирдана.",
+      "truth": "**Container Apps** Kubernetes API-д шууд хандалт өгөхгүй. API, control plane хэрэгтэй бол **AKS**.",
+      "phrase_en": "requires direct access to the Kubernetes API and control plane"
+    },
+    {
+      "trap": "Container Instances нь жижиг AKS шиг, автоматаар scale хийж, бүрэн orchestration өгнө.",
+      "truth": "**Container Instances** бүрэн container orchestration өгөхгүй. Нэг container эсвэл container group-д зориулсан. Orchestration бол **AKS** (мөн AKS-д virtual nodes on ACI).",
+      "phrase_en": "run a single container quickly without managing virtual machines or an orchestrator"
+    },
+    {
+      "trap": "Consumption plan дээр 30 минут ажилладаг функц ажиллуулж болно.",
+      "truth": "**Consumption plan** timeout default 5, max **10** минут. Урт хугацаанд **Flex Consumption, Premium, Dedicated**. HTTP trigger-ийн хариу **230 сек**-ээс хэтэрч болохгүй.",
+      "phrase_en": "function execution may run for up to 20 minutes"
+    },
+    {
+      "trap": "Нэг App Service plan дахь app-уудыг тус тусад нь, бусдад нөлөөлөхгүй scale хийж болно.",
+      "truth": "Plan дахь app-ууд ижил VM instance хуваалцаж, **хамт scale** хийгдэнэ. Compute тусгаарлахад **тусдаа App Service plan** (эсвэл per-app scaling).",
+      "phrase_en": "one web app must scale independently without affecting other apps"
+    },
+    {
+      "trap": "Autoscale нь нэг rule бага болмогц scale in хийнэ.",
+      "truth": "Scale **out**: аль нэг rule биелбэл (OR). Scale **in**: **бүх** rule биелбэл (AND).",
+      "phrase_en": "scale out when CPU is high or queue length is high, scale in when both are low"
+    },
+    {
+      "trap": "Functions cold start-ийг арилгахад Consumption plan хангалттай.",
+      "truth": "Consumption idle үед zero хүртэл scale хийх тул cold start гарна. **Premium** эсвэл **Flex Consumption**-ы **always ready** instance, эсвэл Dedicated plan.",
+      "phrase_en": "avoid cold starts for an event-driven function app"
+    }
+  ],
+  "vocabulary": [
+    { "en": "scale to zero", "mn": "ачаалал байхгүй үед instance-ийн тоог тэг болгох" },
+    { "en": "cold start", "mn": "idle-ээс эхний хүсэлтэд instance бэлдэх саатал" },
+    { "en": "always ready instance", "mn": "байнга бэлэн байлгадаг instance" },
+    { "en": "scale out / scale in", "mn": "instance нэмэх / хасах (хэвтээ scale)" },
+    { "en": "orchestration", "mn": "container-уудыг зохион байгуулах, удирдах" },
+    { "en": "intrinsically parallel workload", "mn": "хоорондоо хамааралгүй, зэрэг хийж болох ажил" },
+    { "en": "operational overhead", "mn": "ажиллуулах, удирдах ачаалал" }
+  ]
+}

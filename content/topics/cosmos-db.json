@@ -1,0 +1,182 @@
+{
+  "id": "cosmos-db",
+  "domain": "data",
+  "order": 6,
+  "title": "Azure Cosmos DB: partitioning, consistency, throughput",
+  "tagline": "Хэн хэр хоцорч уншиж болох вэ, түлхүүрээ хэрхэн сонгох вэ?",
+  "checked": "2026-10-16",
+  "sources": ["cosmos", "partition", "requestunits", "throughputoffer", "cosmosserverless", "globaldist", "multiwrite", "cosmosapi", "cosmosbackup", "cosmosintro"],
+  "analogy": {
+    "title": "Дэлхий даяар салбартай номын сан, Болд эрхлэгч",
+    "story": "Болд олон улсын номын сангийн сүлжээг хариуцдаг. Ном бүр ангиллын кодтой (**partition key**). Ижил кодтой номнууд нэг тавиурт (**logical partition**) байрлана: тавиур 20 GB-аас томорч чадахгүй. Тавиурын бүлгүүд агуулахын нэг хэсэгт (**physical partition**) хадгалагдах бөгөөд тэр хэсгийг Болд хянахгүй, Cosmos өөрөө зохицуулна. Бүх уншигч зөвхөн «шинэ шилдэг» нэг ангиллыг л нэхвэл тэр нэг тавиур дарамтлагдаж, ачаалал хэтэрнэ: энэ бол **hot partition**.\n\nНомын сан кредитээр ажилладаг (**Request Unit**). 1 KB хэмжээтэй номыг код, дугаараар нь шууд авахад 1 кредит. Харин хайлт хийхэд илүү олон кредит зарцуулна. Ажилчдын тоог гурван янзаар зохицуулна. Тогтмол тооны ажилтан (**manual**), ачаалалтай нь дагаад автоматаар нэмэгдэж хасагдах ажилтан (**autoscale**), эсвэл дуудлагаар л ирж үйлчилдэг ажилтан (**serverless**).\n\nШинэ ном нэг салбарт орвол бусад салбарт хүрэх хугацаа ялгаатай. Бүх салбар батлахыг хүлээж байж зарлавал найдвартай боловч удаан (**Strong**). Хоцрогдол «К ном, эсвэл Т минут»-аас хэтрэхгүй гэж амлавал **Bounded staleness**. Хэрэглэгч өөрийн захиалсан номыг өөрийн нэвтрэлтэд шууд харна, бусад нь хоцорч харж болно (**Session**). Дараалал алдагдахгүй, гэхдээ хоцорч болно (**Consistent prefix**). Хэзээ нэгэн цагт хүрнэ (**Eventual**).\n\nГэхдээ «бүх салбар яг ижил» гэдэг нь үнэгүй биш. Strong consistency нь write-ийг бүх салбарт баталгаажуулах тул удаан бөгөөд салбар хоорондын холбоо тасрахад хүртээмж буурна. Уншилтыг сулруулах нь зөвхөн *унших* талыг өөрчилдөг: write-ийн зам хэвээр.",
+    "mapping": [
+      { "real": "Ангиллын код", "azure": "Partition key" },
+      { "real": "Ижил кодтой номны тавиур (20 GB хүртэл)", "azure": "Logical partition" },
+      { "real": "Агуулахын хэсэг, Cosmos өөрөө зохицуулна", "azure": "Physical partition" },
+      { "real": "Нэг тавиурт хэт олон хүн цугларах", "azure": "Hot partition" },
+      { "real": "Кредит: 1 KB номыг шууд авахад 1", "azure": "Request Unit (RU)" },
+      { "real": "Тогтмол тооны ажилтан", "azure": "Provisioned throughput: manual" },
+      { "real": "Ачаалалд тааруулж нэмэгдэх ажилтан", "azure": "Provisioned throughput: autoscale" },
+      { "real": "Дуудлагаар ирдэг ажилтан", "azure": "Serverless account" },
+      { "real": "Салбарууд", "azure": "Azure regions (global distribution)" },
+      { "real": "Өөрийн захиалгыг шууд харах", "azure": "Session consistency (read-your-writes)" },
+      { "real": "Хоцрогдол К ном эсвэл Т минутаас хэтрэхгүй", "azure": "Bounded staleness" }
+    ]
+  },
+  "illustration": {
+    "scene": ["Library", "BookOpen", "Globe", "Users", "Timer", "Archive", "Server"],
+    "caption": "Номын сан (Library), ном (BookOpen), салбарууд даяар (Globe), уншигчид, хоцрогдол (Timer), тавиур (Archive), агуулах (Server)."
+  },
+  "mnemonics": [
+    {
+      "device": "Сүүлийнх · Хязгаар · Өөрийнх · Дараалал · Эцэст",
+      "parts": [
+        { "key": "Сүүлийнх", "meaning": "Хаана ч хамгийн сүүлд баталгаажсан write-ийг уншина → **Strong**" },
+        { "key": "Хязгаар", "meaning": "Хоцрогдол K хувилбар эсвэл T хугацаанаас хэтрэхгүй → **Bounded staleness**" },
+        { "key": "Өөрийнх", "meaning": "Нэг client session дотор өөрийн write-ийг шууд харна → **Session**" },
+        { "key": "Дараалал", "meaning": "Хоцорч болно, гэхдээ write-ийн дараалал алдагдахгүй → **Consistent prefix**" },
+        { "key": "Эцэст", "meaning": "Дараалал шаардахгүй, хамгийн сул → **Eventual**" }
+      ],
+      "why": "Requirement → decision: «Хэн, хэр хоцорч унших ёстой вэ?» гэж асуу. Шаардлагыг хангадаг хамгийн сул түвшнийг ав, учир нь Strong нь write latency нэмж, доголдлын үед хүртээмжийг бууруулна."
+    },
+    {
+      "device": "Тогтмол · Хэлбэлзэл · Хааяа",
+      "parts": [
+        { "key": "Тогтмол", "meaning": "Тогтвортой, урьдчилан тааварлаж болох ачаалал → **provisioned manual**" },
+        { "key": "Хэлбэлзэл", "meaning": "Хувьсах, тааварлахад хэцүү ачаалал → **provisioned autoscale**" },
+        { "key": "Хааяа", "meaning": "Тасалдалтай, hard-to-forecast ачаалал, dev/test, нэг region → **serverless**" }
+      ],
+      "why": "Requirement → decision: «Ачаалал хэр тогтмол вэ, олон region хэрэгтэй юу?» гэж асуу. Олон region хэрэгтэй бол serverless боломжгүй (нэг region)."
+    },
+    {
+      "device": "Тэнцвэр · Хэмжээ · Гүйлгээ",
+      "parts": [
+        { "key": "Тэнцвэр", "meaning": "Хүсэлт ба хадгалалтыг logical partition-уудад жигд хуваарилах key → hot partition гарахгүй" },
+        { "key": "Хэмжээ", "meaning": "Logical partition ≤ 20 GB, ≤ 10,000 RU/s. Хэтрэхээр бол hierarchical partition key" },
+        { "key": "Гүйлгээ", "meaning": "Transaction logical partition доторх item-д л → хамт шинэчлэх item-ууд ижил key-тэй" }
+      ],
+      "why": "Requirement → decision: «Ачаалал жигд тархах уу, нэг key хэт том болох уу, атомар шинэчлэлт хэрэгтэй юу?» гэж асуу. Key сонголт нь ачааллын тархалт, transaction-ы хүрээг шийднэ."
+    },
+    {
+      "device": "Шинэ · Хуучин · Граф · Хүснэгт",
+      "parts": [
+        { "key": "Шинэ", "meaning": "Документ төрлийн ачаалал, native SQL query, automatic indexing → **API for NoSQL**" },
+        { "key": "Хуучин", "meaning": "Одоо байгаа MongoDB / Cassandra апп, wire protocol нийцэл → **API for MongoDB / Cassandra**" },
+        { "key": "Граф", "meaning": "Харилцаа, graph traversal → **API for Gremlin**" },
+        { "key": "Хүснэгт", "meaning": "Azure Table Storage апп-ыг шинэчлэх → **API for Table**" }
+      ],
+      "why": "Requirement → decision: «Шинэ апп уу, одоо байгаа ямар протоколтой апп-ыг шилжүүлэх вэ?» гэж асуу. Одоо байгаа апп-д wire protocol-той API нь код өөрчлөлтийг багасгана."
+    }
+  ],
+  "keyFacts": [
+    {
+      "text": "Cosmos DB нь **таван** consistency түвшинтэй (хүчтэйгээс сул): Strong, Bounded staleness, Session, Consistent prefix, Eventual. **Strong** нь linearizability: уншилт үргэлж хамгийн сүүлийн committed write-ийг буцаана. Гэхдээ write latency нэмэгдэж, доголдлын үед хүртээмж буурна.",
+      "source": "cosmos"
+    },
+    {
+      "text": "**Bounded staleness**: region хоорондын хоцрогдол K хувилбар эсвэл T хугацаанаас (аль эрт хүрсэнээр) хэтрэхгүй. Хоцрогдол хязгаараас давбал тухайн partition-ийн write-ийг буцаан хязгаарлана. Single-region write, 2+ region-той account-д хамгийн тохиромжтой.",
+      "source": "cosmos"
+    },
+    {
+      "text": "**Session**: нэг client session дотор read-your-writes болон write-follows-reads. Session token нь partition-д холбогдсон. Хамгийн өргөн хэрэглэгддэг түвшин: latency, availability, read throughput нь eventual-тай ойролцоо.",
+      "source": "cosmos"
+    },
+    {
+      "text": "**Consistent prefix** нь уншилт write-ийн дарааллыг алдахгүй. **Eventual** нь хамгийн сул: client өмнө уншсан утгаасаа хуучин утга уншиж болно. Like тоолуур, threaded биш сэтгэгдэл зэрэгт тохиромжтой.",
+      "source": "cosmos"
+    },
+    {
+      "text": "Default consistency-г account түвшинд хэзээ ч өөрчилж болно, бүх database, container-д хамаарна. Request эсвэл SDK түвшинд **уншилтыг** сулруулж болно. Strong default-той account ч write-ийг бүх region-д синхрон хэвээр хийнэ. Gremlin, Table API нь account-ийн default-г ашиглана.",
+      "source": "cosmos"
+    },
+    {
+      "text": "**Logical partition** нь ижил partition key утгатай item-уудаас бүрдэнэ. Нэг logical partition ≤ **20 GB**, container доторх logical partition-ы тоо хязгааргүй. Logical partition нь transaction-ы хүрээг мөн тодорхойлно. Hierarchical partition key нь гурван түвшин хүртэл.",
+      "source": "partition"
+    },
+    {
+      "text": "**Physical partition**-ийг Cosmos өөрөө удирдана, та хянахгүй. Тус бүр ≤ **10,000 RU/s**. Provisioned throughput physical partition-уудад тэнцүү хуваагдах тул жигд бус key нь **hot partition** үүсгэж, rate limiting-д хүргэнэ.",
+      "source": "partition"
+    },
+    {
+      "text": "**Request Unit (RU)** нь CPU, IOPS, memory-г нэгтгэсэн гүйцэтгэлийн валют, RU/s-ээр хэмжигдэнэ. ~1 KB item-ийн **point read** нь 1 RU, point read нь query-ээс хямд.",
+      "source": "requestunits"
+    },
+    {
+      "text": "**Manual** throughput нь 100 RU/s-ийн алхмаар өөрчлөгдөж, цаг тутам тооцогдоно. Provisioned RU нь account-тай холбогдсон **бүх region**-д байрлана, region тус бүрт тусад нь оноож болохгүй.",
+      "source": "requestunits"
+    },
+    {
+      "text": "**Manual** ба **autoscale** хоёулаа ижил SLA-тай. Manual нь тогтвортой, тааварлаж болох ачаалалд, autoscale нь хувьсах, тааварлахад хэцүү ачаалалд тохирно.",
+      "source": "throughputoffer"
+    },
+    {
+      "text": "**Serverless** нь хэрэглэсэн RU болон storage-ээр төлдөг account төрөл: хамгийн бага төлбөр, capacity planning-гүй. Тасалдалтай ачаалал, dev/test-д тохиромжтой. **Нэг Azure region-д** л ажиллаж, дараа нь region нэмж болохгүй.",
+      "source": "cosmosserverless"
+    },
+    {
+      "text": "Region-ийг account-д хэзээ ч, апп-ыг зогсоолгүйгээр нэмж хасаж болно. Уншилт, write нь local replica-аас хийгдэнэ. **Multi-region writes** нь read consistency шаардлагагүй үед outage-д ойролцоо тэг downtime өгнө.",
+      "source": "multiwrite"
+    },
+    {
+      "text": "API-ууд: **NoSQL** (native SQL query, automatic indexing), **MongoDB** (wire protocol нийцэл), **Cassandra** (CQL), **Gremlin** (граф), **Table** (Table Storage шинэчлэх), **PostgreSQL** (түгээгдсэн relational).",
+      "source": "cosmosapi"
+    },
+    {
+      "text": "**Continuous backup** нь 7, 30 эсвэл 35 хоногийн retention-ээр хугацааны дурын цэгт сэргээнэ. **Periodic** нь одоо байгаа account-уудын анхдагч горим: support хүсэлтээр сэргээж, дээд retention нь сар.",
+      "source": "cosmosbackup"
+    }
+  ],
+  "compare": {
+    "caption": "Хүснэгтэд зөвхөн түвшин бүрийн гол баталгааг харуулав. ✓ нь Microsoft Learn-д шууд заасан. ¹ Strong нь хамгийн сүүлийн write-ийг баталгаажуулдаг тул бусад баталгааг ч хангана гэсэн дүгнэлт. ✗ нь тухайн түвшний тодорхойлолтод заагаагүй гэсэн утга (Bounded staleness, Session нь нэмэлт чанартай байж болох ч энд харуулаагүй).",
+    "columns": ["Түвшин", "Хамгийн сүүлийн write-ийг уншина", "Session дотор read-your-writes", "Хоцрогдлын дээд хязгаар (K / T)", "Write-ийн дараалал алдагдахгүй"],
+    "rows": [
+      ["Strong", "✓", "✓¹", "✓¹", "✓¹"],
+      ["Bounded staleness", "✗", "✗", "✓", "✗"],
+      ["Session", "✗", "✓", "✗", "✗"],
+      ["Consistent prefix", "✗", "✗", "✗", "✓"],
+      ["Eventual", "✗", "✗", "✗", "✗"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Strong consistency нь бүх region-д хамгийн сайн сонголт, зөвхөн илүү найдвартай.",
+      "truth": "Strong нь **write latency нэмж**, доголдлын үед **хүртээмжийг бууруулна** (бүх region-д commit хийх ёстой). Шаардлагыг хангадаг хамгийн сул түвшнийг сонго.",
+      "phrase_en": "readers in every region must always see the most recent committed write"
+    },
+    {
+      "trap": "Request дээр consistency-г сулруулбал Strong account-ийн write бас хурдасна.",
+      "truth": "Override нь **зөвхөн уншилт**-д хамаарна. Strong default-той account ч write-ийг бүх region-д **синхрон** хийнэ.",
+      "phrase_en": "a client relaxes the consistency of a strong account, but write latency does not change"
+    },
+    {
+      "trap": "Session consistency бүх хэрэглэгчид хамгийн сүүлийн write-ийг харуулна.",
+      "truth": "**Session** нь зөвхөн нэг client session дотор (session token-оор) read-your-writes өгнө. Бусад хэрэглэгч хуучин өгөгдөл харж болно.",
+      "phrase_en": "a user must see their own update immediately while other users may still see older data"
+    },
+    {
+      "trap": "Partition key-г ямар ч утгаар сонговол Cosmos physical partition-ыг өөрөө жигдрүүлнэ.",
+      "truth": "Key нь ачааллын тархалтыг шийднэ. Ихэнх хүсэлт нэг key-д очвол **hot partition** болж rate limiting гарна. Logical partition ≤ 20 GB, ≤ 10,000 RU/s.",
+      "phrase_en": "most writes share one key and the container is throttled"
+    },
+    {
+      "trap": "Serverless account-д дараа нь өөр region нэмж болно.",
+      "truth": "**Serverless** account нэг Azure region-д л ажиллана, үүсгэсний дараа region нэмж болохгүй. Олон region хэрэгтэй бол provisioned throughput.",
+      "phrase_en": "the application needs global distribution across several regions with pay-per-request billing"
+    },
+    {
+      "trap": "Provisioned RU-г хамгийн ачаалалтай region-д л өндөр оноож болно.",
+      "truth": "Container-д provisioned RU нь account-тай холбогдсон **бүх region**-д адил байрлана. Region тус бүрт сонгож оноох боломжгүй.",
+      "phrase_en": "assign extra throughput only to the busiest region of the account"
+    }
+  ],
+  "vocabulary": [
+    { "en": "choose the weakest consistency that meets the requirement", "mn": "шаардлагыг хангадаг хамгийн сул consistency-г сонгох" },
+    { "en": "read your own writes within a session", "mn": "session дотор өөрийн write-ээ унших" },
+    { "en": "lag bounded by a number of versions or a time interval", "mn": "хувилбарын тоо эсвэл хугацаагаар хязгаарлагдсан хоцрогдол" },
+    { "en": "spread requests evenly across partitions", "mn": "хүсэлтийг partition-уудад жигд тараах" },
+    { "en": "hot partition causes rate limiting", "mn": "hot partition нь rate limiting үүсгэнэ" },
+    { "en": "unpredictable, intermittent traffic", "mn": "тааварлашгүй, тасалдалтай ачаалал" },
+    { "en": "migrate an existing MongoDB application", "mn": "одоо байгаа MongoDB апп-ыг шилжүүлэх" },
+    { "en": "point-in-time restore", "mn": "хугацааны дурын цэгт сэргээх" }
+  ]
+}

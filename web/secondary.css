@@ -1,0 +1,48 @@
+/* Native controls and document layouts outside the quiz. No Pico dependency. */
+@layer components {
+  main > article {
+    @apply rounded-xl border bg-card p-5 sm:p-8;
+  }
+  main > article > h2 {
+    @apply mb-4 text-2xl font-semibold tracking-tight;
+  }
+  main > article > p {
+    @apply my-4 leading-relaxed;
+  }
+  .mat-bar button {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm hover:bg-muted disabled:opacity-50;
+  }
+  .muted {
+    @apply text-sm leading-relaxed text-muted-foreground;
+  }
+  .source-grid {
+    @apply my-4 grid gap-3 sm:grid-cols-2;
+  }
+  .source-grid a {
+    @apply flex min-w-0 items-center gap-3 rounded-xl border p-4 text-sm hover:bg-muted;
+  }
+  .source-grid a > span {
+    @apply min-w-0 flex-1;
+  }
+  .source-grid svg {
+    @apply shrink-0;
+  }
+  .source-grid small {
+    @apply mt-1 block text-xs text-muted-foreground;
+  }
+  .mat-bar {
+    @apply my-6 flex flex-wrap gap-2;
+  }
+  .mat-topic {
+    @apply border-b py-3;
+  }
+  .mat-topic > summary {
+    @apply flex items-center gap-3 text-sm;
+  }
+  .mat-topic small {
+    @apply ml-auto text-muted-foreground;
+  }
+  .mat-topic[open] .mat-chev {
+    @apply rotate-90;
+  }
+}

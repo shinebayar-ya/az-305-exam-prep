@@ -1,0 +1,167 @@
+{
+  "id": "monitoring",
+  "domain": "identity",
+  "order": 1,
+  "title": "Logging & monitoring: Azure Monitor",
+  "tagline": "Ямар дохио хаана очиж, хэн үүнийг хэрхэн уншдаг вэ?",
+  "checked": "2026-10-16",
+  "sources": ["monitor", "metrics", "activitylog", "diagnostics", "logs", "alerts", "alertsoverview", "workbooks", "appinsights"],
+  "analogy": {
+    "title": "Байрны менежерийн хэт сэрэмж",
+    "story": "Байрны менежер Батаа бүх зүйлийг хянадаг. Нэг минут тутам хаалганы тоолуур, зуухны термометрийн тоог цаасан дээр тэмдэглэнэ. Энэ бол **metrics**: тоо, тогтмол давтамжтай, юу ч тохируулаагүй ч өөрөө цугларна.\n\nХурлын тэмдэглэлд «хэн, хэзээ, ямар өрөөг шинээр нээсэн, устгасан» гэж бичигддэг. Энэ бол **Activity log**: удирдлагын түвшний үйлдэл, subscription бүрт өөрөө бүртгэгдэнэ. Харин өрөө бүрийн *дотор* юу болсныг харуулах камер тусдаа. Камер суулгасан ч бичлэгийг нь асаагаагүй бол бичлэг хоосон. Энэ бол **resource logs**: өөрөө цуглахгүй, **diagnostic setting** хэрэгтэй.\n\nБатаа бичлэгээ гурван газарт явуулж чаддаг. Хяналтын өрөөний компьютер руу (хайлт хийнэ), хонгилын архив руу (хямд, хугацаагүй хадгална), гадны хамгаалалтын компани руу (шууд дамжуулна). Дохиолол нь гурван янзтай: термометр 40-өөс давбал хонх дуугарна (metric alert), бичлэгийн мөрөнд тодорхой үг гарвал дуугарна (log search alert), хэн нэгэн өрөө устгавал дуугарна (activity log alert).\n\nГэхдээ Батаагийн систем нь **гал гарахаас сэргийлэхгүй**: зөвхөн «гал гарлаа» гэж мэдэгдэнэ. Monitoring бол ажиглалт, засвар биш.",
+    "mapping": [
+      { "real": "Минут тутмын тоолуурын тоо", "azure": "Platform metrics — тоон time-series, автоматаар цуглана" },
+      { "real": "Өрөө нээсэн, устгасан тухай хурлын тэмдэглэл", "azure": "Activity log — subscription-level, Azure Resource Manager-ийн үйлдэл" },
+      { "real": "Өрөөний доторх камер (бичлэгийг асаах хэрэгтэй)", "azure": "Resource logs — diagnostic setting-ээр л цуглана" },
+      { "real": "«Бичлэгийг хаашаа явуулах вэ» гэсэн заавар", "azure": "Diagnostic setting" },
+      { "real": "Хяналтын өрөөний хайлт хийдэг компьютер", "azure": "Log Analytics workspace + KQL" },
+      { "real": "Хонгилын архив", "azure": "Storage account destination" },
+      { "real": "Гадны хамгаалалтын компани руу шууд шугам", "azure": "Event Hubs destination (SIEM рүү stream)" },
+      { "real": "Нэг гомдлын замыг гурван албаар дагах", "azure": "Distributed traces (Application Insights)" },
+      { "real": "Хэн дуудагдах жагсаалт, хонх", "azure": "Action group" }
+    ]
+  },
+  "illustration": {
+    "scene": ["UserRound", "Building2", "Thermometer", "ClipboardList", "Video", "Archive", "Bell"],
+    "caption": "Менежер (UserRound), байр (Building2), термометр (metrics), хурлын тэмдэглэл (Activity log), камер (resource logs), архив (Storage), хонх (alert)."
+  },
+  "mnemonics": [
+    {
+      "device": "Хайх · Хадгалах · Дамжуулах",
+      "parts": [
+        { "key": "Хайх", "meaning": "KQL, workbook эсвэл log alert хэрэгтэй → **Log Analytics workspace**" },
+        { "key": "Хадгалах", "meaning": "Хямд, хугацаагүй архив, immutable → **Storage account**" },
+        { "key": "Дамжуулах", "meaning": "Гадны SIEM руу шууд stream → **Event Hubs**" }
+      ],
+      "why": "Requirement → decision: «Энэ log-ийг дараа нь хэн, яаж ашиглах вэ?» гэж асуу. Хоёр хэрэгцээ байвал хоёр destination сонго. Нэг setting төрөл бүрээс ганц destination авдаг тул Log Analytics + Storage нэг setting-д багтана."
+    },
+    {
+      "device": "Тоо · Мөр · Үйлдэл",
+      "parts": [
+        { "key": "Тоо", "meaning": "Metric-д бэлэн байгаа тоо, нэмэлт боловсруулалтгүй → **metric alert**" },
+        { "key": "Мөр", "meaning": "Log-ийн мөр, KQL, join шаардлагатай → **log search alert**" },
+        { "key": "Үйлдэл", "meaning": "Azure-д нэг үйлдэл болсон (устгасан, role өгсөн, Service Health) → **activity log alert**" }
+      ],
+      "why": "Requirement → decision: «Би юуг ажиглаж байна: тоог, бүртгэлийн мөрийг, эсвэл нэг үйлдлийг?» гэж асуу. Тоо бол хамгийн энгийн rule-ыг ав, KQL хэрэгтэй үед л log search руу ор."
+    },
+    {
+      "device": "Хэд · Дотор · Хэн · Зам",
+      "parts": [
+        { "key": "Хэд", "meaning": "Тоон чиг хандлага, босго → **Metrics**" },
+        { "key": "Дотор", "meaning": "Service дотор ямар үйлдэл болсон → **Resource logs**" },
+        { "key": "Хэн", "meaning": "Хэн Azure Resource Manager-ээр тохиргоог өөрчилсөн → **Activity log**" },
+        { "key": "Зам", "meaning": "Нэг хүсэлт олон service-ээр яаж явсан → **Distributed traces** (Application Insights)" }
+      ],
+      "why": "Requirement → decision: «Надад тоо, service-ийн дотоод үйлдэл, өөрчлөлтийн эзэн, эсвэл хүсэлтийн зам аль нь хэрэгтэй вэ?» гэж асуу. Асуултын төрөл signal-ыг сонгоно."
+    }
+  ],
+  "keyFacts": [
+    {
+      "text": "Metrics, logs, **distributed traces** гурвыг observability-ийн гурван тулгуур гэнэ. Azure Monitor өгөгдлөө **Metrics** эсвэл **Logs** платформд нэгтгэнэ.",
+      "source": "monitor"
+    },
+    {
+      "text": "Logs нь **Log Analytics workspace**-д хадгалагдана. Log Analytics-д **Simple mode** (спредшит шиг) болон **KQL mode** (Kusto Query Language) байдаг.",
+      "source": "logs"
+    },
+    {
+      "text": "**Platform metrics** нь тохиргоогүйгээр, ихэвчлэн нэг минутын давтамжтай автоматаар цуглана. Metrics бол тогтмол давтамжтай цуглуулсан тоон утга.",
+      "source": "metrics"
+    },
+    {
+      "text": "**Activity log** нь subscription-level үйл явдлыг анхдагч scope-оор жагсаадаг бөгөөд үйл явдлыг анхдагчаар **90 хоног** хадгална. Үүнээс урт хугацаа хэрэгтэй бол diagnostic setting-ээр өөр destination руу экспортол.",
+      "source": "activitylog"
+    },
+    {
+      "text": "Platform metrics болон Activity log автоматаар цуглана. **Resource logs** анхдагчаар цуглуулагдахгүй: цуглуулахын тулд diagnostic setting үүсгэнэ.",
+      "source": "diagnostics"
+    },
+    {
+      "text": "Diagnostic setting-ийн destination: **Log Analytics workspace** (log query, workbook, log alert), **Storage account** (audit, архив, хямд, хугацаагүй, immutable боломжтой), **Event Hubs** (гадны SIEM руу stream), Azure Monitor partner solutions.",
+      "source": "diagnostics"
+    },
+    {
+      "text": "Нэг diagnostic setting төрөл бүрийн destination-аас **ганцыг** л агуулна. Нэг resource-д **5 хүртэл** setting байж болно. Destination урьдчилан үүссэн байх ёстой.",
+      "source": "diagnostics"
+    },
+    {
+      "text": "Regional resource-ийн **Storage account болон Event Hubs** нь хяналтад буй resource-тайгаа **ижил region**-д байх ёстой. Log Analytics workspace-д энэ шаардлага заагаагүй.",
+      "source": "diagnostics"
+    },
+    {
+      "text": "Category group: `allLogs` (бүх category), `audit` (data эсвэл тохиргоотой харилцсан бүртгэл). Azure SQL Database дээр `audit`-ийг асаахад database auditing **асахгүй**: auditing-ийн цонхноос тусад нь асаана.",
+      "source": "diagnostics"
+    },
+    {
+      "text": "**Metric alert** нь урьдчилан тооцоолсон metric өгөгдөл дээр ажиллана, анхдагчаар stateful. **Log search alert** нь Log Analytics query-г тогтмол давтамжтай ажиллуулж KQL-ийн нарийн логик ашиглана.",
+      "source": "alerts"
+    },
+    {
+      "text": "**Activity log alert** нь event-driven, **stateless**: тохирох үйл явдал гарахад нэг удаа гал асна. Жишээ: production resource group-ийн VM устсан, subscription-д шинэ role оноосон, Service Health event.",
+      "source": "alerts"
+    },
+    {
+      "text": "Alert rule-ийн нөхцөл биелэхэд холбоотой **action group** ажиллаж, мэдэгдэл явуулж эсвэл автомат workflow эхлүүлнэ. **Alert processing rule** нь action group нэмэх, дарах, шүүх, хуваарьт ажиллах боломжтой.",
+      "source": "alertsoverview"
+    },
+    {
+      "text": "**Workbooks** нь олон data source-ыг нэгтгэсэн, интерактив тайлан бүтээх уян хатан canvas юм.",
+      "source": "workbooks"
+    },
+    {
+      "text": "**Application Insights** нь Azure Monitor-ийн application performance monitoring (APM) боломж. Distributed tracing-ийг Azure Monitor-д Application Insights-аар идэвхжүүлнэ.",
+      "source": "appinsights"
+    }
+  ],
+  "compare": {
+    "caption": "✓ нь Microsoft Learn-ийн destination хүснэгтэд заасан зорилго. ✗ нь Learn тухайн destination-ыг тэр зорилгоор заагаагүй гэсэн дүгнэлт (хүснэгтээс гаргасан, шууд ‘дэмжихгүй’ гэсэн мэдэгдэл биш).",
+    "columns": ["Destination", "KQL / workbook / log alert", "Гадны SIEM руу stream", "Хямд, хугацаагүй archive", "Ижил region шаардлага"],
+    "rows": [
+      ["Log Analytics workspace", "✓", "✗", "✗", "Заагаагүй"],
+      ["Storage account", "✗", "✗", "✓", "Шаардлагатай"],
+      ["Event Hubs", "✗", "✓", "✗", "Шаардлагатай"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Resource үүсгэсэн бол түүний resource logs автоматаар Log Analytics-д орж ирнэ.",
+      "truth": "Автоматаар цуглах нь platform metrics болон Activity log. **Resource logs**-ийг **diagnostic setting** үүсгэж destination сонгосны дараа л авна.",
+      "phrase_en": "detailed operations emitted by a service must be analyzed, but the workspace contains no such records"
+    },
+    {
+      "trap": "Log Analytics-д KQL хийх, Storage-д archive хийх хоёр хэрэгцээ тусдаа setting шаарддаг, нэг setting нэг destination.",
+      "truth": "Нэг setting төрөл бүрээс ганц destination авдаг тул **Log Analytics + Storage** нэг setting-д багтана. Ижил төрлийн хоёр workspace хэрэгтэй бол хоёр setting (resource тутамд 5 хүртэл).",
+      "phrase_en": "logs must support interactive KQL investigation and a separate low-cost raw archive"
+    },
+    {
+      "trap": "Хэн VM устгасныг мэдэхийн тулд metric alert эсвэл Application Insights тавина.",
+      "truth": "Нэг үйлдэл болсныг мэдэгдэх бол **activity log alert**: event-driven, stateless, subscription эсвэл resource group хүрээнд.",
+      "phrase_en": "notify the team whenever a virtual machine in the production resource group is deleted"
+    },
+    {
+      "trap": "Log search alert бол metric alert-ийн илүү хүчтэй хувилбар тул үргэлж түүнийг сонгоно.",
+      "truth": "Өгөгдөл **metric**-д бэлэн, нэмэлт боловсруулалтгүй бол **metric alert**. KQL, олон эх сурвалжийн join шаардлагатай үед л **log search alert**.",
+      "phrase_en": "a CPU threshold must trigger an alert, with no cross-resource joins or event search"
+    },
+    {
+      "trap": "Activity log-ийг нэг жил хадгалахад Azure Monitor өөрөө хадгалсан хэвээр байна.",
+      "truth": "Анхдагч хугацаа **90 хоног**. Урт хугацаа хэрэгтэй бол **diagnostic setting**-ээр Log Analytics эсвэл Storage руу экспортол.",
+      "phrase_en": "management-plane events must remain available for longer than the default retention period"
+    },
+    {
+      "trap": "Storage account эсвэл Event Hubs-ийг аль ч region-д байлгаж болно.",
+      "truth": "Regional resource-ийн **Storage account ба Event Hubs** нь хяналтад буй resource-тайгаа **ижил region**-д байх ёстой. Мөн firewall/VNet асаалттай бол **Allow trusted Microsoft services**-ийг идэвхжүүл.",
+      "phrase_en": "the destination must be in the same region as the monitored resource"
+    }
+  ],
+  "vocabulary": [
+    { "en": "route resource logs to a Log Analytics workspace", "mn": "resource log-ийг Log Analytics workspace руу чиглүүлэх" },
+    { "en": "retain events for longer than 90 days", "mn": "үйл явдлыг 90 хоногоос урт хадгалах" },
+    { "en": "stream events to a third-party SIEM", "mn": "үйл явдлыг гуравдагч талын SIEM руу stream хийх" },
+    { "en": "immutable archive", "mn": "өөрчилж, устгаж болохгүй архив" },
+    { "en": "fire an alert when a threshold is exceeded", "mn": "босго давахад alert асаах" },
+    { "en": "correlate a request across services", "mn": "хүсэлтийг олон service-ээр холбон харах" },
+    { "en": "management-plane operation", "mn": "удирдлагын түвшний үйлдэл" },
+    { "en": "reuse the same notification recipients", "mn": "ижил хүлээн авагчдыг дахин ашиглах" }
+  ]
+}

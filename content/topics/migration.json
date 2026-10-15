@@ -1,0 +1,124 @@
+{
+  "id": "migration",
+  "domain": "infrastructure",
+  "order": 16,
+  "title": "Migration: CAF strategies, Azure Migrate, Database Migration Service, Data Box",
+  "tagline": "Хуучин шүүгээгээ зөөх үү, хаях уу, эсвэл шинийг худалдаж авах уу?",
+  "checked": "2026-10-17",
+  "sources": ["migrationstrategy", "migrate", "dms", "databox", "datatransfer"],
+  "analogy": {
+    "title": "Нүүдэлд хэт сайн бэлтгэдэг Батцэцэг",
+    "story": "Батцэцэг 20 жил амьдарсан байшингаасаа шинэ орон сууц руу нүүнэ. Тэр *юуг ч* бодолгүй зөөхгүй.\n\nЭхлээд бүх өрөөгөөр орж **жагсаалт** хийнэ: юу байгаа, хэр том, юутай холбоотой (**discovery**, **dependency analysis**). Угаалгын машин ус дамжуулах хоолойтойгоо хамт явах ёстой гэдгийг тэр мэднэ. Дараа нь шинэ байранд юу багтах, ямар хэмжээтэй шүүгээ хэрэгтэйг тооцно (**assessment**, **right-sizing**). Энэ бүгд **Azure Migrate**.\n\nЭд зүйл бүрд шийдвэр гаргана. Хэн ч хэрэглэдэггүй дугуй — **хаях** (**Retire**). Сайн шүүгээ — **хэвээр нь зөөх** (**Rehost**). Хуучин зуух — шинэ байрны **цахилгаан зууханд** солих (**Replatform**). Ном тавиурыг **дахин угсрах** (**Refactor**, **Rearchitect**). Эвдэрсэн радиог **шинээр худалдаж авах** (**Replace**, **Rebuild**). Эмээгийн авдрыг хуучин гэрт нь **үлдээх** (**Retain**).\n\nХөргөгчийг (database) унтраалгүй зөөх нь хэцүү. Тусгай мэргэжилтэн (**Database Migration Service**) хөргөгчийг ажиллаж байхад нь шинэ байр руу шилжүүлнэ (**online**), эсвэл түр унтрааж зөөнө (**offline**).\n\nНомын сан 500 хайрцаг. Зам нарийн (network bandwidth бага) тул жижиг машинаар 1000 удаа явахгүй, **том ачааны машин** дуудна: **Data Box**.\n\nГэхдээ нүүдэл гэдэг нь *амьдралын хэв маягийг* засахгүй. Эвдэрхий шүүгээг хэвээр нь зөөвөл шинэ байранд ч эвдэрхий хэвээр. CAF ч «асуудалтай workload-ыг бүү rehost хий» гэдэг.",
+    "mapping": [
+      { "real": "Бүх өрөөний жагсаалт", "azure": "Discovery — Azure Migrate appliance эсвэл Collector" },
+      { "real": "Угаалгын машин хоолойтойгоо хамт", "azure": "Dependency analysis — серверүүдийн network хамаарал" },
+      { "real": "Шинэ байранд багтах эсэх, хэмжээ", "azure": "Assessment — Azure readiness, right-sizing, cost" },
+      { "real": "Дугуйг хаях", "azure": "Retire — бизнесийн үнэ цэнэ бага workload" },
+      { "real": "Шүүгээг хэвээр нь зөөх", "azure": "Rehost — like-for-like, хамгийн бага өөрчлөлт" },
+      { "real": "Цахилгаан зууханд солих", "azure": "Replatform — PaaS, бага зэргийн code өөрчлөлт" },
+      { "real": "Шинээр худалдаж авах", "azure": "Replace — SaaS шийдэл" },
+      { "real": "Авдрыг хуучин гэрт үлдээх", "azure": "Retain — on-premises-д хэвээр, Azure Arc-аар удирдах" },
+      { "real": "Хөргөгчийг ажиллаж байхад нь зөөх", "azure": "Database Migration Service — online migration, бага downtime" },
+      { "real": "Том ачааны машин", "azure": "Azure Data Box — offline data transfer" }
+    ]
+  },
+  "illustration": {
+    "scene": ["Building2", "ClipboardList", "Database", "Truck", "Warehouse"],
+    "caption": "Хуучин байшин (on-premises) → жагсаалт (Azure Migrate) → хөргөгч (Database Migration Service) → ачааны машин (Data Box) → шинэ байр (Azure)",
+    "image": null
+  },
+  "mnemonics": [
+    {
+      "device": "Шаардлага → сонголт: «Энэ workload-д юу хэрэгтэй вэ?» (CAF-ийн 8 R)",
+      "parts": [
+        { "key": "Үнэ цэнэ бага, зөөх нь үнэтэй", "meaning": "**Retire** — decommission" },
+        { "key": "Тогтвортой, хурдан, бага эрсдэлтэй", "meaning": "**Rehost** — like-for-like, 2 жилд modernization хэрэггүй" },
+        { "key": "PaaS руу, бага code өөрчлөлт", "meaning": "**Replatform** — OS, licensing ачаалал багасгах, containerize" },
+        { "key": "Technical debt, code-ыг cloud-д оновчлох", "meaning": "**Refactor** — Azure SDK, cloud design pattern" },
+        { "key": "Component бүр өөрөөр scale хийх", "meaning": "**Rearchitect** — service decomposition" },
+        { "key": "Хуучин систем хэтэрхий хуучирсан", "meaning": "**Replace** (SaaS / AI) эсвэл **Rebuild** (cloud-native)" },
+        { "key": "Тогтвортой, хөдлөх шалтгаангүй, зохицуулалт", "meaning": "**Retain** — Azure Arc-аар удирдана" }
+      ],
+      "why": "Requirement → decision: «бизнес юу хүсэж байна: хурд, бага өөрчлөлт, шинэчлэл, эсвэл огт хөдлөхгүй байх уу?» гэж асуу. Хурд ба бага эрсдэл → Rehost. PaaS, бага code → Replatform. Шинэ архитектур → Rearchitect. Үнэ цэнэгүй → Retire."
+    },
+    {
+      "device": "Azure Migrate-ийн 3 үе: «Шийд → Төлөвлө → Гүйцэтгэ»",
+      "parts": [
+        { "key": "Decide", "meaning": "**Discovery** (appliance / Collector / import) + **business case** (TCO, CapEx → OpEx)" },
+        { "key": "Plan", "meaning": "**Assessment**: readiness, right-sizing, cost, **dependency analysis**" },
+        { "key": "Execute", "meaning": "VMware (agentless / agent-based), Hyper-V, physical server, ASP.NET web app → App Service" }
+      ],
+      "why": "Requirement → decision: «бид юу байгааг мэдэх үү, хамаарлыг мэдэх үү, хэмжээг тооцсон уу?» гэж асуу. Үгүй бол алхам алгасаж болохгүй: эхлээд discovery, дараа нь assessment, dependency analysis, тэгээд л migration."
+    }
+  ],
+  "keyFacts": [
+    { "text": "CAF-ийн migration strategy: **Retire, Rehost, Replatform, Refactor, Rearchitect, Rebuild, Replace, Retain**. Workload тус бүрд аль нэгийг сонгоно.", "source": "migrationstrategy" },
+    { "text": "**Rehost** нь like-for-like (VM → IaaS, IaaS → IaaS, PaaS → PaaS), хурдан, бага эрсдэлтэй. Асуудалтай workload-ыг бүү rehost хий, мөн **2 жилийн дотор** modernization хэрэггүй гэдэгт итгэлтэй байх ёстой.", "source": "migrationstrategy" },
+    { "text": "**Replatform** — PaaS, бага code өөрчлөлт. **Refactor** — technical debt бууруулах code өөрчлөлт. **Rearchitect** — cloud-native боломжид архитектур өөрчлөх (modularization, component тус бүрийн scaling).", "source": "migrationstrategy" },
+    { "text": "**Replace** нь SaaS-аар custom development-ийг орлоно (CRM, HR). **Rebuild** нь cloud-native-аар бүрэн дахин хөгжүүлэх. **Retain** нь зохицуулалт, техникийн хамаарлаас болж үлдэх workload, **Azure Arc**-аар Azure-аас удирдана.", "source": "migrationstrategy" },
+    { "text": "**Azure Migrate** discovery: on-premises-д **Azure Migrate appliance** (зөвлөмж) байршуулж configuration, performance өгөгдлийг тасралтгүй цуглуулна. Air-gapped сүлжээнд **Azure Migrate Collector**.", "source": "migrate" },
+    { "text": "**Business case** нь on-premises ба Azure-ийн TCO, жил бүрийн cash flow, utilization-д суурилсан зөвлөмж, **CapEx → OpEx** шилжилтийн хэмнэлтийг харуулна.", "source": "migrate" },
+    { "text": "**Assessment** нь Azure readiness, **right-sizing** (VM, Azure SQL, Azure VMware Solution node), cost estimation, **dependency analysis** (серверүүдийн network хамаарал)-ийг өгнө.", "source": "migrate" },
+    { "text": "Azure Migrate-ээр VMware VM-ийг **agentless** (discovery-ийн appliance) эсвэл **agent-based** (replication appliance) migrate хийнэ. Physical server, бусад cloud-ийн VM-ийг physical server гэж үзнэ.", "source": "migrate" },
+    { "text": "**Database Migration Service**: Azure SQL Managed Instance ба SQL Server on Azure VM руу **online** (бага downtime) ба offline. Azure SQL Database руу зөвхөн **offline**. Logins migrate хийхгүй, schema migrate хийнэ.", "source": "dms" },
+    { "text": "**Data Box** нь сүлжээ бага эсвэл байхгүй үед **40 TB-аас их** өгөгдөлд тохиромжтой: нэг удаагийн migration, initial bulk transfer (seed), periodic upload. Import, export хоёуланг дэмжинэ.", "source": "databox" },
+    { "text": "Data Box SKU: **120 TB** usable (150 TB raw), **525 TB** usable (600 TB raw).", "source": "databox" },
+    { "text": "Сүлжээгээр, ихэвчлэн **1 TB-аас их**, сая сая файл, NAS-аас тасралтгүй sync хийх file migration-д **Azure Storage Mover**. Bandwidth бага, сүлжээгүй remote site-д **Data Box**.", "source": "datatransfer" }
+  ],
+  "compare": {
+    "caption": "Эх сурвалж: Select your cloud migration strategies (CAF). Rebuild, Replace хоёр хоёулаа шинэ шийдэл, Rebuild нь өөрөө хөгжүүлнэ, Replace нь SaaS. Retain нь Azure Arc-аар удирдаж болно.",
+    "columns": ["Strategy", "Code өөрчлөлт", "Hosting өөрчлөгдөх", "Хэзээ"],
+    "rows": [
+      ["**Retire**", "✗", "Decommission", "Бизнесийн үнэ цэнэ бага, зардал ашгаас их"],
+      ["**Rehost**", "✗ (хамгийн бага)", "✗ (like-for-like)", "Тогтвортой, хурдан, бага эрсдэлтэй"],
+      ["**Replatform**", "Бага", "✓ (PaaS)", "OS, licensing ачаалал багасгах"],
+      ["**Refactor**", "✓", "Хамаарна", "Technical debt, cloud-д оновчлох"],
+      ["**Rearchitect**", "✓ (их)", "✓", "Service decomposition, component тус бүрийн scaling"],
+      ["**Rebuild**", "Шинээр бичнэ", "✓ (cloud-native)", "Legacy систем хуучирсан"],
+      ["**Replace**", "✗ (SaaS)", "✓ (SaaS)", "SaaS хувилбар хэрэгцээг хангана"],
+      ["**Retain**", "✗", "✗ (on-premises)", "Тогтвортой, зохицуулалт, хөдлөх шалтгаангүй"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Гүйцэтгэл муу, тогтворгүй workload-ыг эхлээд rehost хийгээд Azure-д дараа нь засна.",
+      "truth": "CAF: асуудалтай workload-ыг **бүү rehost** хий, technical debt дагаж очно. Migration-ийн үеэр **Replatform / Refactor / Rearchitect**.",
+      "phrase_en": "an unstable application with known performance problems is being prepared for migration"
+    },
+    {
+      "trap": "Серверийн жагсаалт байгаа тул migration wave-ийг шууд төлөвлөж болно.",
+      "truth": "Хамт харилцдаг component-уудыг нэг wave-д оруулахад **dependency analysis** хэрэгтэй (Azure Migrate assessment).",
+      "phrase_en": "servers that communicate with each other must be migrated in the same wave"
+    },
+    {
+      "trap": "Azure SQL Database руу DMS-ээр online, бараг downtime-гүй migrate хийнэ.",
+      "truth": "DMS нь Azure SQL Database руу зөвхөн **offline**. Online (бага downtime) нь **Azure SQL Managed Instance** эсвэл **SQL Server on Azure VM** руу.",
+      "phrase_en": "migrate a SQL Server database with minimal downtime"
+    },
+    {
+      "trap": "Bandwidth бага site-аас 300 TB өгөгдлийг сүлжээгээр AzCopy-оор хуулах нь хамгийн хурдан.",
+      "truth": "Сүлжээ бага эсвэл байхгүй, 40 TB-аас их бол **Data Box** (offline transfer).",
+      "phrase_en": "transfer hundreds of terabytes from a site with limited network bandwidth"
+    },
+    {
+      "trap": "Хэн ч хэрэглэдэггүй app-ыг ч гэсэн Azure руу rehost хийх нь аюулгүй сонголт.",
+      "truth": "Бизнесийн үнэ цэнэ бага, migration-ий зардал ашгаас их бол **Retire**.",
+      "phrase_en": "the application has no remaining users and no data retention obligations"
+    },
+    {
+      "trap": "Зохицуулалтаас болж on-premises-д үлдэх workload-ыг Azure-аас удирдах боломжгүй.",
+      "truth": "**Retain** хийсэн on-premises workload-ыг **Azure Arc**-аар Azure-аас удирдана.",
+      "phrase_en": "workloads that must remain on-premises for regulatory reasons need unified management from Azure"
+    }
+  ],
+  "vocabulary": [
+    { "en": "rehost (lift and shift)", "mn": "өөрчлөлтгүйгээр зөөх" },
+    { "en": "discovery", "mn": "on-premises-ийн workload-уудыг илрүүлэх" },
+    { "en": "dependency analysis", "mn": "серверүүдийн хоорондын хамаарлыг шинжлэх" },
+    { "en": "right-sizing", "mn": "бодит ашиглалтаар зөв хэмжээ сонгох" },
+    { "en": "migration wave", "mn": "хамт зөөх workload-уудын багц" },
+    { "en": "cutover", "mn": "production-ийг шинэ орчин руу шилжүүлэх мөч" },
+    { "en": "offline data transfer", "mn": "төхөөрөмжөөр биет байдлаар өгөгдөл зөөх" },
+    { "en": "technical debt", "mn": "хойшлуулсан засвар, сайжруулалтын хуримтлал" }
+  ]
+}

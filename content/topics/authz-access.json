@@ -1,0 +1,173 @@
+{
+  "id": "authz-access",
+  "domain": "identity",
+  "order": 3,
+  "title": "Authorization & secrets: RBAC, PIM, managed identities, Key Vault",
+  "tagline": "Хэн, хаана, юу хийж чадах вэ, мөн нууцыг хэн хадгалах вэ?",
+  "checked": "2026-10-16",
+  "sources": ["rbac", "scope", "privroles", "directoryroles", "plane", "rbacdata", "identity", "vault", "kvrbac", "pim", "entitlement", "reviews"],
+  "analogy": {
+    "title": "Хэт болгоомжтой зочид буудлын менежер",
+    "story": "Зочид буудлын менежер Сарнай түлхүүр олгохдоо гурван зүйл бичдэг: **хэнд** (ажилтан, баг, эсвэл цэвэрлэгч робот), **ямар үүрэгтэй** (цэвэрлэгч, засварчин, менежер), **аль давхарт**. Гурвыг нэгтгэсэн нь **role assignment**. Давхрын түлхүүр тухайн давхрын өрөө бүрийг нээнэ: дээд түвшинд өгсөн эрх доош *өвлөгдөнө*. Хэн нэгэн хоёр өөр түлхүүртэй бол хоёулангийнх нь нийлбэр хүчинтэй.\n\nСарнай хоёр төрлийн ажлыг тусад нь ялгадаг. Өрөөг барих, дахин зохион байгуулах нь **control plane** (бүгд Azure Resource Manager-ээр дамжина). Харин өрөөний *доторх* сейфийг нээж юм авах нь **data plane**: өөр хаалга, өөр түлхүүр. Барилгын ажилтан өрөөг шинээр барьж чадаж байсан ч сейфний доторх зүйлд хүрэх эрхгүй байж болно.\n\nОлон түлхүүр байнга хамт явуулахгүйн тулд Сарнай үүрэг бүрийг **ердийн үед түр хаасан** байлгадаг: засварчин хэрэгтэй үедээ л хоёр цагийн master түлхүүрийг гар бичмэл шалтгаантайгаар авдаг (**PIM**). Хамтрагч компанийн хүмүүст хугацаатай зочны багц олгодог (**entitlement management**). Улирал бүр «Энэ хүн одоо ч энэ давхарт хэрэгтэй юу?» гэж бүгдийг дахин шалгана (**access reviews**). Цэвэрлэгч робот өөрийн нууц үгийг хэзээ ч мэдэхгүй: буудал өөрөө түүнийг таниулдаг (**managed identity**). Нууц зүйлсийг бүгдийг сейфэнд хадгална (**Key Vault**).\n\nГэхдээ түлхүүр нь зөвхөн *хэн юуг нээж чадахыг* шийднэ. «Ямар өрөө барьж болох вэ?» гэсэн дүрмийг тэр шийддэггүй: энэ нь өөр сэдэв (governance).",
+    "mapping": [
+      { "real": "Түлхүүр авагч: ажилтан, баг, робот", "azure": "Security principal (user, group, service principal, managed identity)" },
+      { "real": "Үүрэг: цэвэрлэгч, засварчин, менежер", "azure": "Role definition" },
+      { "real": "Давхар, өрөө", "azure": "Scope (management group → subscription → resource group → resource)" },
+      { "real": "Хэн + үүрэг + давхар гурвыг бичсэн бүртгэл", "azure": "Role assignment" },
+      { "real": "Өрөөг барих, засах", "azure": "Control plane (Azure Resource Manager)" },
+      { "real": "Өрөөний сейфийн доторх зүйл", "azure": "Data plane" },
+      { "real": "Хоёр цагийн master түлхүүр, шалтгаан бичиж авна", "azure": "PIM eligible role → activation" },
+      { "real": "Хамтрагчид олгох хугацаатай зочны багц", "azure": "Entitlement management access package" },
+      { "real": "Улирал бүр «одоо ч хэрэгтэй юу?» шалгах", "azure": "Access reviews" },
+      { "real": "Нууц үггүй, буудал өөрөө таниулдаг робот", "azure": "Managed identity" },
+      { "real": "Сейф", "azure": "Azure Key Vault" }
+    ]
+  },
+  "illustration": {
+    "scene": ["UserRound", "KeyRound", "Building2", "Ticket", "Timer", "ClipboardList", "Users"],
+    "caption": "Түлхүүр авагч (UserRound), түлхүүр, давхар (Building2), зочны багц (Ticket), түр хугацаа (Timer, PIM), шалгалтын жагсаалт (access reviews), баг."
+  },
+  "mnemonics": [
+    {
+      "device": "Хэн · Юу · Хаана",
+      "parts": [
+        { "key": "Хэн", "meaning": "**Security principal**: user, group, service principal, managed identity" },
+        { "key": "Юу", "meaning": "**Role definition**: ямар үйлдлийг зөвшөөрөх вэ (read, write, delete)" },
+        { "key": "Хаана", "meaning": "**Scope**: management group, subscription, resource group, resource. Доод түвшин дээдээсээ өвлөнө" }
+      ],
+      "why": "Requirement → decision: «Хэн, хамгийн бага ямар role-оор, хамгийн нарийн ямар scope дээр хийх ёстой вэ?» гэж асуу. Нэг resource-д л хэрэгтэй бол resource scope. Ирээдүйн бүх subscription-д хэрэгтэй бол management group scope. Role assignment нийлбэрээр хүчинтэй (additive)."
+    },
+    {
+      "device": "Хийх · Олгох",
+      "parts": [
+        { "key": "Хийх", "meaning": "Бүх resource удирдана, **role олгохгүй** → **Contributor**" },
+        { "key": "Хийх + Олгох", "meaning": "Бүх resource удирдана, **role-ийг мөн олгоно** → **Owner**" },
+        { "key": "Олгох", "meaning": "Зөвхөн Azure RBAC-аар **role олгох** → **Role Based Access Control Administrator**" }
+      ],
+      "why": "Requirement → decision: «Энэ хүн resource ажиллуулах уу, эсвэл бусдад эрх олгох уу?» гэж асуу. Эрх олгох ажлыг тусад нь, ажиллуулах эрхгүйгээр хуваарилах бол RBAC Administrator."
+    },
+    {
+      "device": "Нэг · Олон · Хадгалах",
+      "parts": [
+        { "key": "Нэг", "meaning": "Нэг resource-той хамт төрж, хамт устна → **system-assigned managed identity**" },
+        { "key": "Олон", "meaning": "Тусдаа resource, олон compute-д оноож болно, resource устсан ч үлдэнэ → **user-assigned managed identity**" },
+        { "key": "Хадгалах", "meaning": "Entra-аар нэвтэрч чадахгүй зүйлийн нууц (password, API key) → **Key Vault secret**" }
+      ],
+      "why": "Requirement → decision: «Credential хадгалах шаардлагатай юу, identity хэр урт насалж, хэдэн resource хуваалцах вэ?» гэж асуу. Credential хэрэггүй бол managed identity. Нэг resource-той хамт устах бол system-assigned, хуваалцах эсвэл үлдэх бол user-assigned."
+    },
+    {
+      "device": "Түр · Багц · Шалгалт",
+      "parts": [
+        { "key": "Түр", "meaning": "Privileged role-ийг хэрэгтэй үедээ л, хугацаатай/approval-тай идэвхжүүлэх → **PIM** (eligible → activate)" },
+        { "key": "Багц", "meaning": "Хамтрагчид group, app зэрэг багц эрхийг approval-тай, хугацаатай олгох → **entitlement management** (access package)" },
+        { "key": "Шалгалт", "meaning": "Одоогийн эрхийг давтан баталгаажуулах → **access reviews**" }
+      ],
+      "why": "Requirement → decision: «Асуудал нь эрх олгох цаг уу, багц хүсэлт уу, эсвэл байгаа эрхийг дахин шалгах уу?» гэж асуу. Идэвхжүүлэлт → PIM. Багц хүсэлт + хугацаа → access package. Давтан recertification → access review."
+    }
+  ],
+  "keyFacts": [
+    {
+      "text": "**Role assignment** нь гурван элементтэй: security principal, role definition, scope. Security principal нь user, group, service principal эсвэл managed identity байж болно.",
+      "source": "rbac"
+    },
+    {
+      "text": "Scope нь дөрвөн түвшинтэй: management group, subscription, resource group, resource. Эцэг-хүүхдийн харьцаатай: **доод түвшин дээд түвшнээс role permission өвлөнө**.",
+      "source": "scope"
+    },
+    {
+      "text": "Azure RBAC нь **additive**: хүчинтэй эрх нь role assignment-уудын нийлбэр. Хэрэв **deny assignment** хамаарвал хандалт хаагдана, үгүй бол үнэлгээ үргэлжилнэ.",
+      "source": "rbac"
+    },
+    {
+      "text": "**Contributor** нь бүх resource-ыг удирдах эрхтэй ч Azure RBAC-д role оноож чадахгүй. **Owner** нь role оноох эрхийг мөн агуулна. **Role Based Access Control Administrator** нь Azure RBAC-аар role оноох эрхтэй, Azure Policy зэрэг бусад аргаар хандалт удирдахгүй.",
+      "source": "privroles"
+    },
+    {
+      "text": "**Azure role** нь Azure resource-ыг, **Microsoft Entra role** нь Entra resource-ыг (хэрэглэгч, лиценз, домэйн) удирдана. Анхдагчаар хоёр нь хоорондоо дамждаггүй: Global Administrator **elevate access** хийж User Access Administrator авбал л Azure subscription хүртэл хүрнэ.",
+      "source": "directoryroles"
+    },
+    {
+      "text": "**Control plane** хүсэлт Azure Resource Manager URL руу очно (жишээ нь VM үүсгэх). **Data plane** хүсэлт тухайн instance-ийн өөрийн endpoint руу очно (жишээ нь blob endpoint) бөгөөд RDP шиг өөр credential шаардаж болно. Control plane боломжгүй үед ч data plane ажиллаж болно.",
+      "source": "plane"
+    },
+    {
+      "text": "Key Vault-ийн хоёр plane (management, data) **хоорондоо үл хамаарна**. Data plane-ийн Azure RBAC role (жишээ нь Key Vault Secrets User) нь зөвхөн **Azure role-based access control** permission model-той vault дээр ажиллана.",
+      "source": "kvrbac"
+    },
+    {
+      "text": "Access policy model-д control plane дээр **Contributor** эрхтэй хүн өөртөө data plane эрх олгож чадна, тиймээс control plane эрхийг хатуу хяна. Санал болгох загвар: application бүрт, environment бүрт тусдаа vault, role-ыг vault scope дээр оноо. Тусдаа key, secret, certificate дээр оноохыг зөвлөдөггүй.",
+      "source": "kvrbac"
+    },
+    {
+      "text": "**Key Vault** нь secret (token, password, API key), key (encryption key) болон certificate (TLS/SSL) удирдана. Premium tier нь HSM-protected key санал болгоно.",
+      "source": "vault"
+    },
+    {
+      "text": "**Managed identity** нь credential хөгжүүлэгчид харагдахгүй, удирдах шаардлагагүй. **System-assigned** нь resource-той lifecycle-ээ хуваалцаж, resource устахад автоматаар устна. **User-assigned** нь тусдаа resource, олон resource-д оноож болно, Microsoft үйлчилгээнд санал болгодог төрөл.",
+      "source": "identity"
+    },
+    {
+      "text": "**PIM** нь time-based болон approval-based role activation өгдөг. **Eligible** assignment-тай хүн хэрэгтэй үедээ activate хийнэ (MFA, шалтгаан, approval шаардаж болно). Permanent болон eligible-ийн эрхийн хэмжээ ялгаагүй: ялгаа нь activation. PIM-д лиценз хэрэгтэй.",
+      "source": "pim"
+    },
+    {
+      "text": "**Entitlement management** нь access request workflow, assignment, review, expiration-ийг автоматжуулна. **Access package** нь approval-тай, хугацаатай; connected organization-ийн гадны хэрэглэгч зөвшөөрөгдвөл автоматаар directory-д урьж, эрх олгоно.",
+      "source": "entitlement"
+    },
+    {
+      "text": "**Access reviews** нь group membership, enterprise app хандалт, role assignment-ийг давтан (долоо хоног, сар, улирал, жил) баталгаажуулна. Guest-ийн хувьд group owner өөрөө одоо ч хэрэгтэй эсэхийг батална.",
+      "source": "reviews"
+    }
+  ],
+  "compare": {
+    "caption": "✓ нь Microsoft Learn-ийн тайлбарт шууд заасан. ✗ нь Learn тухайн боломжийг заагаагүй гэсэн дүгнэлт. ¹ Entitlement management review-г автоматжуулж болно гэж Learn заасан ч, давтан recertification-ийн үндсэн хэрэгсэл нь access reviews.",
+    "columns": ["Боломж", "Role-ыг хэрэгтэй үедээ идэвхжүүлэх", "Багц эрхийг approval-тай хүсэх", "Хугацаа дуусахад эрх дуусах", "Давтан recertification"],
+    "rows": [
+      ["PIM", "✓", "✗", "✓", "✗"],
+      ["Entitlement management", "✗", "✓", "✓", "✓¹"],
+      ["Access reviews", "✗", "✗", "✗", "✓"]
+    ]
+  },
+  "examTraps": [
+    {
+      "trap": "Contributor role-той хүн бусдад Azure role оноож чадна.",
+      "truth": "**Contributor** бүх resource-ыг удирдах ч Azure RBAC-д role оноож чадахгүй. Эрх олгох бол **Owner** эсвэл **Role Based Access Control Administrator**.",
+      "phrase_en": "a delegated team must manage role assignments rather than operate application data"
+    },
+    {
+      "trap": "Resource-ийн Owner эсвэл Contributor эрхтэй бол Key Vault дахь secret-ийг шууд уншиж чадна.",
+      "truth": "Management plane болон data plane **үл хамаарна**. Secret унших нь data plane: **Key Vault Secrets User** гэх мэт role (Azure RBAC permission model-той vault). Access policy model-д Contributor өөртөө data эрх олгож чадах тул control plane эрхийг хатуу хяна.",
+      "phrase_en": "the application needs passwordless authorization to read secrets that are already stored correctly"
+    },
+    {
+      "trap": "Global Administrator бол Azure subscription-ийн resource-ыг автоматаар удирдана.",
+      "truth": "**Microsoft Entra role** ба **Azure role** анхдагчаар хоорондоо дамждаггүй. Global Administrator **elevate access** хийж User Access Administrator авбал л subscription-д хүрнэ.",
+      "phrase_en": "an administrator can manage the directory but cannot see any subscription until access is elevated"
+    },
+    {
+      "trap": "Eligible role нь permanent role-оос бага эрхтэй.",
+      "truth": "Эрхийн хэмжээ **ижил**. Ялгаа нь **activation** (MFA, шалтгаан, approval) болон хугацаа. Тэгэхээр байнгын production эрхгүй байх шаардлагад **PIM eligible assignment**.",
+      "phrase_en": "administrators need eligible Azure roles that activate after approval instead of permanent production access"
+    },
+    {
+      "trap": "Access review нь access package шиг тогтоосон хугацаа дуусахад эрхийг өөрөө хаадаг.",
+      "truth": "**Access reviews** нь давтан recertification: reviewer зөвшөөрөх/татгалзах. Тодорхой огноогоор дуусах нь **access package-ийн expiration**.",
+      "phrase_en": "a supplier's access must end on a known contract date without waiting for the next quarterly review"
+    },
+    {
+      "trap": "Хэд хэдэн replacement instance-д нэг system-assigned managed identity-г хуваалцаж болно.",
+      "truth": "**System-assigned** нь тухайн resource-той хамт төрж, хамт устна. Хуваалцах, resource устсан ч үлдэх identity бол **user-assigned managed identity**.",
+      "phrase_en": "replacement instances need the same preauthorized identity that must survive instance deletion"
+    }
+  ],
+  "vocabulary": [
+    { "en": "assign the role at the narrowest scope", "mn": "role-ыг хамгийн нарийн scope дээр оноох" },
+    { "en": "applies to all current and future subscriptions", "mn": "одоогийн болон ирээдүйн бүх subscription-д хамаарна" },
+    { "en": "data plane access", "mn": "data plane хандалт" },
+    { "en": "eligible assignment, activate for a limited time", "mn": "eligible assignment, хязгаарлагдмал хугацаанд activate хийх" },
+    { "en": "access package with approval and expiration", "mn": "approval, хугацаатай access package" },
+    { "en": "periodically recertify access", "mn": "эрхийг үе үе дахин баталгаажуулах" },
+    { "en": "eliminate stored credentials", "mn": "хадгалсан credential-ийг арилгах" },
+    { "en": "retrieve a secret at runtime", "mn": "runtime дээр secret авах" }
+  ]
+}
